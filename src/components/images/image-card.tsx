@@ -64,17 +64,21 @@ export function ImageCard({ image, productId }: ImageCardProps) {
       {/* Footer */}
       <div className="p-2 flex items-center justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
-          <button
-            onClick={handleSetThumbnail}
-            disabled={isPending || image.isThumbnail}
-            title={image.isThumbnail ? "サムネイル設定済み" : "サムネイルに設定"}
-            className={cn(
-              "shrink-0 p-0.5 rounded transition-colors",
-              image.isThumbnail ? "text-yellow-400 cursor-default" : "text-slate-300 hover:text-yellow-400"
-            )}
-          >
-            <Star className={cn("h-4 w-4", image.isThumbnail && "fill-yellow-400")} />
-          </button>
+          {image.isThumbnail ? (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-yellow-600 bg-yellow-50 border border-yellow-200 rounded px-1.5 py-0.5 shrink-0">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              サムネイル
+            </span>
+          ) : (
+            <button
+              onClick={handleSetThumbnail}
+              disabled={isPending}
+              className="group inline-flex items-center gap-1 text-xs text-slate-400 hover:text-yellow-500 transition-colors shrink-0"
+            >
+              <Star className="h-3.5 w-3.5 group-hover:fill-yellow-400 transition-colors" />
+              <span className="hidden group-hover:inline">サムネイルに設定</span>
+            </button>
+          )}
           {image.alt && <p className="text-xs text-slate-500 truncate">{image.alt}</p>}
         </div>
 

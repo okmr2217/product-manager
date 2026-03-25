@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { supabase } from "@/lib/supabase";
 
 interface UploadResult {
   url: string;
@@ -13,28 +12,23 @@ export function useUpload() {
   const [error, setError] = useState<string | null>(null);
 
   const upload = useCallback(async (file: File, productId: string): Promise<UploadResult | null> => {
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const path = `${productId}/${crypto.randomUUID()}.${ext}`;
-
     setUploading(true);
     setError(null);
 
     try {
-      const { error: uploadError } = await supabase.storage.from("product-images").upload(path, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("productId", productId);
 
-      if (uploadError) {
-        setError(uploadError.message);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const json = await res.json();
+
+      if (!res.ok) {
+        setError(json.error ?? "アップロードに失敗しました");
         return null;
       }
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("product-images").getPublicUrl(path);
-
-      return { url: publicUrl, path };
+      return { url: json.url, path: json.path };
     } catch (err) {
       setError(err instanceof Error ? err.message : "アップロードに失敗しました");
       return null;
