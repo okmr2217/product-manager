@@ -19,10 +19,11 @@ function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
 }
 
 function SelectValue({ className, children, placeholder, ...props }: SelectPrimitive.Value.Props) {
-  if (children !== undefined && children !== null) {
+  const isStatic = children !== undefined && children !== null && typeof children !== "function"
+  if (isStatic) {
     return (
       <span data-slot="select-value" className={cn("flex flex-1 text-left", className)}>
-        {children}
+        {children as React.ReactNode}
       </span>
     )
   }
