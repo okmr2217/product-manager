@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { LayoutDashboard, Plus } from "lucide-react";
 import type { ProductStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
@@ -24,12 +24,11 @@ type SidebarProps = {
 
 export function Sidebar({ products }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
 
   const handleSignOut = async () => {
     await signOut();
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   const isDashboardActive = pathname === "/dashboard";
