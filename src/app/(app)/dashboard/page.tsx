@@ -28,7 +28,7 @@ async function getProducts(status: ProductStatus | null, category: ProductCatego
     include: {
       images: { where: { isThumbnail: true }, take: 1 },
     },
-    orderBy: sort === "releaseDate" ? [{ releaseDate: "desc" }, { sortOrder: "asc" }] : { [sort]: sort === "name" ? "asc" : "desc" },
+    orderBy: sort === "releaseDate" ? [{ releaseDate: "desc" }, { sortOrder: "asc" }] : { [sort]: sort === "name" || sort === "sortOrder" ? "asc" : "desc" },
   });
 }
 
