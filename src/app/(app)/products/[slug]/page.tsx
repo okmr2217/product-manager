@@ -9,6 +9,7 @@ import { StatusBadge } from "@/components/products/status-badge";
 import { CategoryBadge } from "@/components/products/category-badge";
 import { StackTags } from "@/components/products/stack-tags";
 import { DeleteDialog } from "@/components/products/delete-dialog";
+import { StatusChangeDialog } from "@/components/products/status-change-dialog";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { PRODUCT_STATUS_LABELS } from "@/constants";
 
@@ -68,7 +69,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500 mb-1">ステータス</p>
-            <p className="text-slate-900">{PRODUCT_STATUS_LABELS[product.status]}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-slate-900">{PRODUCT_STATUS_LABELS[product.status]}</p>
+              <StatusChangeDialog productId={product.id} currentStatus={product.status} />
+            </div>
           </div>
           {product.releaseDate && (
             <div>
