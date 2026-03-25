@@ -91,7 +91,7 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
               <Label>変更前</Label>
               <Select value={from} onValueChange={(v) => setFrom(v as ProductStatus)}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue>{PRODUCT_STATUS_LABELS[from]}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {ALL_STATUSES.map((s) => (
@@ -106,7 +106,7 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
               <Label>変更後</Label>
               <Select value={to} onValueChange={(v) => setTo(v as ProductStatus)}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue>{PRODUCT_STATUS_LABELS[to]}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {ALL_STATUSES.map((s) => (

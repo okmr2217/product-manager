@@ -38,7 +38,7 @@ export function ReleaseCard({ release, slug }: ReleaseCardProps) {
           <ReleaseDeleteButton id={release.id} />
         </div>
       </div>
-      <p className="text-xs text-slate-400">{format(release.releaseDate, "yyyy年M月d日")}</p>
+      <p className="text-xs text-slate-400">{format(release.releaseDate, "yyyy/MM/dd")}</p>
       {preview && <p className="text-sm text-slate-600 whitespace-pre-wrap line-clamp-3">{preview}</p>}
     </div>
   );

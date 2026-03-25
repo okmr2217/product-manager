@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { ReleaseForm } from "@/components/releases/release-form";
 import { createRelease } from "@/actions/releases";
+
+export const metadata: Metadata = {
+  title: "リリースノートを追加",
+};
 
 async function getProduct(slug: string) {
   return prisma.product.findUnique({ where: { slug }, select: { id: true, slug: true } });

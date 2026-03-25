@@ -16,7 +16,10 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Product Manager",
+  title: {
+    default: "Product Manager",
+    template: "%s | Product Manager",
+  },
   description: "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
 };
 

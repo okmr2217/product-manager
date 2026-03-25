@@ -82,7 +82,7 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
             <Label htmlFor="status-select">変更先ステータス</Label>
             <Select value={selectedStatus} onValueChange={(v) => setSelectedStatus(v as ProductStatus)}>
               <SelectTrigger id="status-select">
-                <SelectValue placeholder="ステータスを選択" />
+                <SelectValue placeholder="ステータスを選択">{selectedStatus ? PRODUCT_STATUS_LABELS[selectedStatus] : undefined}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {candidateStatuses.map((s) => (

@@ -70,7 +70,7 @@ export function TaskForm({ action, initialData, cancelHref }: TaskFormProps) {
         </Label>
         <Select value={type} onValueChange={(value) => setType(value ?? "")}>
           <SelectTrigger>
-            <SelectValue placeholder="タイプを選択" />
+            <SelectValue placeholder="タイプを選択">{type ? DEV_TASK_TYPE_LABELS[type as DevTaskType] : undefined}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {(Object.entries(DEV_TASK_TYPE_LABELS) as [DevTaskType, string][]).map(([value, label]) => (
@@ -88,7 +88,7 @@ export function TaskForm({ action, initialData, cancelHref }: TaskFormProps) {
         </Label>
         <Select value={status} onValueChange={(value) => setStatus(value ?? "TODO")}>
           <SelectTrigger>
-            <SelectValue placeholder="ステータスを選択" />
+            <SelectValue placeholder="ステータスを選択">{DEV_TASK_STATUS_LABELS[status as DevTaskStatus]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {(Object.entries(DEV_TASK_STATUS_LABELS) as [DevTaskStatus, string][]).map(([value, label]) => (
@@ -104,7 +104,7 @@ export function TaskForm({ action, initialData, cancelHref }: TaskFormProps) {
         <Label>優先度</Label>
         <Select value={priority} onValueChange={(value) => setPriority(value ?? "")}>
           <SelectTrigger>
-            <SelectValue placeholder="優先度を選択（任意）" />
+            <SelectValue placeholder="優先度を選択（任意）">{priority === "" ? "未設定" : priority ? PRIORITY_LABELS[priority as Priority] : undefined}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="">未設定</SelectItem>

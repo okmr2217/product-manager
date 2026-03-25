@@ -31,7 +31,7 @@ export function ProductCard({ product }: { product: ProductWithThumbnail }) {
             <StatusBadge status={product.status} />
           </div>
           <StackTags stacks={product.stacks} maxDisplay={2} />
-          <p className="text-xs text-muted-foreground">更新: {format(product.updatedAt, "M/d")}</p>
+          <p className="text-xs text-muted-foreground">更新: {format(product.updatedAt, "yyyy/MM/dd")}</p>
         </CardContent>
       </Card>
     </Link>

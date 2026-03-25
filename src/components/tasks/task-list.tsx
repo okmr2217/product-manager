@@ -45,7 +45,7 @@ export function TaskList({ tasks, slug }: TaskListProps) {
       <div className="flex gap-3 flex-wrap">
         <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v ?? "ALL")}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder="ステータス" />
+            <SelectValue>{statusFilter === "ALL" ? "すべて" : DEV_TASK_STATUS_LABELS[statusFilter as DevTaskStatus]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">すべて</SelectItem>
@@ -57,7 +57,7 @@ export function TaskList({ tasks, slug }: TaskListProps) {
 
         <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v ?? "ALL")}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder="タイプ" />
+            <SelectValue>{typeFilter === "ALL" ? "すべて" : DEV_TASK_TYPE_LABELS[typeFilter as DevTaskType]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">すべて</SelectItem>
@@ -69,7 +69,7 @@ export function TaskList({ tasks, slug }: TaskListProps) {
 
         <Select value={priorityFilter} onValueChange={(v) => setPriorityFilter(v ?? "ALL")}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder="優先度" />
+            <SelectValue>{priorityFilter === "ALL" ? "すべて" : PRIORITY_LABELS[priorityFilter as Priority]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">すべて</SelectItem>

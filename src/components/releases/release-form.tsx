@@ -82,7 +82,7 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
           <input type="hidden" name="type" value={type} />
           <Select value={type} onValueChange={(v) => setType(v ?? "")}>
             <SelectTrigger aria-invalid={!!fieldError("type")}>
-              <SelectValue placeholder="タイプを選択" />
+              <SelectValue placeholder="タイプを選択">{type ? RELEASE_TYPE_LABELS[type as ReleaseType] : undefined}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {RELEASE_TYPES.map((t) => (

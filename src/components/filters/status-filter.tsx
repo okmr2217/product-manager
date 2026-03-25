@@ -27,7 +27,7 @@ export function StatusFilter() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue placeholder="ステータス" />
+        <SelectValue>{current === "all" ? "すべて" : PRODUCT_STATUS_LABELS[current as ProductStatus]}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">すべて</SelectItem>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
@@ -10,6 +11,10 @@ import { StatusFilter } from "@/components/filters/status-filter";
 import { CategoryFilter } from "@/components/filters/category-filter";
 import { SortSelect } from "@/components/filters/sort-select";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "ダッシュボード",
+};
 
 const VALID_SORT = ["sortOrder", "updatedAt", "name", "releaseDate"] as const;
 type SortKey = (typeof VALID_SORT)[number];

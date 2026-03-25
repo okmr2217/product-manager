@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateTask } from "@/actions/tasks";
 import { TaskForm } from "@/components/tasks/task-form";
+
+export const metadata: Metadata = {
+  title: "タスクを編集",
+};
 
 async function getTask(id: string) {
   return prisma.devTask.findUnique({ where: { id } });

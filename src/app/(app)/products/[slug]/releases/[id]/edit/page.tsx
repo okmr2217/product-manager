@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { ReleaseForm } from "@/components/releases/release-form";
 import { updateRelease } from "@/actions/releases";
+
+export const metadata: Metadata = {
+  title: "リリースノートを編集",
+};
 
 async function getRelease(id: string, slug: string) {
   return prisma.release.findFirst({

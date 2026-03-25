@@ -30,7 +30,7 @@ export function SortSelect() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue placeholder="並び順" />
+        <SelectValue>{SORT_OPTIONS.find((o) => o.value === current)?.label}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {SORT_OPTIONS.map((o) => (

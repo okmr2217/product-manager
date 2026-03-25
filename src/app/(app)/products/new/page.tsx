@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { ProductForm } from "@/components/products/product-form";
 import { createProduct } from "@/actions/products";
 import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "プロダクトを追加",
+};
 
 async function getExistingStacks() {
   const products = await prisma.product.findMany({ select: { stacks: true } });

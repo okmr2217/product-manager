@@ -27,7 +27,7 @@ export function CategoryFilter() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue placeholder="カテゴリ" />
+        <SelectValue>{current === "all" ? "すべて" : PRODUCT_CATEGORY_LABELS[current as ProductCategory]}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">すべて</SelectItem>

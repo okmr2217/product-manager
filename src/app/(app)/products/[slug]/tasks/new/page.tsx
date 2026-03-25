@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { createTask } from "@/actions/tasks";
 import { TaskForm } from "@/components/tasks/task-form";
+
+export const metadata: Metadata = {
+  title: "タスクを追加",
+};
 
 async function getProduct(slug: string) {
   return prisma.product.findUnique({ where: { slug } });

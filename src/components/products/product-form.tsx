@@ -131,7 +131,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         </Label>
         <Select value={category} onValueChange={(value) => setCategory(value ?? "")}>
           <SelectTrigger>
-            <SelectValue placeholder="カテゴリを選択" />
+            <SelectValue placeholder="カテゴリを選択">{category ? PRODUCT_CATEGORY_LABELS[category as ProductCategory] : undefined}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {(Object.entries(PRODUCT_CATEGORY_LABELS) as [ProductCategory, string][]).map(([value, label]) => (
@@ -150,7 +150,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         <Popover>
           <PopoverTrigger render={<button type="button" className={cn(buttonVariants({ variant: "outline" }), "w-full justify-start text-left font-normal")} />}>
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {releaseDate ? format(releaseDate, "yyyy年M月d日") : "日付を選択"}
+            {releaseDate ? format(releaseDate, "yyyy/MM/dd") : "日付を選択"}
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar mode="single" selected={releaseDate} onSelect={setReleaseDate} />

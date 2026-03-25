@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -6,6 +7,12 @@ import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { ReleaseCard } from "@/components/releases/release-card";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await prisma.product.findUnique({ where: { slug }, select: { name: true } });
+  return { title: product ? `${product.name} — リリースノート` : "リリースノート" };
+}
 
 async function getProductWithReleases(slug: string) {
   return prisma.product.findUnique({

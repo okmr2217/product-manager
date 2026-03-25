@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { ImagesPanel } from "@/components/images/images-panel";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await prisma.product.findUnique({ where: { slug }, select: { name: true } });
+  return { title: product ? `${product.name} — 画像` : "画像" };
+}
 
 async function getProductWithImages(slug: string) {
   return prisma.product.findUnique({

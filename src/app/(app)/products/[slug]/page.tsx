@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -15,6 +16,12 @@ import { PRODUCT_STATUS_LABELS } from "@/constants";
 
 async function getProduct(slug: string) {
   return prisma.product.findUnique({ where: { slug } });
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+  return { title: product?.name ?? slug };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -77,7 +84,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {product.releaseDate && (
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">リリース日</p>
-              <p className="text-slate-900">{format(product.releaseDate, "yyyy年M月d日")}</p>
+              <p className="text-slate-900">{format(product.releaseDate, "yyyy/MM/dd")}</p>
             </div>
           )}
         </section>
