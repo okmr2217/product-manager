@@ -121,7 +121,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       {/* Long Description */}
       <div className="space-y-1.5">
         <Label htmlFor="longDescription">詳細説明</Label>
-        <Textarea id="longDescription" name="longDescription" rows={4} defaultValue={initialData?.longDescription ?? ""} />
+        <Textarea id="longDescription" name="longDescription" rows={8} defaultValue={initialData?.longDescription ?? ""} />
       </div>
 
       {/* Category */}
