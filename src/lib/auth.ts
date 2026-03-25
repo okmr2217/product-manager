@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { prisma } from "./prisma";
 
 export const auth = betterAuth({
@@ -14,7 +15,7 @@ export async function requireAuth() {
   });
 
   if (!session) {
-    throw new Error("Unauthorized");
+    redirect("/login");
   }
 
   return session;

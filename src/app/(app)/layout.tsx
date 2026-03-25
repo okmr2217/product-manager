@@ -1,3 +1,4 @@
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -11,6 +12,7 @@ async function getProducts() {
 }
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  await requireAuth();
   const products = await getProducts();
 
   return (
