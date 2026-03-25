@@ -6,7 +6,6 @@ import { ExternalLink, GitFork, Pencil } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
-import { StatusBadge } from "@/components/products/status-badge";
 import { CategoryBadge } from "@/components/products/category-badge";
 import { StackTags } from "@/components/products/stack-tags";
 import { DeleteDialog } from "@/components/products/delete-dialog";
@@ -33,14 +32,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div>
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
-            <StatusBadge status={product.status} />
-          </div>
-          <p className="text-sm text-slate-500">{product.description}</p>
-        </div>
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
         <div className="flex gap-2 shrink-0">
           <Link href={`/products/${slug}/edit`} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
             <Pencil className="h-4 w-4 mr-1" />
