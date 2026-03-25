@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id              String          @id @default(cuid())
+  name            String
+  slug            String          @unique
+  description     String
+  longDescription String?
+  category        ProductCategory
+  status          ProductStatus   @default(IDEA)
+  releaseDate     DateTime?
+  stacks          String[]
+  repositoryUrl   String?
+  productUrl      String?
+  note            String?
+  sortOrder       Int             @default(0)
+  isPublic        Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  images        ProductImage[]
+  releases      Release[]
+  statusHistory StatusHistory[]
+  tasks         DevTask[]
+}
+
+enum ProductCategory {
+  APP
+  MCP
+  SITE
+}
+
+enum ProductStatus {
+  IDEA
+  DEVELOPING
+  RELEASED
+  MAINTENANCE
+  PAUSED
+}
+
+model ProductImage {
+  id          String  @id @default(cuid())
+  url         String
+  alt         String?
+  isThumbnail Boolean @default(false)
+  sortOrder   Int     @default(0)
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Release {
+  id          String      @id @default(cuid())
+  version     String
+  title       String
+  content     String
+  releaseDate DateTime
+  type        ReleaseType
+  isDraft     Boolean     @default(true)
+  productId   String
+  createdAt   DateTime    @default(now())
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum ReleaseType {
+  MAJOR
+  MINOR
+  PATCH
+  HOTFIX
+}
+
+model StatusHistory {
+  id        String        @id @default(cuid())
+  from      ProductStatus
+  to        ProductStatus
+  note      String?
+  productId String
+  createdAt DateTime      @default(now())
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model DevTask {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  type        DevTaskType
+  status      DevTaskStatus @default(TODO)
+  priority    Priority?
+  productId   String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  product     Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum DevTaskType {
+  FEATURE
+  BUG
+  IMPROVEMENT
+}
+
+enum DevTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  ON_HOLD
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
