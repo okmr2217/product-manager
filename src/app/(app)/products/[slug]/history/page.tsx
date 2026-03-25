@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { prisma } from "@/lib/prisma";
 import { ProductTabs } from "@/components/products/product-tabs";
+import { HistoryEditDialog } from "@/components/products/history-edit-dialog";
+import { HistoryDeleteButton } from "@/components/products/history-delete-button";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_DOT_COLORS } from "@/constants";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +11,7 @@ async function getProductWithHistory(slug: string) {
   return prisma.product.findUnique({
     where: { slug },
     include: {
-      statusHistory: { orderBy: { createdAt: "desc" } },
+      statusHistory: { orderBy: { changedAt: "desc" } },
     },
   });
 }
@@ -40,13 +42,21 @@ export default async function ProductHistoryPage({ params }: { params: Promise<{
                   {/* Dot */}
                   <div className={cn("w-5 h-5 rounded-full shrink-0 mt-0.5 z-10", PRODUCT_STATUS_DOT_COLORS[entry.to])} />
 
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">
-                      {PRODUCT_STATUS_LABELS[entry.to]}{" "}
-                      <span className="font-normal text-slate-500">← {PRODUCT_STATUS_LABELS[entry.from]}</span>
-                    </p>
-                    <p className="text-xs text-slate-400 mt-0.5">{format(entry.createdAt, "yyyy年M月d日 HH:mm")}</p>
-                    {entry.note && <p className="text-sm text-slate-600 mt-1 whitespace-pre-wrap">{entry.note}</p>}
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-medium text-slate-900">
+                          {PRODUCT_STATUS_LABELS[entry.to]}{" "}
+                          <span className="font-normal text-slate-500">← {PRODUCT_STATUS_LABELS[entry.from]}</span>
+                        </p>
+                        <p className="text-xs text-slate-400 mt-0.5">{format(entry.changedAt, "yyyy年M月d日 HH:mm")}</p>
+                        {entry.note && <p className="text-sm text-slate-600 mt-1 whitespace-pre-wrap">{entry.note}</p>}
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        <HistoryEditDialog entry={entry} />
+                        <HistoryDeleteButton id={entry.id} />
+                      </div>
+                    </div>
                   </div>
                 </li>
               ))}

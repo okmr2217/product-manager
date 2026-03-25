@@ -132,6 +132,7 @@ model StatusHistory {
   from      ProductStatus
   to        ProductStatus
   note      String?
+  changedAt DateTime      @default(now())
   productId String
   createdAt DateTime      @default(now())
   product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)

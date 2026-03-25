@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,34 +13,41 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { changeStatus } from "@/actions/status";
+import { updateStatusHistory } from "@/actions/status";
 import { PRODUCT_STATUS_LABELS } from "@/constants";
 import type { ProductStatus } from "@prisma/client";
 
 const ALL_STATUSES: ProductStatus[] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
 
-interface StatusChangeDialogProps {
-  productId: string;
-  currentStatus: ProductStatus;
+interface HistoryEntry {
+  id: string;
+  from: ProductStatus;
+  to: ProductStatus;
+  note: string | null;
+  changedAt: Date;
 }
 
-export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<ProductStatus | "">("");
-  const [note, setNote] = useState("");
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [time, setTime] = useState(() => format(new Date(), "HH:mm"));
-  const [isPending, startTransition] = useTransition();
+interface HistoryEditDialogProps {
+  entry: HistoryEntry;
+}
 
-  const candidateStatuses = ALL_STATUSES.filter((s) => s !== currentStatus);
+export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [from, setFrom] = useState<ProductStatus>(entry.from);
+  const [to, setTo] = useState<ProductStatus>(entry.to);
+  const [note, setNote] = useState(entry.note ?? "");
+  const [date, setDate] = useState<Date | undefined>(new Date(entry.changedAt));
+  const [time, setTime] = useState(format(new Date(entry.changedAt), "HH:mm"));
+  const [isPending, startTransition] = useTransition();
 
   const handleOpenChange = (value: boolean) => {
     setOpen(value);
     if (!value) {
-      setSelectedStatus("");
-      setNote("");
-      setDate(new Date());
-      setTime(format(new Date(), "HH:mm"));
+      setFrom(entry.from);
+      setTo(entry.to);
+      setNote(entry.note ?? "");
+      setDate(new Date(entry.changedAt));
+      setTime(format(new Date(entry.changedAt), "HH:mm"));
     }
   };
 
@@ -53,45 +60,63 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
   };
 
   const handleSubmit = () => {
-    if (!selectedStatus) return;
-
     startTransition(async () => {
-      const result = await changeStatus(productId, {
-        to: selectedStatus,
+      const result = await updateStatusHistory(entry.id, {
+        from,
+        to,
         note: note || undefined,
         changedAt: buildChangedAt(),
       });
       if (result.success) {
-        toast.success("ステータスを変更しました");
+        toast.success("ステータス履歴を更新しました");
         setOpen(false);
       } else {
-        toast.error(result.error ?? "ステータスの変更に失敗しました");
+        toast.error(result.error ?? "更新に失敗しました");
       }
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger render={<Button variant="outline" size="sm" />}>ステータスを変更</DialogTrigger>
+      <DialogTrigger render={<Button variant="ghost" size="sm" />}>
+        <Pencil className="h-3.5 w-3.5" />
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>ステータスを変更</DialogTitle>
+          <DialogTitle>ステータス履歴を編集</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
-          <div className="space-y-1.5">
-            <Label htmlFor="status-select">変更先ステータス</Label>
-            <Select value={selectedStatus} onValueChange={(v) => setSelectedStatus(v as ProductStatus)}>
-              <SelectTrigger id="status-select">
-                <SelectValue placeholder="ステータスを選択" />
-              </SelectTrigger>
-              <SelectContent>
-                {candidateStatuses.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {PRODUCT_STATUS_LABELS[s]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label>変更前</Label>
+              <Select value={from} onValueChange={(v) => setFrom(v as ProductStatus)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ALL_STATUSES.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {PRODUCT_STATUS_LABELS[s]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>変更後</Label>
+              <Select value={to} onValueChange={(v) => setTo(v as ProductStatus)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ALL_STATUSES.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {PRODUCT_STATUS_LABELS[s]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-1.5">
@@ -126,9 +151,8 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="status-note">メモ（任意）</Label>
+            <Label>メモ（任意）</Label>
             <Textarea
-              id="status-note"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="変更理由など"
@@ -140,8 +164,8 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
           <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isPending}>
             キャンセル
           </Button>
-          <Button onClick={handleSubmit} disabled={!selectedStatus || isPending}>
-            {isPending ? "変更中..." : "変更する"}
+          <Button onClick={handleSubmit} disabled={isPending}>
+            {isPending ? "保存中..." : "保存する"}
           </Button>
         </DialogFooter>
       </DialogContent>
