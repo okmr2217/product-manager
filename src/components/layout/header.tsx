@@ -27,7 +27,7 @@ export function Header({ products }: HeaderProps) {
           <Menu className="size-5" />
           <span className="sr-only">メニューを開く</span>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-64" showCloseButton={false}>
+        <SheetContent side="left" className="p-0 max-w-64" showCloseButton={false}>
           <Sidebar products={products} />
         </SheetContent>
       </Sheet>

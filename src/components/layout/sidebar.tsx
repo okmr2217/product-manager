@@ -35,7 +35,7 @@ export function Sidebar({ products }: SidebarProps) {
   const isDashboardActive = pathname === "/dashboard";
 
   return (
-    <aside className="flex h-full w-64 flex-col bg-slate-50 border-r border-slate-200">
+    <aside className="flex h-full w-full flex-col bg-slate-50 border-r border-slate-200">
       {/* アプリ名 */}
       <div className="p-4">
         <Link href="/dashboard" className="block">
