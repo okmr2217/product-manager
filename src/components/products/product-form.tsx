@@ -219,7 +219,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       {/* Note */}
       <div className="space-y-1.5">
         <Label htmlFor="note">備考</Label>
-        <Textarea id="note" name="note" rows={3} defaultValue={initialData?.note ?? ""} placeholder="ホスティング情報、DBサービスなど" />
+        <Textarea id="note" name="note" rows={6} defaultValue={initialData?.note ?? ""} placeholder="ホスティング情報、DBサービスなど" />
       </div>
 
       {/* Sort Order */}
