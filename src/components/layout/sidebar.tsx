@@ -33,6 +33,14 @@ export function Sidebar({ products }: SidebarProps) {
 
   const isDashboardActive = pathname === "/dashboard";
 
+  const TAB_SEGMENTS = new Set(["/tasks", "/images", "/releases", "/history"]);
+
+  function getProductHref(slug: string): string {
+    const match = pathname.match(/^\/products\/[^/]+(\/[^/]+)?/);
+    const segment = match?.[1] ?? "";
+    return `/products/${slug}${TAB_SEGMENTS.has(segment) ? segment : ""}`;
+  }
+
   return (
     <aside className="flex h-full w-full flex-col bg-slate-50 border-r border-slate-200">
       {/* アプリ名 */}
@@ -75,7 +83,7 @@ export function Sidebar({ products }: SidebarProps) {
               return (
                 <li key={product.id}>
                   <Link
-                    href={`/products/${product.slug}`}
+                    href={getProductHref(product.slug)}
                     className={cn(
                       "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
                       isActive ? "bg-slate-200 text-slate-900 font-medium" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
