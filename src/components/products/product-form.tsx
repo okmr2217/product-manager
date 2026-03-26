@@ -95,7 +95,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         <Label htmlFor="name">
           プロダクト名 <span className="text-red-500">*</span>
         </Label>
-        <Input id="name" name="name" defaultValue={initialData?.name} />
+        <Input id="name" name="name" defaultValue={initialData?.name} className="max-w-sm" />
         {fieldError("name") && <p className="text-sm text-red-500">{fieldError("name")}</p>}
       </div>
 
@@ -104,7 +104,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         <Label htmlFor="slug">
           スラッグ <span className="text-red-500">*</span>
         </Label>
-        <Input id="slug" name="slug" defaultValue={initialData?.slug} placeholder="例: my-product" />
+        <Input id="slug" name="slug" defaultValue={initialData?.slug} placeholder="例: my-product" className="max-w-xs" />
         <p className="text-xs text-muted-foreground">小文字英数字とハイフンのみ（例: yarukoto）</p>
         {fieldError("slug") && <p className="text-sm text-red-500">{fieldError("slug")}</p>}
       </div>
@@ -114,7 +114,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         <Label htmlFor="description">
           概要説明 <span className="text-red-500">*</span>
         </Label>
-        <Input id="description" name="description" defaultValue={initialData?.description} />
+        <Input id="description" name="description" defaultValue={initialData?.description} className="max-w-md" />
         {fieldError("description") && <p className="text-sm text-red-500">{fieldError("description")}</p>}
       </div>
 
@@ -205,14 +205,14 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       {/* Repository URL */}
       <div className="space-y-1.5">
         <Label htmlFor="repositoryUrl">リポジトリURL</Label>
-        <Input id="repositoryUrl" name="repositoryUrl" type="url" defaultValue={initialData?.repositoryUrl ?? ""} placeholder="https://github.com/..." />
+        <Input id="repositoryUrl" name="repositoryUrl" type="url" defaultValue={initialData?.repositoryUrl ?? ""} placeholder="https://github.com/..." className="max-w-md" />
         {fieldError("repositoryUrl") && <p className="text-sm text-red-500">{fieldError("repositoryUrl")}</p>}
       </div>
 
       {/* Product URL */}
       <div className="space-y-1.5">
         <Label htmlFor="productUrl">プロダクトURL</Label>
-        <Input id="productUrl" name="productUrl" type="url" defaultValue={initialData?.productUrl ?? ""} placeholder="https://..." />
+        <Input id="productUrl" name="productUrl" type="url" defaultValue={initialData?.productUrl ?? ""} placeholder="https://..." className="max-w-md" />
         {fieldError("productUrl") && <p className="text-sm text-red-500">{fieldError("productUrl")}</p>}
       </div>
 
