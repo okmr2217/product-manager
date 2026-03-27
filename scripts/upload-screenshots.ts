@@ -96,6 +96,17 @@ const PRODUCT_CONFIGS: ProductUploadConfig[] = [
       { filePath: `${BASE}/ツケカン/tukekan/output/screenshots/mobile/members-list-mobile.png`, filename: "members-list-mobile.png", isThumbnail: false, alt: "メンバー一覧（モバイル）", sortOrder: 6 },
     ],
   },
+  {
+    slug: "stockee",
+    screenshots: [
+      { filePath: `${BASE}/Stockee/stockee/output/screenshots/pc/home-items-pc.png`, filename: "home-items-pc.png", isThumbnail: true, alt: "在庫一覧（PC）", sortOrder: 1 },
+      { filePath: `${BASE}/Stockee/stockee/output/screenshots/pc/item-new-form-pc.png`, filename: "item-new-form-pc.png", isThumbnail: false, alt: "アイテム追加フォーム（PC）", sortOrder: 2 },
+      { filePath: `${BASE}/Stockee/stockee/output/screenshots/pc/item-edit-form-pc.png`, filename: "item-edit-form-pc.png", isThumbnail: false, alt: "アイテム編集フォーム（PC）", sortOrder: 3 },
+      { filePath: `${BASE}/Stockee/stockee/output/screenshots/pc/group-new-form.png`, filename: "group-new-form.png", isThumbnail: false, alt: "グループ作成（PC）", sortOrder: 4 },
+      { filePath: `${BASE}/Stockee/stockee/output/screenshots/pc/settings.png`, filename: "settings.png", isThumbnail: false, alt: "設定（PC）", sortOrder: 5 },
+      { filePath: `${BASE}/Stockee/stockee/output/screenshots/mobile/home-items-mobile.png`, filename: "home-items-mobile.png", isThumbnail: false, alt: "在庫一覧（モバイル）", sortOrder: 6 },
+    ],
+  },
 ];
 
 async function uploadScreenshots() {
