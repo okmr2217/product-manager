@@ -75,6 +75,17 @@ const PRODUCT_CONFIGS: ProductUploadConfig[] = [
     ],
   },
   {
+    slug: "peak-log",
+    screenshots: [
+      { filePath: `${BASE}/Peak Log/peak-log/output/screenshots/pc/home-timeline-pc.png`, filename: "home-timeline-pc.png", isThumbnail: true, alt: "ホーム - タイムライン（PC）", sortOrder: 1 },
+      { filePath: `${BASE}/Peak Log/peak-log/output/screenshots/pc/activities-list-pc.png`, filename: "activities-list-pc.png", isThumbnail: false, alt: "アクティビティ一覧（PC）", sortOrder: 2 },
+      { filePath: `${BASE}/Peak Log/peak-log/output/screenshots/pc/monthly-stats-pc.png`, filename: "monthly-stats-pc.png", isThumbnail: false, alt: "月間統計（PC）", sortOrder: 3 },
+      { filePath: `${BASE}/Peak Log/peak-log/output/screenshots/pc/log-create-modal-pc.png`, filename: "log-create-modal-pc.png", isThumbnail: false, alt: "ログ作成モーダル（PC）", sortOrder: 4 },
+      { filePath: `${BASE}/Peak Log/peak-log/output/screenshots/mobile/home-timeline-mobile.png`, filename: "home-timeline-mobile.png", isThumbnail: false, alt: "ホーム - タイムライン（モバイル）", sortOrder: 5 },
+      { filePath: `${BASE}/Peak Log/peak-log/output/screenshots/mobile/monthly-stats-mobile.png`, filename: "monthly-stats-mobile.png", isThumbnail: false, alt: "月間統計（モバイル）", sortOrder: 6 },
+    ],
+  },
+  {
     slug: "tukekan",
     screenshots: [
       { filePath: `${BASE}/ツケカン/tukekan/output/screenshots/pc/home-expenses-pc.png`, filename: "home-expenses-pc.png", isThumbnail: true, alt: "支出一覧（PC）", sortOrder: 1 },
