@@ -1,9 +1,34 @@
-import { PrismaClient, ProductCategory, ProductStatus, ReleaseType } from "@prisma/client";
+import { PrismaClient, ProductCategory, ProductStatus, ReleaseType, DevTaskType, DevTaskStatus, Priority } from "@prisma/client";
+import { hashPassword } from "better-auth/crypto";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 シード開始...");
+
+  // ユーザー作成（スクリーンショット撮影用デモアカウント）
+  const demoEmail = "demo@example.com";
+  const existingUser = await prisma.user.findUnique({ where: { email: demoEmail } });
+  if (!existingUser) {
+    const hashed = await hashPassword("password123");
+    await prisma.user.create({
+      data: {
+        name: "デモユーザー",
+        email: demoEmail,
+        emailVerified: true,
+        accounts: {
+          create: {
+            accountId: demoEmail,
+            providerId: "credential",
+            password: hashed,
+          },
+        },
+      },
+    });
+    console.log(`  ✅ ユーザー作成: ${demoEmail} / password123`);
+  } else {
+    console.log(`  ⏭️  ユーザースキップ（既存）: ${demoEmail}`);
+  }
 
   const products = [
     {
@@ -394,6 +419,47 @@ async function main() {
     }
 
     console.log(`  ✅ 作成: ${productData.name} (releases: ${releases.length}, history: ${statusHistory.length})`);
+  }
+
+  // DevTask サンプルデータ（Yarukoto プロダクトに紐付け）
+  const yarukoto = await prisma.product.findUnique({ where: { slug: "yarukoto" } });
+  if (yarukoto) {
+    const existingTasks = await prisma.devTask.count({ where: { productId: yarukoto.id } });
+    if (existingTasks === 0) {
+      await prisma.devTask.createMany({
+        data: [
+          { title: "ダークモード対応", description: "システム設定に連動したダークモード切り替え機能を追加する。\n\n- `next-themes` を導入\n- shadcn/ui の ThemeProvider を設定\n- 全コンポーネントのカラートークンを確認", type: DevTaskType.FEATURE, status: DevTaskStatus.TODO, priority: Priority.HIGH, productId: yarukoto.id },
+          { title: "Safari でログイン画面のレイアウト崩れ", description: "Safari（iOS 17）でログインフォームのボタンが画面外にはみ出す問題。\n\n再現条件: iPhone SE（第3世代）/ Safari 17", type: DevTaskType.BUG, status: DevTaskStatus.IN_PROGRESS, priority: Priority.HIGH, productId: yarukoto.id },
+          { title: "タスクの繰り返し設定", description: "毎日・毎週など繰り返しタスクを設定できるようにする。", type: DevTaskType.FEATURE, status: DevTaskStatus.TODO, priority: Priority.MEDIUM, productId: yarukoto.id },
+          { title: "カレンダービューのパフォーマンス改善", description: "月表示時に大量タスクがあるとレンダリングが遅い。仮想化を検討する。", type: DevTaskType.IMPROVEMENT, status: DevTaskStatus.TODO, priority: Priority.LOW, productId: yarukoto.id },
+          { title: "タスク並び替えのドラッグ操作をモバイル対応", description: "スマホでのドラッグ&ドロップが動作しない。@dnd-kit の touch センサーを追加する。", type: DevTaskType.BUG, status: DevTaskStatus.TODO, priority: Priority.MEDIUM, productId: yarukoto.id },
+          { title: "ダッシュボードの初回読み込み高速化", description: "初回レンダリングで全タスクを取得しているのを、当日分のみに絞り込む。", type: DevTaskType.IMPROVEMENT, status: DevTaskStatus.DONE, priority: Priority.MEDIUM, productId: yarukoto.id },
+          { title: "タスク削除の確認ダイアログを追加", description: "誤削除防止のため削除前に確認ダイアログを表示する。", type: DevTaskType.IMPROVEMENT, status: DevTaskStatus.DONE, priority: Priority.LOW, productId: yarukoto.id },
+        ],
+      });
+      console.log("  ✅ DevTask 作成: Yarukoto (7件)");
+    } else {
+      console.log("  ⏭️  DevTask スキップ（既存）: Yarukoto");
+    }
+  }
+
+  // DevTask サンプルデータ（Peak Log プロダクトに紐付け）
+  const peakLog = await prisma.product.findUnique({ where: { slug: "peak-log" } });
+  if (peakLog) {
+    const existingTasks = await prisma.devTask.count({ where: { productId: peakLog.id } });
+    if (existingTasks === 0) {
+      await prisma.devTask.createMany({
+        data: [
+          { title: "月別統計グラフの追加", description: "アクティビティ別の月次集計をグラフで表示する。recharts を使用予定。", type: DevTaskType.FEATURE, status: DevTaskStatus.TODO, priority: Priority.HIGH, productId: peakLog.id },
+          { title: "アクティビティのアーカイブ機能", description: "使わなくなったアクティビティを非表示にできるアーカイブ機能を実装する。", type: DevTaskType.FEATURE, status: DevTaskStatus.IN_PROGRESS, priority: Priority.MEDIUM, productId: peakLog.id },
+          { title: "余韻入力後に一覧へスムーズに戻る", description: "余韻を保存した後、スクロール位置を保持したまま一覧に戻れるようにする。", type: DevTaskType.IMPROVEMENT, status: DevTaskStatus.TODO, priority: Priority.LOW, productId: peakLog.id },
+          { title: "ログ記録日時の編集機能", description: "記録後に performed_at を修正できるダイアログを追加する。", type: DevTaskType.FEATURE, status: DevTaskStatus.DONE, priority: Priority.HIGH, productId: peakLog.id },
+        ],
+      });
+      console.log("  ✅ DevTask 作成: Peak Log (4件)");
+    } else {
+      console.log("  ⏭️  DevTask スキップ（既存）: Peak Log");
+    }
   }
 
   console.log("✨ シード完了");

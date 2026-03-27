@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "screenshots": "tsx scripts/screenshots/take-screenshots.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -46,6 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "playwright": "^1.58.2",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
