@@ -7,6 +7,9 @@ import { prisma } from "./prisma";
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   emailAndPassword: { enabled: true },
+  session: {
+    expiresIn: 60 * 60 * 24 * 90, // 90日（秒単位）
+  },
 });
 
 export async function requireAuth() {
