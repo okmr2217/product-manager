@@ -87,6 +87,56 @@ export async function setThumbnail(imageId: string, productId: string): Promise<
   return { success: true };
 }
 
+export async function updateImageAlt(imageId: string, alt: string): Promise<ActionResult> {
+  await requireAuth();
+
+  try {
+    const image = await prisma.productImage.findUniqueOrThrow({
+      where: { id: imageId },
+      include: { product: true },
+    });
+
+    await prisma.productImage.update({
+      where: { id: imageId },
+      data: { alt: alt.trim() || null },
+    });
+
+    revalidatePath(`/products/${image.product.slug}/images`);
+  } catch {
+    return { success: false, error: "名前の変更に失敗しました" };
+  }
+
+  return { success: true };
+}
+
+export async function replaceImage(imageId: string, newUrl: string): Promise<ActionResult> {
+  await requireAuth();
+
+  try {
+    const image = await prisma.productImage.findUniqueOrThrow({
+      where: { id: imageId },
+      include: { product: true },
+    });
+
+    const storageBaseUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/`;
+    if (image.url.startsWith(storageBaseUrl)) {
+      const filePath = image.url.slice(storageBaseUrl.length);
+      await supabaseAdmin.storage.from("product-images").remove([filePath]);
+    }
+
+    await prisma.productImage.update({
+      where: { id: imageId },
+      data: { url: newUrl },
+    });
+
+    revalidatePath(`/products/${image.product.slug}/images`);
+  } catch {
+    return { success: false, error: "画像の変更に失敗しました" };
+  }
+
+  return { success: true };
+}
+
 export async function reorderImages(productId: string, orderedIds: string[]): Promise<ActionResult> {
   await requireAuth();
 

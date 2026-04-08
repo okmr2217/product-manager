@@ -17,6 +17,8 @@ interface ImageType {
   alt: string | null;
   isThumbnail: boolean;
   sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface SortableItemProps {
@@ -93,7 +95,7 @@ export function ImageGrid({ images: initialImages, productId }: ImageGridProps) 
   }
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext id="image-grid-dnd" sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={images.map((img) => img.id)} strategy={rectSortingStrategy}>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {images.map((image) => (

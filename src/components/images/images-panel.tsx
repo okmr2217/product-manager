@@ -12,6 +12,8 @@ interface Image {
   alt: string | null;
   isThumbnail: boolean;
   sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface ImagesPanelProps {
