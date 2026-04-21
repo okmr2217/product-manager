@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
-import type { ProductStatus, ProductCategory } from "@prisma/client";
+import type { Product, ProductImage, ProductStatus, ProductCategory } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/lib/button-variants";
 import { PageHeader } from "@/components/layout/page-header";
-import { ProductCard } from "@/components/products/product-card";
+import { DashboardView } from "@/components/products/dashboard-view";
 import { StatusFilter } from "@/components/filters/status-filter";
 import { CategoryFilter } from "@/components/filters/category-filter";
 import { SortSelect } from "@/components/filters/sort-select";
@@ -16,18 +16,33 @@ export const metadata: Metadata = {
   title: "ダッシュボード",
 };
 
-const VALID_SORT = ["sortOrder", "updatedAt", "name", "releaseDate"] as const;
+type ProductWithThumbnail = Product & { images: Pick<ProductImage, "url" | "alt">[] };
+
+const VALID_SORT = ["sortOrder", "updatedAt", "name", "releaseDate", "latestRelease"] as const;
 type SortKey = (typeof VALID_SORT)[number];
 
-async function getProducts(status: ProductStatus | null, category: ProductCategory | null, sort: SortKey) {
+async function getProducts(status: ProductStatus | null, category: ProductCategory | null, sort: SortKey): Promise<ProductWithThumbnail[]> {
+  const where = {
+    ...(status ? { status } : {}),
+    ...(category ? { category } : {}),
+  };
+
+  if (sort === "latestRelease") {
+    const rows = await prisma.product.findMany({
+      where,
+      include: {
+        images: { where: { isThumbnail: true }, take: 1 },
+        releases: { orderBy: { releaseDate: "desc" }, take: 1, select: { releaseDate: true } },
+      },
+    });
+    return rows
+      .sort((a, b) => (b.releases[0]?.releaseDate?.getTime() ?? 0) - (a.releases[0]?.releaseDate?.getTime() ?? 0))
+      .map(({ releases: _, ...product }) => product);
+  }
+
   return prisma.product.findMany({
-    where: {
-      ...(status ? { status } : {}),
-      ...(category ? { category } : {}),
-    },
-    include: {
-      images: { where: { isThumbnail: true }, take: 1 },
-    },
+    where,
+    include: { images: { where: { isThumbnail: true }, take: 1 } },
     orderBy: sort === "releaseDate" ? [{ releaseDate: "desc" }, { sortOrder: "asc" }] : { [sort]: sort === "name" || sort === "sortOrder" ? "asc" : "desc" },
   });
 }
@@ -82,11 +97,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <DashboardView products={products} />
       )}
     </div>
   );

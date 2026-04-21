@@ -8,6 +8,7 @@ const SORT_OPTIONS = [
   { value: "updatedAt", label: "更新日順" },
   { value: "name", label: "名前順" },
   { value: "releaseDate", label: "リリース日順" },
+  { value: "latestRelease", label: "最新リリース順" },
 ] as const;
 
 export function SortSelect() {
