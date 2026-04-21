@@ -35,7 +35,7 @@ export default function LoginPage() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Product Manager</CardTitle>
+        <CardTitle className="text-2xl">Launchpad</CardTitle>
         <CardDescription>メールアドレスとパスワードでログイン</CardDescription>
       </CardHeader>
       <CardContent>

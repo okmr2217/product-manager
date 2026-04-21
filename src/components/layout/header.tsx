@@ -31,7 +31,7 @@ export function Header({ products }: HeaderProps) {
           <Sidebar products={products} />
         </SheetContent>
       </Sheet>
-      <span className="ml-3 text-sm font-semibold text-slate-900">Product Manager</span>
+      <span className="ml-3 text-sm font-semibold text-slate-900">Launchpad</span>
     </header>
   );
 }

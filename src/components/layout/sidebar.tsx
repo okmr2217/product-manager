@@ -47,7 +47,7 @@ export function Sidebar({ products }: SidebarProps) {
       <div className="p-4">
         <Link href="/dashboard" className="block">
           <span className="text-base font-semibold text-slate-900 hover:text-slate-700 transition-colors">
-            Product Manager
+            Launchpad
           </span>
         </Link>
       </div>
