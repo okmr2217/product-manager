@@ -5,26 +5,45 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageUpload } from "./image-upload";
 import { ImageGrid } from "./image-grid";
-
-interface Image {
-  id: string;
-  url: string;
-  alt: string | null;
-  isThumbnail: boolean;
-  sortOrder: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { ImageData } from "@/types";
+import type { DeviceType } from "@prisma/client";
 
 interface ImagesPanelProps {
-  images: Image[];
+  images: ImageData[];
   productId: string;
 }
 
-export function ImagesPanel({ images, productId }: ImagesPanelProps) {
+export function ImagesPanel({ images: initialImages, productId }: ImagesPanelProps) {
+  const [images, setImages] = useState<ImageData[]>(initialImages);
   const [showUpload, setShowUpload] = useState(false);
 
-  const gridKey = images.map((img) => img.id + img.isThumbnail).join(",");
+  const handleImageAdded = (image: ImageData) => {
+    setImages((prev) => [...prev, image]);
+  };
+
+  const handleDelete = (id: string) => {
+    setImages((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  const handleRename = (id: string, newAlt: string | null) => {
+    setImages((prev) => prev.map((img) => (img.id === id ? { ...img, alt: newAlt } : img)));
+  };
+
+  const handleSetThumbnail = (id: string) => {
+    setImages((prev) => prev.map((img) => ({ ...img, isThumbnail: img.id === id })));
+  };
+
+  const handleDeviceTypeChange = (id: string, newType: DeviceType) => {
+    setImages((prev) => prev.map((img) => (img.id === id ? { ...img, deviceType: newType } : img)));
+  };
+
+  const handleReplace = (id: string, newUrl: string) => {
+    setImages((prev) => prev.map((img) => (img.id === id ? { ...img, url: newUrl } : img)));
+  };
+
+  const handleReorder = (newImages: ImageData[]) => {
+    setImages(newImages);
+  };
 
   return (
     <div className="space-y-4">
@@ -42,10 +61,20 @@ export function ImagesPanel({ images, productId }: ImagesPanelProps) {
           productId={productId}
           nextSortOrder={images.length}
           onClose={() => setShowUpload(false)}
+          onImageAdded={handleImageAdded}
         />
       )}
 
-      <ImageGrid key={gridKey} images={images} productId={productId} />
+      <ImageGrid
+        images={images}
+        productId={productId}
+        onDelete={handleDelete}
+        onRename={handleRename}
+        onSetThumbnail={handleSetThumbnail}
+        onDeviceTypeChange={handleDeviceTypeChange}
+        onReplace={handleReplace}
+        onReorder={handleReorder}
+      />
     </div>
   );
 }

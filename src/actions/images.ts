@@ -4,11 +4,13 @@ import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { supabaseAdmin } from "@/lib/supabase";
-import { imageRecordSchema } from "@/schemas/image";
-import type { ActionResult } from "@/types";
-import type { ImageRecordInput } from "@/schemas/image";
+import { imageRecordSchema, deviceTypeSchema } from "@/schemas/image";
+import type { ActionResult, ImageData } from "@/types";
+import type { ImageRecordInput, DeviceTypeInput } from "@/schemas/image";
 
-export async function createImageRecord(productId: string, data: ImageRecordInput): Promise<ActionResult> {
+type ImageCreateResult = ActionResult & { image?: ImageData };
+
+export async function createImageRecord(productId: string, data: ImageRecordInput): Promise<ImageCreateResult> {
   await requireAuth();
 
   const result = imageRecordSchema.safeParse(data);
@@ -19,22 +21,33 @@ export async function createImageRecord(productId: string, data: ImageRecordInpu
   try {
     const product = await prisma.product.findUniqueOrThrow({ where: { id: productId } });
 
-    await prisma.productImage.create({
+    const created = await prisma.productImage.create({
       data: {
         url: result.data.url,
         alt: result.data.alt,
         isThumbnail: result.data.isThumbnail,
         sortOrder: result.data.sortOrder,
+        deviceType: result.data.deviceType,
         productId,
       },
     });
 
     revalidatePath(`/products/${product.slug}/images`);
+    return {
+      success: true,
+      image: {
+        id: created.id,
+        url: created.url,
+        alt: created.alt,
+        isThumbnail: created.isThumbnail,
+        deviceType: created.deviceType,
+        createdAt: created.createdAt,
+        updatedAt: created.updatedAt,
+      },
+    };
   } catch {
     return { success: false, error: "画像の登録に失敗しました" };
   }
-
-  return { success: true };
 }
 
 export async function deleteImage(imageId: string): Promise<ActionResult> {
@@ -132,6 +145,33 @@ export async function replaceImage(imageId: string, newUrl: string): Promise<Act
     revalidatePath(`/products/${image.product.slug}/images`);
   } catch {
     return { success: false, error: "画像の変更に失敗しました" };
+  }
+
+  return { success: true };
+}
+
+export async function updateImageDeviceType(imageId: string, deviceType: DeviceTypeInput): Promise<ActionResult> {
+  await requireAuth();
+
+  const result = deviceTypeSchema.safeParse(deviceType);
+  if (!result.success) {
+    return { success: false, error: "無効なデバイス種別です" };
+  }
+
+  try {
+    const image = await prisma.productImage.findUniqueOrThrow({
+      where: { id: imageId },
+      include: { product: true },
+    });
+
+    await prisma.productImage.update({
+      where: { id: imageId },
+      data: { deviceType: result.data },
+    });
+
+    revalidatePath(`/products/${image.product.slug}/images`);
+  } catch {
+    return { success: false, error: "デバイス種別の変更に失敗しました" };
   }
 
   return { success: true };

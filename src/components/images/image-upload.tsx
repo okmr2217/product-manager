@@ -7,17 +7,36 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useUpload } from "@/hooks/use-upload";
 import { createImageRecord } from "@/actions/images";
+import type { ImageData } from "@/types";
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+
+function detectDeviceType(file: File): Promise<"PC" | "MOBILE" | "OTHER"> {
+  return new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const ratio = img.naturalWidth / img.naturalHeight;
+      resolve(ratio > 1 ? "PC" : ratio < 1 ? "MOBILE" : "PC");
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve("PC");
+    };
+    img.src = objectUrl;
+  });
+}
 
 interface ImageUploadProps {
   productId: string;
   nextSortOrder: number;
   onClose: () => void;
+  onImageAdded: (image: ImageData) => void;
 }
 
-export function ImageUpload({ productId, nextSortOrder, onClose }: ImageUploadProps) {
+export function ImageUpload({ productId, nextSortOrder, onClose, onImageAdded }: ImageUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,17 +71,21 @@ export function ImageUpload({ productId, nextSortOrder, onClose }: ImageUploadPr
         continue;
       }
 
+      const deviceType = await detectDeviceType(file);
+
       const actionResult = await createImageRecord(productId, {
         url: uploadResult.url,
         isThumbnail: false,
         sortOrder: order++,
+        deviceType,
       });
 
-      if (!actionResult.success) {
+      if (!actionResult.success || !actionResult.image) {
         toast.error(actionResult.error ?? "画像の登録に失敗しました");
         continue;
       }
 
+      onImageAdded(actionResult.image);
       successCount++;
     }
 

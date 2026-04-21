@@ -99,15 +99,22 @@ enum ProductStatus {
 }
 
 model ProductImage {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   url         String
   alt         String?
-  isThumbnail Boolean  @default(false)
-  sortOrder   Int      @default(0)
+  isThumbnail Boolean    @default(false)
+  sortOrder   Int        @default(0)
+  deviceType  DeviceType @default(PC)
   productId   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum DeviceType {
+  PC
+  MOBILE
+  OTHER
 }
 
 model Release {

@@ -1,4 +1,4 @@
-import type { ProductStatus, ProductCategory, ReleaseType, DevTaskType, DevTaskStatus, Priority } from "@prisma/client";
+import type { ProductStatus, ProductCategory, ReleaseType, DevTaskType, DevTaskStatus, Priority, DeviceType } from "@prisma/client";
 
 export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
   IDEA: "構想中",
@@ -87,6 +87,20 @@ export const PRIORITY_COLORS: Record<Priority, string> = {
   MEDIUM: "bg-yellow-100 text-yellow-700",
   LOW: "bg-slate-100 text-slate-700",
 };
+
+export const DEVICE_TYPE_LABELS: Record<DeviceType, string> = {
+  PC: "PC",
+  MOBILE: "Mobile",
+  OTHER: "Other",
+};
+
+export const DEVICE_TYPE_COLORS: Record<DeviceType, string> = {
+  PC: "bg-slate-100 text-slate-700 border-slate-200",
+  MOBILE: "bg-blue-50 text-blue-700 border-blue-200",
+  OTHER: "bg-slate-100 text-slate-700 border-slate-200",
+};
+
+export const DEVICE_TYPE_ORDER: DeviceType[] = ["PC", "MOBILE", "OTHER"];
 
 export const STACK_SUGGESTIONS = [
   "Next.js",
