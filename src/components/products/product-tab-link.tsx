@@ -20,14 +20,23 @@ export function ProductTabLink({ label, href, basePath, isExact, count }: Props)
     <Link
       href={href}
       className={cn(
-        "px-4 py-2 text-sm font-medium border-b-2 -mb-px whitespace-nowrap transition-colors flex items-center gap-1.5",
+        "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap transition-all",
         isActive
-          ? "border-primary text-primary"
-          : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+          ? "bg-background text-foreground shadow-sm border border-border"
+          : "text-muted-foreground hover:text-foreground hover:bg-background/60"
       )}
     >
       {label}
-      {count !== undefined && <span className="text-xs tabular-nums opacity-60">{count}</span>}
+      {count !== undefined && (
+        <span
+          className={cn(
+            "text-xs font-medium px-1.5 py-0.5 rounded-full tabular-nums",
+            isActive ? "bg-primary/10 text-primary" : "bg-muted-foreground/15 text-muted-foreground"
+          )}
+        >
+          {count}
+        </span>
+      )}
     </Link>
   );
 }

@@ -25,7 +25,7 @@ export async function ProductTabs({ slug, productId }: { slug: string; productId
   const basePath = `/products/${slug}`;
 
   return (
-    <div className="flex gap-0 border-b overflow-x-auto">
+    <div className="flex gap-1 p-1 bg-muted rounded-lg mb-4 overflow-x-auto">
       {tabs.map(({ label, path, count }) => (
         <ProductTabLink
           key={path}
