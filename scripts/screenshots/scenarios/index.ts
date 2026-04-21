@@ -33,6 +33,15 @@ export async function runPcScenarios(page: Page): Promise<void> {
     console.error('❌ product-detail-overview failed:', e);
   }
 
+  // product-detail-info
+  try {
+    await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/info`);
+    await page.waitForLoadState('networkidle');
+    await capture(page, 'product-detail-info', 'pc');
+  } catch (e) {
+    console.error('❌ product-detail-info failed:', e);
+  }
+
   // product-detail-tasks
   try {
     await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/tasks`);
@@ -67,20 +76,6 @@ export async function runPcScenarios(page: Page): Promise<void> {
     await capture(page, 'product-detail-history', 'pc');
   } catch (e) {
     console.error('❌ product-detail-history failed:', e);
-  }
-
-  // status-change-dialog
-  try {
-    await page.goto(`${BASE_URL}/products/${DEMO_SLUG}`);
-    await page.waitForLoadState('networkidle');
-    const statusBtn = page.locator('button:has-text("ステータス")').first();
-    await statusBtn.click();
-    await page.waitForTimeout(300);
-    await capture(page, 'status-change-dialog', 'pc');
-    await page.keyboard.press('Escape');
-    await page.waitForTimeout(200);
-  } catch (e) {
-    console.error('❌ status-change-dialog failed:', e);
   }
 
   // delete-confirm-dialog
@@ -120,6 +115,18 @@ export async function runPcScenarios(page: Page): Promise<void> {
     console.error('❌ release-new-form failed:', e);
   }
 
+  // release-edit-form
+  try {
+    await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/releases`);
+    await page.waitForLoadState('networkidle');
+    const editBtn = page.locator('a[href*="/releases/"][href*="/edit"]').first();
+    await editBtn.click();
+    await page.waitForLoadState('networkidle');
+    await capture(page, 'release-edit-form', 'pc');
+  } catch (e) {
+    console.error('❌ release-edit-form failed:', e);
+  }
+
   // task-new-form
   try {
     await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/tasks/new`);
@@ -127,6 +134,18 @@ export async function runPcScenarios(page: Page): Promise<void> {
     await capture(page, 'task-new-form', 'pc');
   } catch (e) {
     console.error('❌ task-new-form failed:', e);
+  }
+
+  // task-edit-form
+  try {
+    await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/tasks`);
+    await page.waitForLoadState('networkidle');
+    const editBtn = page.locator('a[href*="/tasks/"][href*="/edit"]').first();
+    await editBtn.click();
+    await page.waitForLoadState('networkidle');
+    await capture(page, 'task-edit-form', 'pc');
+  } catch (e) {
+    console.error('❌ task-edit-form failed:', e);
   }
 }
 
@@ -168,5 +187,13 @@ export async function runLoginScenario(page: Page): Promise<void> {
     await capture(page, 'login', 'pc');
   } catch (e) {
     console.error('❌ login failed:', e);
+  }
+
+  try {
+    await page.goto(`${BASE_URL}/signup`);
+    await page.waitForLoadState('networkidle');
+    await capture(page, 'signup', 'pc');
+  } catch (e) {
+    console.error('❌ signup failed:', e);
   }
 }
