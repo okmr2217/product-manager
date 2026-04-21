@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, Rocket } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "./sidebar";
 import type { ProductStatus } from "@prisma/client";
@@ -31,7 +31,12 @@ export function Header({ products }: HeaderProps) {
           <Sidebar products={products} />
         </SheetContent>
       </Sheet>
-      <span className="ml-3 text-sm font-semibold text-slate-900">Launchpad</span>
+      <div className="ml-3 flex items-center gap-2">
+        <span className="flex size-6 items-center justify-center rounded-md bg-indigo-600">
+          <Rocket className="size-3.5 text-white" />
+        </span>
+        <span className="text-sm font-semibold text-slate-900">Launchpad</span>
+      </div>
     </header>
   );
 }

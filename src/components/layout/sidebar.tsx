@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Plus } from "lucide-react";
+import { LayoutDashboard, Plus, Rocket } from "lucide-react";
 import type { ProductStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { PRODUCT_STATUS_DOT_COLORS } from "@/constants";
@@ -42,26 +42,29 @@ export function Sidebar({ products }: SidebarProps) {
   }
 
   return (
-    <aside className="flex h-full w-full flex-col bg-slate-50 border-r border-slate-200">
+    <aside className="flex h-full w-full flex-col bg-slate-900 border-r border-slate-700/50">
       {/* アプリ名 */}
       <div className="p-4">
-        <Link href="/dashboard" className="block">
-          <span className="text-base font-semibold text-slate-900 hover:text-slate-700 transition-colors">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <span className="flex size-7 items-center justify-center rounded-md bg-indigo-600">
+            <Rocket className="size-4 text-white" />
+          </span>
+          <span className="text-base font-semibold text-white hover:text-slate-200 transition-colors">
             Launchpad
           </span>
         </Link>
       </div>
 
-      <Separator />
+      <Separator className="bg-slate-700/50" />
 
       {/* ナビゲーション */}
-      <nav className="flex-1 overflow-y-auto p-2">
+      <nav className="flex-1 overflow-y-auto p-2 [scrollbar-width:thin] [scrollbar-color:theme(colors.slate.700)_transparent] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-700">
         {/* ダッシュボード */}
         <Link
           href="/dashboard"
           className={cn(
             "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-            isDashboardActive ? "bg-slate-200 text-slate-900" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            isDashboardActive ? "bg-slate-800 text-white" : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
           )}
         >
           <LayoutDashboard className="size-4 shrink-0" />
@@ -70,12 +73,12 @@ export function Sidebar({ products }: SidebarProps) {
 
         {/* プロダクトセクション */}
         <div className="mt-4 mb-1 px-3">
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">プロダクト</span>
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">プロダクト</span>
         </div>
-        <Separator className="mb-1" />
+        <Separator className="mb-1 bg-slate-700/50" />
 
         {products.length === 0 ? (
-          <p className="px-3 py-2 text-xs text-slate-400">プロダクトがありません</p>
+          <p className="px-3 py-2 text-xs text-slate-500">プロダクトがありません</p>
         ) : (
           <ul className="space-y-0.5">
             {products.map((product) => {
@@ -86,7 +89,7 @@ export function Sidebar({ products }: SidebarProps) {
                     href={getProductHref(product.slug)}
                     className={cn(
                       "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
-                      isActive ? "bg-slate-200 text-slate-900 font-medium" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      isActive ? "bg-slate-800 text-white font-medium" : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
                     )}
                   >
                     <span className={cn("size-2 shrink-0 rounded-full", PRODUCT_STATUS_DOT_COLORS[product.status])} />
@@ -101,21 +104,21 @@ export function Sidebar({ products }: SidebarProps) {
 
       {/* 下部 */}
       <div className="p-2 space-y-1">
-        <Separator className="mb-2" />
+        <Separator className="mb-2 bg-slate-700/50" />
 
         <Link
           href="/products/new"
-          className="flex w-full items-center justify-start gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+          className="flex w-full items-center justify-start gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-slate-800/60 hover:text-slate-200"
         >
           <Plus className="size-4" />
           新規作成
         </Link>
 
-        <Separator className="my-2" />
+        <Separator className="my-2 bg-slate-700/50" />
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900">
-            <span className="size-6 rounded-full bg-slate-300 flex items-center justify-center text-xs font-medium text-slate-700 shrink-0">
+          <DropdownMenuTrigger className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-slate-400 transition-colors hover:bg-slate-800/60 hover:text-slate-200">
+            <span className="size-6 rounded-full bg-slate-700 flex items-center justify-center text-xs font-medium text-slate-300 shrink-0">
               {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
             </span>
             <span className="truncate">{session?.user?.name ?? session?.user?.email ?? "ユーザー"}</span>
