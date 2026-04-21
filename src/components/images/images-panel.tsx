@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ImageUpload } from "./image-upload";
 import { ImageGrid } from "./image-grid";
 import type { ImageData } from "@/types";
@@ -15,7 +13,6 @@ interface ImagesPanelProps {
 
 export function ImagesPanel({ images: initialImages, productId }: ImagesPanelProps) {
   const [images, setImages] = useState<ImageData[]>(initialImages);
-  const [showUpload, setShowUpload] = useState(false);
 
   const handleImageAdded = (image: ImageData) => {
     setImages((prev) => [...prev, image]);
@@ -47,23 +44,11 @@ export function ImagesPanel({ images: initialImages, productId }: ImagesPanelPro
 
   return (
     <div className="space-y-4">
-      {!showUpload && (
-        <div>
-          <Button size="sm" onClick={() => setShowUpload(true)}>
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            画像をアップロード
-          </Button>
-        </div>
-      )}
-
-      {showUpload && (
-        <ImageUpload
-          productId={productId}
-          nextSortOrder={images.length}
-          onClose={() => setShowUpload(false)}
-          onImageAdded={handleImageAdded}
-        />
-      )}
+      <ImageUpload
+        productId={productId}
+        nextSortOrder={images.length}
+        onImageAdded={handleImageAdded}
+      />
 
       <ImageGrid
         images={images}

@@ -5,7 +5,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { SortableContext, sortableKeyboardCoordinates, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { GripVertical, ChevronLeft, ChevronRight, Star, Pencil, Trash2, ImageIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Pencil, Trash2, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { reorderImages, setThumbnail, updateImageAlt, deleteImage, replaceImage } from "@/actions/images";
@@ -60,16 +60,10 @@ function SortableItem({ image, productId, onPreviewClick, onDelete, onRename, on
     <div
       ref={setNodeRef}
       style={style}
-      className={cn("relative", isDragging && "z-50 opacity-50")}
+      {...attributes}
+      {...listeners}
+      className={cn("relative cursor-grab active:cursor-grabbing touch-none", isDragging && "z-50 opacity-50")}
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute top-1 left-1 z-10 cursor-grab active:cursor-grabbing p-0.5 rounded bg-black/20 hover:bg-black/30 transition-colors"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <GripVertical className="h-3.5 w-3.5 text-white" />
-      </div>
       <ImageCard
         image={image}
         productId={productId}

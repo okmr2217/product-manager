@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, X } from "lucide-react";
+import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { useUpload } from "@/hooks/use-upload";
 import { createImageRecord } from "@/actions/images";
 import type { ImageData } from "@/types";
@@ -32,11 +31,10 @@ function detectDeviceType(file: File): Promise<"PC" | "MOBILE" | "OTHER"> {
 interface ImageUploadProps {
   productId: string;
   nextSortOrder: number;
-  onClose: () => void;
   onImageAdded: (image: ImageData) => void;
 }
 
-export function ImageUpload({ productId, nextSortOrder, onClose, onImageAdded }: ImageUploadProps) {
+export function ImageUpload({ productId, nextSortOrder, onImageAdded }: ImageUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -93,7 +91,6 @@ export function ImageUpload({ productId, nextSortOrder, onClose, onImageAdded }:
 
     if (successCount > 0) {
       toast.success(`${successCount}件の画像をアップロードしました`);
-      onClose();
     }
   };
 
@@ -110,55 +107,46 @@ export function ImageUpload({ productId, nextSortOrder, onClose, onImageAdded }:
   };
 
   return (
-    <div className="space-y-3">
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragOver(true);
-        }}
-        onDragLeave={() => setIsDragOver(false)}
-        onDrop={handleDrop}
-        onClick={() => !isUploading && fileInputRef.current?.click()}
-        className={cn(
-          "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
-          isDragOver ? "border-primary bg-primary/5" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
-          isUploading ? "pointer-events-none opacity-60 cursor-default" : "cursor-pointer"
-        )}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept={ACCEPTED_TYPES.join(",")}
-          onChange={handleFileChange}
-          className="hidden"
-        />
+    <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragOver(true);
+      }}
+      onDragLeave={() => setIsDragOver(false)}
+      onDrop={handleDrop}
+      onClick={() => !isUploading && fileInputRef.current?.click()}
+      className={cn(
+        "border-2 border-dashed rounded-lg p-5 text-center transition-colors",
+        isDragOver ? "border-primary bg-primary/5" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+        isUploading ? "pointer-events-none opacity-60 cursor-default" : "cursor-pointer"
+      )}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept={ACCEPTED_TYPES.join(",")}
+        onChange={handleFileChange}
+        className="hidden"
+      />
 
-        <Upload className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+      <Upload className="h-6 w-6 text-slate-400 mx-auto mb-1.5" />
 
-        {isUploading ? (
-          <div>
-            <p className="text-sm text-slate-600 mb-2">アップロード中...</p>
-            <ul className="text-xs text-slate-400 space-y-0.5">
-              {uploadingFiles.map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <>
-            <p className="text-sm text-slate-600">ドラッグ&ドロップまたはクリックしてファイルを選択</p>
-            <p className="text-xs text-slate-400 mt-1">PNG, JPEG, WebP, GIF（最大5MB）・複数選択可</p>
-          </>
-        )}
-      </div>
-
-      <div className="flex justify-end">
-        <Button variant="outline" size="sm" onClick={onClose} disabled={isUploading}>
-          <X className="h-3.5 w-3.5 mr-1" />
-          閉じる
-        </Button>
-      </div>
+      {isUploading ? (
+        <div>
+          <p className="text-sm text-slate-600 mb-1">アップロード中...</p>
+          <ul className="text-xs text-slate-400 space-y-0.5">
+            {uploadingFiles.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <>
+          <p className="text-sm text-slate-600">ドラッグ&ドロップまたはクリックして画像を追加</p>
+          <p className="text-xs text-slate-400 mt-0.5">PNG, JPEG, WebP, GIF（最大5MB）・複数選択可</p>
+        </>
+      )}
     </div>
   );
 }
