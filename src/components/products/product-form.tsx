@@ -47,7 +47,7 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
 
   const [category, setCategory] = useState<string>(initialData?.category ?? "");
   const [releaseDate, setReleaseDate] = useState<Date | undefined>(
-    initialData?.releaseDate ? new Date(initialData.releaseDate) : undefined
+    initialData?.releaseDate ? new Date(initialData.releaseDate) : new Date()
   );
   const [stacks, setStacks] = useState<string[]>(initialData?.stacks ?? []);
   const [stackInput, setStackInput] = useState("");

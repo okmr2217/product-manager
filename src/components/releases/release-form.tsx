@@ -43,10 +43,10 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
   const [state, formAction, isPending] = useActionState(action, null);
 
   const [releaseDate, setReleaseDate] = useState<Date | undefined>(
-    initialData?.releaseDate ? new Date(initialData.releaseDate) : undefined
+    initialData?.releaseDate ? new Date(initialData.releaseDate) : new Date()
   );
   const [type, setType] = useState<string>(initialData?.type ?? "");
-  const [isDraft, setIsDraft] = useState(initialData?.isDraft ?? true);
+  const [isDraft, setIsDraft] = useState(initialData?.isDraft ?? false);
 
   useEffect(() => {
     if (state?.success === false && state.error) {
