@@ -16,6 +16,7 @@ export async function ProductTabs({ slug, productId }: { slug: string; productId
 
   const tabs = [
     { label: "概要", path: "" },
+    { label: "基本情報", path: "/info" },
     { label: "タスク", path: "/tasks", count: taskCount },
     { label: "画像", path: "/images", count: imageCount },
     { label: "リリースノート", path: "/releases", count: releaseCount },

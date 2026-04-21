@@ -8,7 +8,6 @@ import type { ProductCategory } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/lib/button-variants";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -36,6 +35,17 @@ interface ProductFormProps {
   initialData?: InitialData;
   existingStacks?: string[];
   cancelHref: string;
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">{children}</p>
+  );
+}
+
+function FieldError({ message }: { message: string | undefined }) {
+  if (!message) return null;
+  return <p className="text-xs text-red-500 mt-1">{message}</p>;
 }
 
 export function ProductForm({ action, initialData, existingStacks = [], cancelHref }: ProductFormProps) {
@@ -74,73 +84,64 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
   const fieldError = (field: string) => state?.fieldErrors?.[field]?.[0];
 
   return (
-    <form action={formAction} className="space-y-5 max-w-2xl">
-      {/* Hidden inputs for controlled fields */}
+    <form action={formAction} className="space-y-6 max-w-2xl">
+      {/* Hidden inputs */}
       <input type="hidden" name="category" value={category} />
       {stacks.map((stack) => (
         <input key={stack} type="hidden" name="stacks" value={stack} />
       ))}
       <input type="hidden" name="isPublic" value={isPublic ? "true" : "false"} />
 
-      {/* Name */}
-      <div className="space-y-1.5">
-        <Label htmlFor="name">
-          プロダクト名 <span className="text-red-500">*</span>
-        </Label>
-        <Input id="name" name="name" defaultValue={initialData?.name} className="max-w-sm" />
-        {fieldError("name") && <p className="text-sm text-red-500">{fieldError("name")}</p>}
+      {/* Name + Slug */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <FieldLabel>プロダクト名 <span className="text-red-400 normal-case">*</span></FieldLabel>
+          <Input id="name" name="name" defaultValue={initialData?.name} />
+          <FieldError message={fieldError("name")} />
+        </div>
+        <div>
+          <FieldLabel>スラッグ <span className="text-red-400 normal-case">*</span></FieldLabel>
+          <Input id="slug" name="slug" defaultValue={initialData?.slug} placeholder="例: my-product" />
+          <FieldError message={fieldError("slug")} />
+        </div>
       </div>
 
-      {/* Slug */}
-      <div className="space-y-1.5">
-        <Label htmlFor="slug">
-          スラッグ <span className="text-red-500">*</span>
-        </Label>
-        <Input id="slug" name="slug" defaultValue={initialData?.slug} placeholder="例: my-product" className="max-w-xs" />
-        <p className="text-xs text-muted-foreground">小文字英数字とハイフンのみ（例: yarukoto）</p>
-        {fieldError("slug") && <p className="text-sm text-red-500">{fieldError("slug")}</p>}
-      </div>
-
-      {/* Description */}
-      <div className="space-y-1.5">
-        <Label htmlFor="description">
-          概要説明 <span className="text-red-500">*</span>
-        </Label>
-        <Input id="description" name="description" defaultValue={initialData?.description} className="max-w-md" />
-        {fieldError("description") && <p className="text-sm text-red-500">{fieldError("description")}</p>}
+      {/* Description + Category */}
+      <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
+        <div>
+          <FieldLabel>概要説明 <span className="text-red-400 normal-case">*</span></FieldLabel>
+          <Input id="description" name="description" defaultValue={initialData?.description} />
+          <FieldError message={fieldError("description")} />
+        </div>
+        <div>
+          <FieldLabel>カテゴリ <span className="text-red-400 normal-case">*</span></FieldLabel>
+          <Select value={category} onValueChange={(value) => setCategory(value ?? "")}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="選択">
+                {category ? PRODUCT_CATEGORY_LABELS[category as ProductCategory] : undefined}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.entries(PRODUCT_CATEGORY_LABELS) as [ProductCategory, string][]).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FieldError message={fieldError("category")} />
+        </div>
       </div>
 
       {/* Long Description */}
-      <div className="space-y-1.5">
-        <Label htmlFor="longDescription">詳細説明</Label>
-        <Textarea id="longDescription" name="longDescription" rows={8} defaultValue={initialData?.longDescription ?? ""} />
-      </div>
-
-      {/* Category */}
-      <div className="space-y-1.5">
-        <Label>
-          カテゴリ <span className="text-red-500">*</span>
-        </Label>
-        <Select value={category} onValueChange={(value) => setCategory(value ?? "")}>
-          <SelectTrigger>
-            <SelectValue placeholder="カテゴリを選択">{category ? PRODUCT_CATEGORY_LABELS[category as ProductCategory] : undefined}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {(Object.entries(PRODUCT_CATEGORY_LABELS) as [ProductCategory, string][]).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {fieldError("category") && <p className="text-sm text-red-500">{fieldError("category")}</p>}
+      <div>
+        <FieldLabel>詳細説明</FieldLabel>
+        <Textarea id="longDescription" name="longDescription" rows={6} defaultValue={initialData?.longDescription ?? ""} />
       </div>
 
       {/* Stacks */}
-      <div className="space-y-1.5">
-        <Label>技術スタック</Label>
+      <div>
+        <FieldLabel>技術スタック</FieldLabel>
         {stacks.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 mb-2">
             {stacks.map((stack) => (
               <Badge key={stack} variant="secondary" className="gap-1 pr-1">
                 {stack}
@@ -154,16 +155,8 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         <div className="relative">
           <Input
             value={stackInput}
-            onChange={(e) => {
-              setStackInput(e.target.value);
-              setShowSuggestions(true);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addStack(stackInput);
-              }
-            }}
+            onChange={(e) => { setStackInput(e.target.value); setShowSuggestions(true); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addStack(stackInput); } }}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
             onFocus={() => setShowSuggestions(true)}
             placeholder="技術名を入力してEnterで追加"
@@ -180,44 +173,46 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         </div>
       </div>
 
-      {/* Repository URL */}
-      <div className="space-y-1.5">
-        <Label htmlFor="repositoryUrl">リポジトリURL</Label>
-        <Input id="repositoryUrl" name="repositoryUrl" type="url" defaultValue={initialData?.repositoryUrl ?? ""} placeholder="https://github.com/..." className="max-w-md" />
-        {fieldError("repositoryUrl") && <p className="text-sm text-red-500">{fieldError("repositoryUrl")}</p>}
-      </div>
-
-      {/* Product URL */}
-      <div className="space-y-1.5">
-        <Label htmlFor="productUrl">プロダクトURL</Label>
-        <Input id="productUrl" name="productUrl" type="url" defaultValue={initialData?.productUrl ?? ""} placeholder="https://..." className="max-w-md" />
-        {fieldError("productUrl") && <p className="text-sm text-red-500">{fieldError("productUrl")}</p>}
+      {/* URLs */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <FieldLabel>リポジトリURL</FieldLabel>
+          <Input id="repositoryUrl" name="repositoryUrl" type="url" defaultValue={initialData?.repositoryUrl ?? ""} placeholder="https://github.com/..." />
+          <FieldError message={fieldError("repositoryUrl")} />
+        </div>
+        <div>
+          <FieldLabel>プロダクトURL</FieldLabel>
+          <Input id="productUrl" name="productUrl" type="url" defaultValue={initialData?.productUrl ?? ""} placeholder="https://..." />
+          <FieldError message={fieldError("productUrl")} />
+        </div>
       </div>
 
       {/* Note */}
-      <div className="space-y-1.5">
-        <Label htmlFor="note">備考</Label>
-        <Textarea id="note" name="note" rows={6} defaultValue={initialData?.note ?? ""} placeholder="ホスティング情報、DBサービスなど" />
+      <div>
+        <FieldLabel>備考</FieldLabel>
+        <Textarea id="note" name="note" rows={4} defaultValue={initialData?.note ?? ""} placeholder="ホスティング情報、DBサービスなど" />
       </div>
 
-      {/* Sort Order */}
-      <div className="space-y-1.5">
-        <Label htmlFor="sortOrder">表示順</Label>
-        <Input id="sortOrder" name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} className="w-24" />
-      </div>
-
-      {/* isPublic */}
-      <div className="flex items-center gap-3">
-        <Switch id="isPublic" checked={isPublic} onCheckedChange={setIsPublic} />
-        <Label htmlFor="isPublic">ブログで公開する</Label>
+      {/* Sort Order + isPublic */}
+      <div className="flex items-center gap-8">
+        <div>
+          <FieldLabel>表示順</FieldLabel>
+          <Input id="sortOrder" name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} className="w-20" />
+        </div>
+        <div className="flex items-center gap-2.5 pt-5">
+          <Switch id="isPublic" checked={isPublic} onCheckedChange={setIsPublic} />
+          <p className="text-sm text-slate-700">ブログで公開する</p>
+        </div>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 pt-2">
-        <Link href={cancelHref} className={cn(buttonVariants({ variant: "outline" }))}>キャンセル</Link>
+      <div className="flex gap-2 pt-2 border-t border-slate-100">
         <Button type="submit" disabled={isPending}>
           {isPending ? "保存中..." : "保存"}
         </Button>
+        <Link href={cancelHref} className={cn(buttonVariants({ variant: "ghost" }))}>
+          キャンセル
+        </Link>
       </div>
     </form>
   );

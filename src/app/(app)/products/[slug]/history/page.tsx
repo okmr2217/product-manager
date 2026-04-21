@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { format } from "date-fns";
-import { Pencil } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { HistoryEditDialog } from "@/components/products/history-edit-dialog";
 import { HistoryDeleteButton } from "@/components/products/history-delete-button";
-import { DeleteDialog } from "@/components/products/delete-dialog";
+import { StatusChangeDialog } from "@/components/products/status-change-dialog";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_DOT_COLORS } from "@/constants";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -35,20 +32,16 @@ export default async function ProductHistoryPage({ params }: { params: Promise<{
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4 mb-6">
+      <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
-        <div className="flex gap-2 shrink-0">
-          <Link href={`/products/${slug}/edit`} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
-            <Pencil className="h-4 w-4 mr-1" />
-            編集
-          </Link>
-          <DeleteDialog product={{ id: product.id, name: product.name }} />
-        </div>
       </div>
       <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6 max-w-2xl">
-        <h2 className="text-sm font-medium text-slate-500 mb-4">ステータス変更履歴</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-medium text-slate-500">ステータス変更履歴</h2>
+          <StatusChangeDialog productId={product.id} currentStatus={product.status} />
+        </div>
 
         {product.statusHistory.length === 0 ? (
           <p className="text-sm text-slate-400">変更履歴はありません</p>

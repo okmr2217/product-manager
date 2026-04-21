@@ -5,9 +5,24 @@ import { Header } from "@/components/layout/header";
 import { Toaster } from "@/components/ui/sonner";
 
 async function getProducts() {
-  return prisma.product.findMany({
-    select: { id: true, name: true, slug: true, status: true },
-    orderBy: { sortOrder: "asc" },
+  const products = await prisma.product.findMany({
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      status: true,
+      releases: {
+        select: { releaseDate: true },
+        orderBy: { releaseDate: "desc" },
+        take: 1,
+      },
+    },
+  });
+
+  return products.sort((a, b) => {
+    const aDate = a.releases[0]?.releaseDate ?? new Date(0);
+    const bDate = b.releases[0]?.releaseDate ?? new Date(0);
+    return bDate.getTime() - aDate.getTime();
   });
 }
 
