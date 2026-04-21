@@ -1,30 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Star, Trash2, Pencil } from "lucide-react";
+import { Star } from "lucide-react";
 import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { deleteImage, setThumbnail, updateImageAlt, updateImageDeviceType } from "@/actions/images";
+import { setThumbnail, updateImageDeviceType } from "@/actions/images";
 import { DEVICE_TYPE_LABELS, DEVICE_TYPE_COLORS, DEVICE_TYPE_ORDER } from "@/constants";
 import type { ImageData } from "@/types";
 import type { DeviceType } from "@prisma/client";
@@ -35,42 +14,12 @@ interface ImageCardProps {
   image: ImageData;
   productId: string;
   onPreviewClick?: () => void;
-  onDelete: () => void;
-  onRename: (newAlt: string | null) => void;
   onSetThumbnail: () => void;
   onDeviceTypeChange: (newType: DeviceType) => void;
 }
 
-export function ImageCard({ image, productId, onPreviewClick, onDelete, onRename, onSetThumbnail, onDeviceTypeChange }: ImageCardProps) {
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [renameOpen, setRenameOpen] = useState(false);
-  const [altValue, setAltValue] = useState(image.alt ?? "");
+export function ImageCard({ image, productId, onPreviewClick, onSetThumbnail, onDeviceTypeChange }: ImageCardProps) {
   const [isPending, startTransition] = useTransition();
-
-  const handleDelete = () => {
-    startTransition(async () => {
-      const result = await deleteImage(image.id);
-      if (!result.success) {
-        toast.error(result.error ?? "削除に失敗しました");
-      } else {
-        onDelete();
-      }
-      setDeleteOpen(false);
-    });
-  };
-
-  const handleRename = () => {
-    startTransition(async () => {
-      const result = await updateImageAlt(image.id, altValue);
-      if (!result.success) {
-        toast.error(result.error ?? "名前の変更に失敗しました");
-      } else {
-        toast.success("名前を変更しました");
-        onRename(altValue.trim() || null);
-        setRenameOpen(false);
-      }
-    });
-  };
 
   const handleSetThumbnail = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -107,7 +56,7 @@ export function ImageCard({ image, productId, onPreviewClick, onDelete, onRename
     <div className="group rounded-lg overflow-hidden border bg-card">
       {/* Image */}
       <div
-        className="h-36 relative overflow-hidden bg-slate-100 flex items-center justify-center cursor-pointer"
+        className="h-48 relative overflow-hidden bg-slate-100 flex items-center justify-center cursor-pointer"
         onClick={onPreviewClick}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -147,71 +96,7 @@ export function ImageCard({ image, productId, onPreviewClick, onDelete, onRename
           </button>
           <span className="text-xs text-slate-400">{formatDate(image.createdAt)}</span>
         </div>
-
-        {/* Row 3: action buttons (hover only) */}
-        <div className="flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={isPending}
-            title="名前を変更"
-            onClick={(e) => {
-              e.stopPropagation();
-              setAltValue(image.alt ?? "");
-              setRenameOpen(true);
-            }}
-          >
-            <Pencil className="h-3.5 w-3.5 text-slate-400" />
-          </Button>
-
-          <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-            <AlertDialogTrigger render={<Button variant="ghost" size="icon-sm" />} onClick={(e) => e.stopPropagation()}>
-              <Trash2 className="h-3.5 w-3.5 text-slate-400" />
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>画像を削除しますか？</AlertDialogTitle>
-                <AlertDialogDescription>この操作は取り消せません。Storageからも削除されます。</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete} disabled={isPending} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                  {isPending ? "削除中..." : "削除する"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
       </div>
-
-      {/* Rename dialog */}
-      <Dialog open={renameOpen} onOpenChange={setRenameOpen}>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>名前を変更</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="alt-input">画像の名前（alt テキスト）</Label>
-            <Input
-              id="alt-input"
-              value={altValue}
-              onChange={(e) => setAltValue(e.target.value)}
-              placeholder="例: スクリーンショット"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !isPending) handleRename();
-              }}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRenameOpen(false)} disabled={isPending}>
-              キャンセル
-            </Button>
-            <Button onClick={handleRename} disabled={isPending}>
-              {isPending ? "保存中..." : "保存"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

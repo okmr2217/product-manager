@@ -7,34 +7,19 @@ import { cn } from "@/lib/utils";
 import { useUpload } from "@/hooks/use-upload";
 import { createImageRecord } from "@/actions/images";
 import type { ImageData } from "@/types";
+import type { DeviceType } from "@prisma/client";
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 const MAX_SIZE_BYTES = 5 * 1024 * 1024;
 
-function detectDeviceType(file: File): Promise<"PC" | "MOBILE" | "OTHER"> {
-  return new Promise((resolve) => {
-    const objectUrl = URL.createObjectURL(file);
-    const img = new window.Image();
-    img.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      const ratio = img.naturalWidth / img.naturalHeight;
-      resolve(ratio > 1 ? "PC" : ratio < 1 ? "MOBILE" : "PC");
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      resolve("PC");
-    };
-    img.src = objectUrl;
-  });
-}
-
 interface ImageUploadProps {
   productId: string;
   nextSortOrder: number;
+  deviceType: DeviceType;
   onImageAdded: (image: ImageData) => void;
 }
 
-export function ImageUpload({ productId, nextSortOrder, onImageAdded }: ImageUploadProps) {
+export function ImageUpload({ productId, nextSortOrder, deviceType, onImageAdded }: ImageUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,8 +53,6 @@ export function ImageUpload({ productId, nextSortOrder, onImageAdded }: ImageUpl
         toast.error(`${file.name}: アップロードに失敗しました`);
         continue;
       }
-
-      const deviceType = await detectDeviceType(file);
 
       const actionResult = await createImageRecord(productId, {
         url: uploadResult.url,
@@ -116,7 +99,7 @@ export function ImageUpload({ productId, nextSortOrder, onImageAdded }: ImageUpl
       onDrop={handleDrop}
       onClick={() => !isUploading && fileInputRef.current?.click()}
       className={cn(
-        "border-2 border-dashed rounded-lg p-5 text-center transition-colors",
+        "border-2 border-dashed rounded-lg p-4 text-center transition-colors",
         isDragOver ? "border-primary bg-primary/5" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
         isUploading ? "pointer-events-none opacity-60 cursor-default" : "cursor-pointer"
       )}
@@ -130,7 +113,7 @@ export function ImageUpload({ productId, nextSortOrder, onImageAdded }: ImageUpl
         className="hidden"
       />
 
-      <Upload className="h-6 w-6 text-slate-400 mx-auto mb-1.5" />
+      <Upload className="h-5 w-5 text-slate-400 mx-auto mb-1" />
 
       {isUploading ? (
         <div>
@@ -143,8 +126,8 @@ export function ImageUpload({ productId, nextSortOrder, onImageAdded }: ImageUpl
         </div>
       ) : (
         <>
-          <p className="text-sm text-slate-600">ドラッグ&ドロップまたはクリックして画像を追加</p>
-          <p className="text-xs text-slate-400 mt-0.5">PNG, JPEG, WebP, GIF（最大5MB）・複数選択可</p>
+          <p className="text-sm text-slate-600">ドロップまたはクリックして追加</p>
+          <p className="text-xs text-slate-400 mt-0.5">PNG, JPEG, WebP, GIF（最大5MB）・複数可</p>
         </>
       )}
     </div>

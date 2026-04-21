@@ -42,13 +42,11 @@ interface SortableItemProps {
   image: ImageData;
   productId: string;
   onPreviewClick: () => void;
-  onDelete: () => void;
-  onRename: (newAlt: string | null) => void;
   onSetThumbnail: () => void;
   onDeviceTypeChange: (newType: DeviceType) => void;
 }
 
-function SortableItem({ image, productId, onPreviewClick, onDelete, onRename, onSetThumbnail, onDeviceTypeChange }: SortableItemProps) {
+function SortableItem({ image, productId, onPreviewClick, onSetThumbnail, onDeviceTypeChange }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: image.id });
 
   const style = {
@@ -68,8 +66,6 @@ function SortableItem({ image, productId, onPreviewClick, onDelete, onRename, on
         image={image}
         productId={productId}
         onPreviewClick={onPreviewClick}
-        onDelete={onDelete}
-        onRename={onRename}
         onSetThumbnail={onSetThumbnail}
         onDeviceTypeChange={onDeviceTypeChange}
       />
@@ -192,7 +188,7 @@ function PreviewModal({ images, index, productId, onClose, onNavigate, onDelete,
   return (
     <>
       <Dialog open onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="max-w-3xl p-0 gap-0 overflow-hidden">
+        <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden">
           {/* Header */}
           <DialogHeader className="px-4 py-3 border-b flex-row items-center justify-between">
             <DialogTitle className="text-sm font-medium truncate max-w-xs">
@@ -233,38 +229,59 @@ function PreviewModal({ images, index, productId, onClose, onNavigate, onDelete,
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 border-t flex items-center gap-3 flex-wrap">
-            <span className={`inline-flex items-center text-xs font-medium rounded px-1.5 py-0.5 border ${DEVICE_TYPE_COLORS[image.deviceType]}`}>
-              {DEVICE_TYPE_LABELS[image.deviceType]}
-            </span>
-            <span className="text-xs text-slate-400">{formatDate(image.createdAt)}</span>
+          <div className="px-4 py-3 border-t space-y-3">
+            {/* Meta + thumbnail row */}
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className={`inline-flex items-center text-xs font-medium rounded px-1.5 py-0.5 border ${DEVICE_TYPE_COLORS[image.deviceType]}`}>
+                {DEVICE_TYPE_LABELS[image.deviceType]}
+              </span>
+              <span className="text-xs text-slate-400">{formatDate(image.createdAt)}</span>
 
-            <div className="ml-auto flex items-center gap-1">
-              <input ref={fileInputRef} type="file" accept={ACCEPTED_TYPES.join(",")} onChange={handleFileChange} className="hidden" />
+              <div className="ml-auto flex items-center gap-1">
+                <input ref={fileInputRef} type="file" accept={ACCEPTED_TYPES.join(",")} onChange={handleFileChange} className="hidden" />
 
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={isPending}
-                onClick={handleSetThumbnail}
-                className={image.isThumbnail ? "text-yellow-600 border-yellow-300 bg-yellow-50" : ""}
-              >
-                <Star className={cn("h-3.5 w-3.5 mr-1", image.isThumbnail && "fill-yellow-400 text-yellow-400")} />
-                {image.isThumbnail ? "サムネイル" : "サムネイルに設定"}
-              </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isPending}
+                  onClick={handleSetThumbnail}
+                  className={image.isThumbnail ? "text-yellow-600 border-yellow-300 bg-yellow-50" : ""}
+                >
+                  <Star className={cn("h-3.5 w-3.5 mr-1", image.isThumbnail && "fill-yellow-400 text-yellow-400")} />
+                  {image.isThumbnail ? "サムネイル" : "サムネイルに設定"}
+                </Button>
 
-              <Button variant="outline" size="sm" disabled={isPending} onClick={() => setRenameOpen(true)}>
+                <Button variant="outline" size="sm" disabled={isPending || uploading} onClick={handleReplaceClick}>
+                  <ImageIcon className="h-3.5 w-3.5 mr-1" />
+                  変更
+                </Button>
+              </div>
+            </div>
+
+            {/* Rename row */}
+            <div className="flex items-end gap-2">
+              <div className="flex-1 space-y-1">
+                <Label htmlFor="preview-alt-input" className="text-xs text-slate-500">
+                  名前（alt テキスト）
+                </Label>
+                <Input
+                  id="preview-alt-input"
+                  value={altValue}
+                  onChange={(e) => setAltValue(e.target.value)}
+                  placeholder="例: スクリーンショット"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !isPending) handleRename();
+                  }}
+                  className="h-8 text-sm"
+                />
+              </div>
+              <Button size="sm" onClick={handleRename} disabled={isPending} className="h-8">
                 <Pencil className="h-3.5 w-3.5 mr-1" />
-                名前を変更
-              </Button>
-
-              <Button variant="outline" size="sm" disabled={isPending || uploading} onClick={handleReplaceClick}>
-                <ImageIcon className="h-3.5 w-3.5 mr-1" />
-                変更
+                {isPending ? "保存中..." : "保存"}
               </Button>
 
               <AlertDialog>
-                <AlertDialogTrigger render={<Button variant="outline" size="sm" className="text-destructive hover:text-destructive border-destructive/30" />}>
+                <AlertDialogTrigger render={<Button variant="outline" size="sm" className="h-8 text-destructive hover:text-destructive border-destructive/30" />}>
                   <Trash2 className="h-3.5 w-3.5 mr-1" />
                   削除
                 </AlertDialogTrigger>
@@ -282,35 +299,6 @@ function PreviewModal({ images, index, productId, onClose, onNavigate, onDelete,
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Rename dialog (nested outside preview to avoid z-index issues) */}
-      <Dialog open={renameOpen} onOpenChange={setRenameOpen}>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>名前を変更</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="preview-alt-input">画像の名前（alt テキスト）</Label>
-            <Input
-              id="preview-alt-input"
-              value={altValue}
-              onChange={(e) => setAltValue(e.target.value)}
-              placeholder="例: スクリーンショット"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !isPending) handleRename();
-              }}
-            />
-          </div>
-          <div className="flex justify-end gap-2 mt-2">
-            <Button variant="outline" onClick={() => setRenameOpen(false)} disabled={isPending}>
-              キャンセル
-            </Button>
-            <Button onClick={handleRename} disabled={isPending}>
-              {isPending ? "保存中..." : "保存"}
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -372,8 +360,6 @@ export function ImageGrid({ images, productId, onDelete, onRename, onSetThumbnai
                 image={image}
                 productId={productId}
                 onPreviewClick={() => setPreviewIndex(i)}
-                onDelete={() => onDelete(image.id)}
-                onRename={(newAlt) => onRename(image.id, newAlt)}
                 onSetThumbnail={() => onSetThumbnail(image.id)}
                 onDeviceTypeChange={(newType) => onDeviceTypeChange(image.id, newType)}
               />
