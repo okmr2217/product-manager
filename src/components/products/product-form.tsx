@@ -110,7 +110,8 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
         <div>
           <FieldLabel>概要説明 <span className="text-red-400 normal-case">*</span></FieldLabel>
-          <Input id="description" name="description" defaultValue={initialData?.description} />
+          <Input id="description" name="description" defaultValue={initialData?.description} placeholder="例: 日々のタスク管理に特化したWebアプリ" />
+          <p className="text-xs text-muted-foreground mt-1">1〜2文・40〜80字目安。カード一覧やブログの説明文に使用。</p>
           <FieldError message={fieldError("description")} />
         </div>
         <div>
@@ -134,7 +135,8 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       {/* Long Description */}
       <div>
         <FieldLabel>詳細説明</FieldLabel>
-        <Textarea id="longDescription" name="longDescription" rows={6} defaultValue={initialData?.longDescription ?? ""} />
+        <Textarea id="longDescription" name="longDescription" rows={6} defaultValue={initialData?.longDescription ?? ""} placeholder="プロダクトの背景・コンセプト・主な機能などを自由に記述" />
+        <p className="text-xs text-muted-foreground mt-1">200〜600字目安。ブログのプロダクト詳細ページに掲載する紹介文。</p>
       </div>
 
       {/* Stacks */}
@@ -190,7 +192,8 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       {/* Note */}
       <div>
         <FieldLabel>備考</FieldLabel>
-        <Textarea id="note" name="note" rows={4} defaultValue={initialData?.note ?? ""} placeholder="ホスティング情報、DBサービスなど" />
+        <Textarea id="note" name="note" rows={4} defaultValue={initialData?.note ?? ""} placeholder="例: Vercel（個人アカウント）、Supabase（Free プラン）、ドメイン: example.com" />
+        <p className="text-xs text-muted-foreground mt-1">管理者のみ閲覧。ホスティング・DB・ドメインなどの運用情報を自由に記録。ブログには表示されない。</p>
       </div>
 
       {/* Sort Order + isPublic */}
