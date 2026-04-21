@@ -68,7 +68,6 @@ model Product {
   longDescription String?
   category        ProductCategory
   status          ProductStatus   @default(IDEA)
-  releaseDate     DateTime?
   stacks          String[]
   repositoryUrl   String?
   productUrl      String?

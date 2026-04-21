@@ -14,7 +14,12 @@ import { ProductTabs } from "@/components/products/product-tabs";
 import { PRODUCT_STATUS_LABELS } from "@/constants";
 
 async function getProduct(slug: string) {
-  return prisma.product.findUnique({ where: { slug } });
+  return prisma.product.findUnique({
+    where: { slug },
+    include: {
+      statusHistory: { where: { to: "RELEASED" }, orderBy: { changedAt: "asc" }, take: 1, select: { changedAt: true } },
+    },
+  });
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -74,10 +79,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <StatusChangeDialog productId={product.id} currentStatus={product.status} />
             </div>
           </div>
-          {product.releaseDate && (
+          {product.statusHistory[0] && (
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">リリース日</p>
-              <p className="text-slate-900">{format(product.releaseDate, "yyyy/MM/dd")}</p>
+              <p className="text-slate-900">{format(product.statusHistory[0].changedAt, "yyyy/MM/dd")}</p>
             </div>
           )}
         </section>

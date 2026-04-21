@@ -1,17 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import type { Product, ProductImage } from "@prisma/client";
+import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
 import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "./status-badge";
 import { CategoryBadge } from "./category-badge";
 import { StackTags } from "./stack-tags";
 
-type ProductWithThumbnail = Product & {
-  images: Pick<ProductImage, "url" | "alt">[];
-};
-
-export function ProductCard({ product }: { product: ProductWithThumbnail }) {
+export function ProductCard({ product }: { product: ProductWithLatestRelease }) {
   const thumbnail = product.images[0];
 
   return (
@@ -31,7 +27,13 @@ export function ProductCard({ product }: { product: ProductWithThumbnail }) {
             <StatusBadge status={product.status} />
           </div>
           <StackTags stacks={product.stacks} maxDisplay={2} />
-          <p className="text-xs text-muted-foreground">更新: {format(product.updatedAt, "yyyy/MM/dd")}</p>
+          {product.latestRelease ? (
+            <p className="text-xs text-muted-foreground">
+              {product.latestRelease.version} · {format(product.latestRelease.releaseDate, "yyyy/MM/dd")}
+            </p>
+          ) : (
+            <p className="text-xs text-muted-foreground">リリースなし</p>
+          )}
         </CardContent>
       </Card>
     </Link>

@@ -3,18 +3,14 @@
 import { useState, useEffect } from "react";
 import { LayoutGrid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Product, ProductImage } from "@prisma/client";
+import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
 import { ProductCard } from "./product-card";
 import { ProductTable } from "./product-table";
-
-type ProductWithThumbnail = Product & {
-  images: Pick<ProductImage, "url" | "alt">[];
-};
 
 type ViewMode = "grid" | "table";
 const STORAGE_KEY = "dashboard-view-mode";
 
-export function DashboardView({ products }: { products: ProductWithThumbnail[] }) {
+export function DashboardView({ products }: { products: ProductWithLatestRelease[] }) {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   useEffect(() => {

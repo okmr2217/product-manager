@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
+import { X } from "lucide-react";
 import type { ProductCategory } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/lib/button-variants";
@@ -12,8 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCT_CATEGORY_LABELS, STACK_SUGGESTIONS } from "@/constants";
@@ -26,7 +23,6 @@ interface InitialData {
   description?: string;
   longDescription?: string | null;
   category?: ProductCategory;
-  releaseDate?: Date | null;
   stacks?: string[];
   repositoryUrl?: string | null;
   productUrl?: string | null;
@@ -46,9 +42,6 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
   const [state, formAction, isPending] = useActionState(action, null);
 
   const [category, setCategory] = useState<string>(initialData?.category ?? "");
-  const [releaseDate, setReleaseDate] = useState<Date | undefined>(
-    initialData?.releaseDate ? new Date(initialData.releaseDate) : new Date()
-  );
   const [stacks, setStacks] = useState<string[]>(initialData?.stacks ?? []);
   const [stackInput, setStackInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -84,7 +77,6 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
     <form action={formAction} className="space-y-5 max-w-2xl">
       {/* Hidden inputs for controlled fields */}
       <input type="hidden" name="category" value={category} />
-      <input type="hidden" name="releaseDate" value={releaseDate ? releaseDate.toISOString() : ""} />
       {stacks.map((stack) => (
         <input key={stack} type="hidden" name="stacks" value={stack} />
       ))}
@@ -142,20 +134,6 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
           </SelectContent>
         </Select>
         {fieldError("category") && <p className="text-sm text-red-500">{fieldError("category")}</p>}
-      </div>
-
-      {/* Release Date */}
-      <div className="space-y-1.5">
-        <Label>リリース日</Label>
-        <Popover>
-          <PopoverTrigger render={<button type="button" className={cn(buttonVariants({ variant: "outline" }), "w-full justify-start text-left font-normal")} />}>
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {releaseDate ? format(releaseDate, "yyyy/MM/dd") : "日付を選択"}
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar mode="single" selected={releaseDate} onSelect={setReleaseDate} />
-          </PopoverContent>
-        </Popover>
       </div>
 
       {/* Stacks */}

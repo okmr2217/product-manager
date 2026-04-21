@@ -16,7 +16,6 @@ function parseFormData(formData: FormData) {
     description: formData.get("description"),
     longDescription: formData.get("longDescription") || undefined,
     category: formData.get("category"),
-    releaseDate: formData.get("releaseDate") || undefined,
     stacks: formData.getAll("stacks") as string[],
     repositoryUrl: formData.get("repositoryUrl") || undefined,
     productUrl: formData.get("productUrl") || undefined,
@@ -40,7 +39,7 @@ export async function createProduct(_prev: ActionResult | null, formData: FormDa
   let slug: string;
   try {
     const product = await prisma.product.create({
-      data: { ...result.data, releaseDate: result.data.releaseDate ?? null },
+      data: result.data,
     });
     slug = product.slug;
   } catch (error) {
@@ -69,7 +68,7 @@ export async function updateProduct(id: string, _prev: ActionResult | null, form
   try {
     const product = await prisma.product.update({
       where: { id },
-      data: { ...result.data, releaseDate: result.data.releaseDate ?? null },
+      data: result.data,
     });
     slug = product.slug;
   } catch (error) {

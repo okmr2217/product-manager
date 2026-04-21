@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
-import type { Product, ProductImage, ProductStatus, ProductCategory } from "@prisma/client";
+import type { Product, ProductImage, ProductStatus, ProductCategory, StatusHistory } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/lib/button-variants";
 import { PageHeader } from "@/components/layout/page-header";
@@ -16,15 +16,29 @@ export const metadata: Metadata = {
   title: "ダッシュボード",
 };
 
-type ProductWithThumbnail = Product & { images: Pick<ProductImage, "url" | "alt">[] };
+export type LatestRelease = { version: string; releaseDate: Date } | null;
+
+export type ProductWithLatestRelease = Product & {
+  images: Pick<ProductImage, "url" | "alt">[];
+  releasedAt: Pick<StatusHistory, "changedAt"> | null;
+  latestRelease: LatestRelease;
+};
 
 const VALID_SORT = ["sortOrder", "updatedAt", "name", "releaseDate", "latestRelease"] as const;
 type SortKey = (typeof VALID_SORT)[number];
 
-async function getProducts(status: ProductStatus | null, category: ProductCategory | null, sort: SortKey): Promise<ProductWithThumbnail[]> {
+async function getProducts(status: ProductStatus | null, category: ProductCategory | null, sort: SortKey): Promise<ProductWithLatestRelease[]> {
   const where = {
     ...(status ? { status } : {}),
     ...(category ? { category } : {}),
+  };
+
+  const releasedAtInclude = {
+    statusHistory: { where: { to: "RELEASED" as const }, orderBy: { changedAt: "asc" as const }, take: 1, select: { changedAt: true } },
+  };
+
+  const releasesInclude = {
+    releases: { orderBy: { releaseDate: "desc" as const }, take: 1, select: { version: true, releaseDate: true } },
   };
 
   if (sort === "latestRelease") {
@@ -32,19 +46,43 @@ async function getProducts(status: ProductStatus | null, category: ProductCatego
       where,
       include: {
         images: { where: { isThumbnail: true }, take: 1 },
-        releases: { orderBy: { releaseDate: "desc" }, take: 1, select: { releaseDate: true } },
+        ...releasedAtInclude,
+        ...releasesInclude,
       },
     });
     return rows
       .sort((a, b) => (b.releases[0]?.releaseDate?.getTime() ?? 0) - (a.releases[0]?.releaseDate?.getTime() ?? 0))
-      .map(({ releases: _, ...product }) => product);
+      .map(({ releases, statusHistory, ...product }) => ({
+        ...product,
+        releasedAt: statusHistory[0] ?? null,
+        latestRelease: releases[0] ?? null,
+      }));
   }
 
-  return prisma.product.findMany({
+  if (sort === "releaseDate") {
+    const rows = await prisma.product.findMany({
+      where,
+      include: { images: { where: { isThumbnail: true }, take: 1 }, ...releasedAtInclude, ...releasesInclude },
+    });
+    return rows
+      .sort((a, b) => (b.statusHistory[0]?.changedAt?.getTime() ?? 0) - (a.statusHistory[0]?.changedAt?.getTime() ?? 0))
+      .map(({ statusHistory, releases, ...product }) => ({
+        ...product,
+        releasedAt: statusHistory[0] ?? null,
+        latestRelease: releases[0] ?? null,
+      }));
+  }
+
+  const rows = await prisma.product.findMany({
     where,
-    include: { images: { where: { isThumbnail: true }, take: 1 } },
-    orderBy: sort === "releaseDate" ? [{ releaseDate: "desc" }, { sortOrder: "asc" }] : { [sort]: sort === "name" || sort === "sortOrder" ? "asc" : "desc" },
+    include: { images: { where: { isThumbnail: true }, take: 1 }, ...releasedAtInclude, ...releasesInclude },
+    orderBy: { [sort]: sort === "name" || sort === "sortOrder" ? "asc" : "desc" },
   });
+  return rows.map(({ statusHistory, releases, ...product }) => ({
+    ...product,
+    releasedAt: statusHistory[0] ?? null,
+    latestRelease: releases[0] ?? null,
+  }));
 }
 
 type SearchParams = Promise<{ status?: string; category?: string; sort?: string }>;

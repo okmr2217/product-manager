@@ -1,17 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import type { Product, ProductImage } from "@prisma/client";
+import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "./status-badge";
 import { CategoryBadge } from "./category-badge";
 import { StackTags } from "./stack-tags";
 
-type ProductWithThumbnail = Product & {
-  images: Pick<ProductImage, "url" | "alt">[];
-};
-
-export function ProductTable({ products }: { products: ProductWithThumbnail[] }) {
+export function ProductTable({ products }: { products: ProductWithLatestRelease[] }) {
   return (
     <div className="border rounded-md overflow-hidden">
       <Table>
@@ -22,8 +18,7 @@ export function ProductTable({ products }: { products: ProductWithThumbnail[] })
             <TableHead>カテゴリ</TableHead>
             <TableHead>ステータス</TableHead>
             <TableHead>技術スタック</TableHead>
-            <TableHead>リリース日</TableHead>
-            <TableHead>更新日</TableHead>
+            <TableHead>最新リリース</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -57,10 +52,13 @@ export function ProductTable({ products }: { products: ProductWithThumbnail[] })
                   <StackTags stacks={product.stacks} maxDisplay={3} />
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
-                  {product.releaseDate ? format(product.releaseDate, "yyyy/MM/dd") : "-"}
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
-                  {format(product.updatedAt, "yyyy/MM/dd")}
+                  {product.latestRelease ? (
+                    <span>
+                      {product.latestRelease.version} · {format(product.latestRelease.releaseDate, "yyyy/MM/dd")}
+                    </span>
+                  ) : (
+                    "-"
+                  )}
                 </TableCell>
               </TableRow>
             );
