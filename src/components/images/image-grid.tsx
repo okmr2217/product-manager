@@ -1,19 +1,44 @@
 "use client";
 
 import { useState, useTransition, useEffect, useRef } from "react";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { SortableContext, sortableKeyboardCoordinates, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  arrayMove,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { ChevronLeft, ChevronRight, Star, Pencil, Trash2, ImageIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  Pencil,
+  Trash2,
+  ImageIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { reorderImages, setThumbnail, updateImageAlt, deleteImage, replaceImage } from "@/actions/images";
+import {
+  reorderImages,
+  setThumbnail,
+  updateImageAlt,
+  deleteImage,
+  replaceImage,
+} from "@/actions/images";
 import { ImageCard } from "./image-card";
 import type { ImageData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -46,8 +71,21 @@ interface SortableItemProps {
   onDeviceTypeChange: (newType: DeviceType) => void;
 }
 
-function SortableItem({ image, productId, onPreviewClick, onSetThumbnail, onDeviceTypeChange }: SortableItemProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: image.id });
+function SortableItem({
+  image,
+  productId,
+  onPreviewClick,
+  onSetThumbnail,
+  onDeviceTypeChange,
+}: SortableItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: image.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -60,7 +98,10 @@ function SortableItem({ image, productId, onPreviewClick, onSetThumbnail, onDevi
       style={style}
       {...attributes}
       {...listeners}
-      className={cn("relative cursor-grab active:cursor-grabbing touch-none", isDragging && "z-50 opacity-50")}
+      className={cn(
+        "relative cursor-grab active:cursor-grabbing touch-none",
+        isDragging && "z-50 opacity-50",
+      )}
     >
       <ImageCard
         image={image}
@@ -85,7 +126,17 @@ interface PreviewModalProps {
   onReplace: (id: string, newUrl: string) => void;
 }
 
-function PreviewModal({ images, index, productId, onClose, onNavigate, onDelete, onRename, onSetThumbnail, onReplace }: PreviewModalProps) {
+function PreviewModal({
+  images,
+  index,
+  productId,
+  onClose,
+  onNavigate,
+  onDelete,
+  onRename,
+  onSetThumbnail,
+  onReplace,
+}: PreviewModalProps) {
   const image = images[index];
   const [renameOpen, setRenameOpen] = useState(false);
   const [altValue, setAltValue] = useState(image.alt ?? "");
@@ -183,121 +234,173 @@ function PreviewModal({ images, index, productId, onClose, onNavigate, onDelete,
   };
 
   const formatDate = (date: Date) =>
-    date.toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" });
+    date.toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
 
   return (
     <>
       <Dialog open onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden">
-          {/* Header */}
-          <DialogHeader className="px-4 py-3 border-b flex-row items-center justify-between">
-            <DialogTitle className="text-sm font-medium truncate max-w-xs">
-              {image.alt ?? "画像プレビュー"}
-            </DialogTitle>
-            {images.length > 1 && (
-              <span className="text-xs text-slate-400 shrink-0 ml-2">
-                {index + 1} / {images.length}
-              </span>
-            )}
-          </DialogHeader>
-
-          {/* Image area */}
-          <div className="relative bg-slate-100 flex items-center justify-center" style={{ minHeight: "50vh", maxHeight: "70vh" }}>
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={goPrev}
-                  className="absolute left-2 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
-                >
-                  <ChevronLeft className="h-5 w-5 text-white" />
-                </button>
-                <button
-                  onClick={goNext}
-                  className="absolute right-2 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
-                >
-                  <ChevronRight className="h-5 w-5 text-white" />
-                </button>
-              </>
-            )}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={image.url}
-              alt={image.alt ?? ""}
-              className="max-w-full object-contain"
-              style={{ maxHeight: "70vh" }}
-            />
-          </div>
-
-          {/* Footer */}
-          <div className="px-4 py-3 border-t space-y-3">
-            {/* Meta + thumbnail row */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className={`inline-flex items-center text-xs font-medium rounded px-1.5 py-0.5 border ${DEVICE_TYPE_COLORS[image.deviceType]}`}>
-                {DEVICE_TYPE_LABELS[image.deviceType]}
-              </span>
-              <span className="text-xs text-slate-400">{formatDate(image.createdAt)}</span>
-
-              <div className="ml-auto flex items-center gap-1">
-                <input ref={fileInputRef} type="file" accept={ACCEPTED_TYPES.join(",")} onChange={handleFileChange} className="hidden" />
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={isPending}
-                  onClick={handleSetThumbnail}
-                  className={image.isThumbnail ? "text-yellow-600 border-yellow-300 bg-yellow-50" : ""}
-                >
-                  <Star className={cn("h-3.5 w-3.5 mr-1", image.isThumbnail && "fill-yellow-400 text-yellow-400")} />
-                  {image.isThumbnail ? "サムネイル" : "サムネイルに設定"}
-                </Button>
-
-                <Button variant="outline" size="sm" disabled={isPending || uploading} onClick={handleReplaceClick}>
-                  <ImageIcon className="h-3.5 w-3.5 mr-1" />
-                  変更
-                </Button>
-              </div>
+        <DialogContent className="sm:max-w-4xl p-0 gap-0 overflow-hidden">
+          <div className="flex h-full">
+            {/* Left: image area */}
+            <div className="relative flex-1 bg-slate-900 flex items-center justify-center min-h-[60vh]">
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={goPrev}
+                    className="absolute left-2 z-10 p-2 rounded-full bg-white/10 hover:bg-white/25 transition-colors"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-white" />
+                  </button>
+                  <button
+                    onClick={goNext}
+                    className="absolute right-2 z-10 p-2 rounded-full bg-white/10 hover:bg-white/25 transition-colors"
+                  >
+                    <ChevronRight className="h-5 w-5 text-white" />
+                  </button>
+                </>
+              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image.url}
+                alt={image.alt ?? ""}
+                className="max-w-full max-h-[75vh] object-contain p-4"
+              />
+              {images.length > 1 && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-xs text-white/60 bg-black/30 rounded-full px-2.5 py-0.5 pointer-events-none">
+                  {index + 1} / {images.length}
+                </div>
+              )}
             </div>
 
-            {/* Rename row */}
-            <div className="flex items-end gap-2">
-              <div className="flex-1 space-y-1">
-                <Label htmlFor="preview-alt-input" className="text-xs text-slate-500">
-                  名前（alt テキスト）
-                </Label>
-                <Input
-                  id="preview-alt-input"
-                  value={altValue}
-                  onChange={(e) => setAltValue(e.target.value)}
-                  placeholder="例: スクリーンショット"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !isPending) handleRename();
-                  }}
-                  className="h-8 text-sm"
-                />
-              </div>
-              <Button size="sm" onClick={handleRename} disabled={isPending} className="h-8">
-                <Pencil className="h-3.5 w-3.5 mr-1" />
-                {isPending ? "保存中..." : "保存"}
-              </Button>
+            {/* Right: info & actions panel */}
+            <div className="w-64 shrink-0 flex flex-col border-l bg-background">
+              {/* Panel header */}
+              <DialogHeader className="px-4 py-3 border-b">
+                <DialogTitle className="text-sm font-medium truncate">
+                  {image.alt ?? "画像プレビュー"}
+                </DialogTitle>
+              </DialogHeader>
 
-              <AlertDialog>
-                <AlertDialogTrigger render={<Button variant="outline" size="sm" className="h-8 text-destructive hover:text-destructive border-destructive/30" />}>
-                  <Trash2 className="h-3.5 w-3.5 mr-1" />
-                  削除
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>画像を削除しますか？</AlertDialogTitle>
-                    <AlertDialogDescription>この操作は取り消せません。Storageからも削除されます。</AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} disabled={isPending} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                      {isPending ? "削除中..." : "削除する"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+                {/* Meta */}
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">情報</p>
+                  <div className="flex flex-col gap-1.5">
+                    <span
+                      className={`self-start inline-flex items-center text-xs font-medium rounded px-1.5 py-0.5 border ${DEVICE_TYPE_COLORS[image.deviceType]}`}
+                    >
+                      {DEVICE_TYPE_LABELS[image.deviceType]}
+                    </span>
+                    <span className="text-xs text-slate-400">{formatDate(image.createdAt)}</span>
+                  </div>
+                </div>
+
+                {/* Alt text */}
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">名前（alt）</p>
+                  <Input
+                    id="preview-alt-input"
+                    value={altValue}
+                    onChange={(e) => setAltValue(e.target.value)}
+                    placeholder="例: スクリーンショット"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !isPending) handleRename();
+                    }}
+                    className="h-8 text-sm"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={handleRename}
+                    disabled={isPending}
+                    className="w-full h-8"
+                  >
+                    <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                    {isPending ? "保存中..." : "保存"}
+                  </Button>
+                </div>
+
+                {/* Actions */}
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">操作</p>
+                  <div className="flex flex-col gap-2">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept={ACCEPTED_TYPES.join(",")}
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isPending}
+                      onClick={handleSetThumbnail}
+                      className={cn(
+                        "w-full h-8 justify-start",
+                        image.isThumbnail && "text-yellow-600 border-yellow-300 bg-yellow-50",
+                      )}
+                    >
+                      <Star
+                        className={cn(
+                          "h-3.5 w-3.5 mr-1.5",
+                          image.isThumbnail && "fill-yellow-400 text-yellow-400",
+                        )}
+                      />
+                      {image.isThumbnail ? "サムネイル設定済み" : "サムネイルに設定"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isPending || uploading}
+                      onClick={handleReplaceClick}
+                      className="w-full h-8 justify-start"
+                    >
+                      <ImageIcon className="h-3.5 w-3.5 mr-1.5" />
+                      画像を変更
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Danger zone */}
+              <div className="px-4 py-3 border-t">
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    render={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full h-8 text-destructive hover:text-destructive border-destructive/30 justify-start"
+                      />
+                    }
+                  >
+                    <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                    削除
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>画像を削除しますか？</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        この操作は取り消せません。Storageからも削除されます。
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={isPending}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        {isPending ? "削除中..." : "削除する"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
           </div>
         </DialogContent>
@@ -317,13 +420,24 @@ interface ImageGridProps {
   onReorder: (newImages: ImageData[]) => void;
 }
 
-export function ImageGrid({ images, productId, onDelete, onRename, onSetThumbnail, onDeviceTypeChange, onReplace, onReorder }: ImageGridProps) {
+export function ImageGrid({
+  images,
+  productId,
+  onDelete,
+  onRename,
+  onSetThumbnail,
+  onDeviceTypeChange,
+  onReplace,
+  onReorder,
+}: ImageGridProps) {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [, startTransition] = useTransition();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -337,7 +451,10 @@ export function ImageGrid({ images, productId, onDelete, onRename, onSetThumbnai
     onReorder(newImages);
 
     startTransition(async () => {
-      const result = await reorderImages(productId, newImages.map((img) => img.id));
+      const result = await reorderImages(
+        productId,
+        newImages.map((img) => img.id),
+      );
       if (!result.success) {
         toast.error(result.error ?? "並び替えに失敗しました");
         onReorder(prevImages);
@@ -351,8 +468,16 @@ export function ImageGrid({ images, productId, onDelete, onRename, onSetThumbnai
 
   return (
     <>
-      <DndContext id="image-grid-dnd" sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={images.map((img) => img.id)} strategy={rectSortingStrategy}>
+      <DndContext
+        id="image-grid-dnd"
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={images.map((img) => img.id)}
+          strategy={rectSortingStrategy}
+        >
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {images.map((image, i) => (
               <SortableItem
@@ -361,7 +486,9 @@ export function ImageGrid({ images, productId, onDelete, onRename, onSetThumbnai
                 productId={productId}
                 onPreviewClick={() => setPreviewIndex(i)}
                 onSetThumbnail={() => onSetThumbnail(image.id)}
-                onDeviceTypeChange={(newType) => onDeviceTypeChange(image.id, newType)}
+                onDeviceTypeChange={(newType) =>
+                  onDeviceTypeChange(image.id, newType)
+                }
               />
             ))}
           </div>
@@ -375,7 +502,9 @@ export function ImageGrid({ images, productId, onDelete, onRename, onSetThumbnai
           productId={productId}
           onClose={() => setPreviewIndex(null)}
           onNavigate={setPreviewIndex}
-          onDelete={(id) => { onDelete(id); }}
+          onDelete={(id) => {
+            onDelete(id);
+          }}
           onRename={onRename}
           onSetThumbnail={onSetThumbnail}
           onReplace={onReplace}
