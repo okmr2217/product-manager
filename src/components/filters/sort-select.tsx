@@ -15,12 +15,12 @@ export function SortSelect() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const current = searchParams.get("sort") ?? "sortOrder";
+  const current = searchParams.get("sort") ?? "latestRelease";
 
   function handleChange(value: string | null) {
     if (!value) return;
     const params = new URLSearchParams(searchParams.toString());
-    if (value === "sortOrder") {
+    if (value === "latestRelease") {
       params.delete("sort");
     } else {
       params.set("sort", value);

@@ -95,7 +95,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
 
   const status = statusValues.includes(params.status as ProductStatus) ? (params.status as ProductStatus) : null;
   const category = categoryValues.includes(params.category as ProductCategory) ? (params.category as ProductCategory) : null;
-  const sort: SortKey = VALID_SORT.includes(params.sort as SortKey) ? (params.sort as SortKey) : "sortOrder";
+  const sort: SortKey = VALID_SORT.includes(params.sort as SortKey) ? (params.sort as SortKey) : "latestRelease";
 
   const products = await getProducts(status, category, sort);
 
