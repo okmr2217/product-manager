@@ -44,7 +44,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       {/* Tabs */}
-      <ProductTabs slug={slug} />
+      <ProductTabs slug={slug} productId={product.id} />
 
       {/* Overview content */}
       <div className="mt-6 space-y-6 max-w-2xl">

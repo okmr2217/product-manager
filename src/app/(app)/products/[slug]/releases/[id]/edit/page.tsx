@@ -25,7 +25,7 @@ export default async function EditReleasePage({ params }: { params: Promise<{ sl
 
   return (
     <div>
-      <ProductTabs slug={slug} />
+      <ProductTabs slug={slug} productId={release.productId} />
       <div className="mt-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">リリースノートを編集</h2>
         <ReleaseForm

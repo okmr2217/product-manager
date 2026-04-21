@@ -45,7 +45,7 @@ export default async function ProductHistoryPage({ params }: { params: Promise<{
           <DeleteDialog product={{ id: product.id, name: product.name }} />
         </div>
       </div>
-      <ProductTabs slug={slug} />
+      <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6 max-w-2xl">
         <h2 className="text-sm font-medium text-slate-500 mb-4">ステータス変更履歴</h2>

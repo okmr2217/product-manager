@@ -23,7 +23,7 @@ export default async function NewReleasePage({ params }: { params: Promise<{ slu
 
   return (
     <div>
-      <ProductTabs slug={slug} />
+      <ProductTabs slug={slug} productId={product.id} />
       <div className="mt-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">リリースノートを追加</h2>
         <ReleaseForm

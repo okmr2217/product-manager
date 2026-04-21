@@ -1,41 +1,41 @@
-"use client";
+import { prisma } from "@/lib/prisma";
+import { ProductTabLink } from "./product-tab-link";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+async function getTabCounts(productId: string) {
+  const [taskCount, imageCount, releaseCount, historyCount] = await Promise.all([
+    prisma.devTask.count({ where: { productId } }),
+    prisma.productImage.count({ where: { productId } }),
+    prisma.release.count({ where: { productId } }),
+    prisma.statusHistory.count({ where: { productId } }),
+  ]);
+  return { taskCount, imageCount, releaseCount, historyCount };
+}
 
-const TABS = [
-  { label: "概要", path: "" },
-  { label: "タスク", path: "/tasks" },
-  { label: "画像", path: "/images" },
-  { label: "リリースノート", path: "/releases" },
-  { label: "履歴", path: "/history" },
-] as const;
+export async function ProductTabs({ slug, productId }: { slug: string; productId: string }) {
+  const { taskCount, imageCount, releaseCount, historyCount } = await getTabCounts(productId);
 
-export function ProductTabs({ slug }: { slug: string }) {
-  const pathname = usePathname();
+  const tabs = [
+    { label: "概要", path: "" },
+    { label: "タスク", path: "/tasks", count: taskCount },
+    { label: "画像", path: "/images", count: imageCount },
+    { label: "リリースノート", path: "/releases", count: releaseCount },
+    { label: "履歴", path: "/history", count: historyCount },
+  ];
+
   const basePath = `/products/${slug}`;
 
   return (
     <div className="flex gap-0 border-b overflow-x-auto">
-      {TABS.map(({ label, path }) => {
-        const href = `${basePath}${path}`;
-        const isActive = path === "" ? pathname === basePath : pathname.startsWith(href);
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              "px-4 py-2 text-sm font-medium border-b-2 -mb-px whitespace-nowrap transition-colors",
-              isActive
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-            )}
-          >
-            {label}
-          </Link>
-        );
-      })}
+      {tabs.map(({ label, path, count }) => (
+        <ProductTabLink
+          key={path}
+          label={label}
+          href={`${basePath}${path}`}
+          basePath={basePath}
+          isExact={path === ""}
+          count={count}
+        />
+      ))}
     </div>
   );
 }

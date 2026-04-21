@@ -42,7 +42,7 @@ export default async function ProductReleasesPage({ params }: { params: Promise<
           <DeleteDialog product={{ id: product.id, name: product.name }} />
         </div>
       </div>
-      <ProductTabs slug={slug} />
+      <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6">
         <div className="flex items-center justify-between mb-4">

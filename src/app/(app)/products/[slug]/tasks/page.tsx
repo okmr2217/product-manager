@@ -43,7 +43,7 @@ export default async function TasksPage({ params }: { params: Promise<{ slug: st
         </div>
       </div>
 
-      <ProductTabs slug={slug} />
+      <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6">
         <div className="flex justify-end mb-4">
