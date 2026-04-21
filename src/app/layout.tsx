@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     template: "%s | Launchpad",
   },
   description: "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
+  themeColor: "#4f46e5",
 };
 
 export default function RootLayout({
