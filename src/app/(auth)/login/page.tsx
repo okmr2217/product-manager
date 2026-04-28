@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -21,7 +27,7 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    const result = await signIn.email({ email, password });
+    const result = await signIn.email({ email, password, rememberMe: true });
 
     if (result.error) {
       setError("メールアドレスまたはパスワードが正しくありません");
@@ -69,7 +75,10 @@ export default function LoginPage() {
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           アカウントをお持ちでない方は{" "}
-          <Link href="/signup" className="underline underline-offset-4 hover:text-primary">
+          <Link
+            href="/signup"
+            className="underline underline-offset-4 hover:text-primary"
+          >
             新規登録
           </Link>
         </p>
