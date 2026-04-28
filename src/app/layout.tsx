@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Roboto } from "next/font/google";
 import "./globals.css";
 
@@ -21,7 +21,11 @@ export const metadata: Metadata = {
     template: "%s | Launchpad",
   },
   description: "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
-  themeColor: "#4f46e5",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Launchpad",
+  },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
@@ -32,6 +36,10 @@ export const metadata: Metadata = {
     ],
     shortcut: "/favicon.ico",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#4f46e5",
 };
 
 export default function RootLayout({
