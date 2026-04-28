@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Launchpad",
     short_name: "Launchpad",
     description: "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
-    start_url: "/dashboard",
+    start_url: "/",
     display: "standalone",
     background_color: "#0f172a",
     theme_color: "#4f46e5",
