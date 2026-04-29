@@ -47,11 +47,9 @@ export function Sidebar({ products }: SidebarProps) {
     <aside className="flex h-full w-full flex-col bg-[oklch(0.975_0.008_276)] border-r border-[oklch(0.9_0.025_276)]">
       {/* アプリ名 */}
       <div className="p-4">
-        <Link href="/products" className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-md bg-[oklch(0.45_0.18_277)]">
-            <Rocket className="size-4 text-white" />
-          </span>
-          <span className="text-base font-semibold text-[oklch(0.22_0.12_277)] hover:text-[oklch(0.35_0.15_277)] transition-colors">
+        <Link href="/products" className="flex items-center gap-2.5">
+          <img src="/icon-192.png" alt="Launchpad" className="size-7" />
+          <span className="text-lg font-semibold text-[oklch(0.22_0.12_277)] hover:text-[oklch(0.35_0.15_277)] transition-colors">
             Launchpad
           </span>
         </Link>
@@ -100,9 +98,11 @@ export function Sidebar({ products }: SidebarProps) {
                   >
                     {product.iconUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={product.iconUrl} alt="" className="size-4 shrink-0 rounded overflow-hidden object-cover" />
+                      <img src={product.iconUrl} alt="" className="size-4.5 shrink-0 rounded overflow-hidden object-cover" />
                     ) : (
-                      <span className={cn("size-2 shrink-0 rounded-full", PRODUCT_STATUS_DOT_COLORS[product.status])} />
+                      <span className="size-4.5 shrink-0 flex items-center justify-center">
+                        <span className={cn("size-2 rounded-full", PRODUCT_STATUS_DOT_COLORS[product.status])} />
+                      </span>
                     )}
                     <span className="truncate">{product.name}</span>
                   </Link>

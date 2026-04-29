@@ -33,7 +33,7 @@ export function Header({ products }: HeaderProps) {
       </Sheet>
       <div className="ml-3 flex items-center gap-2">
         <span className="flex size-6 items-center justify-center rounded-md bg-indigo-600">
-          <Rocket className="size-3.5 text-white" />
+          <img src="/icon-192.png" alt="Launchpad" className="size-3.5" />
         </span>
         <span className="text-sm font-semibold text-slate-900">Launchpad</span>
       </div>
