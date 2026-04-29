@@ -6,13 +6,13 @@ const BASE_URL = CONFIG.BASE_URL;
 const DEMO_SLUG = 'yarukoto';
 
 export async function runPcScenarios(page: Page): Promise<void> {
-  // dashboard-pc
+  // products-pc
   try {
-    await page.goto(`${BASE_URL}/dashboard`);
+    await page.goto(`${BASE_URL}/products`);
     await page.waitForLoadState('networkidle');
-    await capture(page, 'dashboard-pc', 'pc');
+    await capture(page, 'products-pc', 'pc');
   } catch (e) {
-    console.error('❌ dashboard-pc failed:', e);
+    console.error('❌ products-pc failed:', e);
   }
 
   // product-new-form

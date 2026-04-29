@@ -35,7 +35,7 @@ export async function changeStatus(productId: string, data: StatusChangeInput): 
     ]);
 
     revalidatePath(`/products/${product.slug}`);
-    revalidatePath("/dashboard");
+    revalidatePath("/products");
   } catch {
     return { success: false, error: "ステータスの変更に失敗しました" };
   }

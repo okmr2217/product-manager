@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import type { ProductCategory } from "@prisma/client";
 import { PRODUCT_CATEGORY_VALUES } from "@/constants";
-import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
+import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { ProductListRow } from "./product-list-row";
 
 export function ProductList({ products }: { products: ProductWithLatestRelease[] }) {

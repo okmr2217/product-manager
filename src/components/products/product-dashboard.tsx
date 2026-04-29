@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
+import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { ProductToolbar } from "./product-toolbar";
 import { ProductGrid } from "./product-grid";
 import { ProductList } from "./product-list";

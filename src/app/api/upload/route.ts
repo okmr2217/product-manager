@@ -41,5 +41,6 @@ export async function POST(request: NextRequest) {
     data: { publicUrl },
   } = supabaseAdmin.storage.from("product-images").getPublicUrl(path);
 
-  return NextResponse.json({ url: publicUrl, path });
+  const url = type === "icon" ? `${publicUrl}?t=${Date.now()}` : publicUrl;
+  return NextResponse.json({ url, path });
 }

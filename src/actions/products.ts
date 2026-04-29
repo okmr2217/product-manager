@@ -51,7 +51,7 @@ export async function createProduct(_prev: ActionResult | null, formData: FormDa
     return { success: false, error: "プロダクトの作成に失敗しました" };
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath("/products");
   redirect(`/products/${slug}`);
 }
 
@@ -80,7 +80,7 @@ export async function updateProduct(id: string, _prev: ActionResult | null, form
     return { success: false, error: "プロダクトの更新に失敗しました" };
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath("/products");
   revalidatePath(`/products/${slug}`);
   redirect(`/products/${slug}`);
 }
@@ -97,7 +97,7 @@ export async function reorderProducts(orderedIds: string[]): Promise<ActionResul
         })
       )
     );
-    revalidatePath("/dashboard");
+    revalidatePath("/products");
   } catch {
     return { success: false, error: "並び替えに失敗しました" };
   }
@@ -124,6 +124,6 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     return { success: false, error: "プロダクトの削除に失敗しました" };
   }
 
-  revalidatePath("/dashboard");
-  redirect("/dashboard");
+  revalidatePath("/products");
+  redirect("/products");
 }

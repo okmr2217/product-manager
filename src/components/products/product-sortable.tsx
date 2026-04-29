@@ -7,7 +7,7 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from 
 import type { DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
+import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_COLORS } from "@/constants";
 import { reorderProducts } from "@/actions/products";
 import { cn } from "@/lib/utils";

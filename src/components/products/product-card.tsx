@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
 import type { ProductCategory, ProductStatus } from "@prisma/client";
-import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
+import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { PRODUCT_STATUS_DOT_COLORS, PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_COLORS } from "@/constants";
 import { cn } from "@/lib/utils";
 

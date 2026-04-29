@@ -33,7 +33,7 @@ export function Sidebar({ products }: SidebarProps) {
     window.location.href = "/login";
   };
 
-  const isDashboardActive = pathname === "/dashboard";
+  const isDashboardActive = pathname === "/products";
 
   const TAB_SEGMENTS = new Set(["/tasks", "/images", "/releases", "/history"]);
 
@@ -47,7 +47,7 @@ export function Sidebar({ products }: SidebarProps) {
     <aside className="flex h-full w-full flex-col bg-[oklch(0.975_0.008_276)] border-r border-[oklch(0.9_0.025_276)]">
       {/* アプリ名 */}
       <div className="p-4">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/products" className="flex items-center gap-2">
           <span className="flex size-7 items-center justify-center rounded-md bg-[oklch(0.45_0.18_277)]">
             <Rocket className="size-4 text-white" />
           </span>
@@ -63,7 +63,7 @@ export function Sidebar({ products }: SidebarProps) {
       <nav className="flex-1 overflow-y-auto p-2 [scrollbar-width:thin] [scrollbar-color:oklch(0.9_0.025_276)_transparent] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[oklch(0.9_0.025_276)]">
         {/* ダッシュボード */}
         <Link
-          href="/dashboard"
+          href="/products"
           className={cn(
             "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
             isDashboardActive
