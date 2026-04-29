@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { PRODUCT_CATEGORY_VALUES } from "@/constants";
 
 export const productSchema = z.object({
   name: z.string().min(1, "プロダクト名は必須です"),
   slug: z.string().min(1, "スラッグは必須です").regex(/^[a-z0-9-]+$/, "小文字英数字とハイフンのみ使用できます"),
   description: z.string().min(1, "概要説明は必須です"),
   longDescription: z.string().optional(),
-  category: z.enum(["APP", "MCP", "SITE"]),
+  category: z.enum(PRODUCT_CATEGORY_VALUES),
   stacks: z.array(z.string()),
   repositoryUrl: z.string().url("有効なURLを入力してください").optional().or(z.literal("")),
   productUrl: z.string().url("有効なURLを入力してください").optional().or(z.literal("")),

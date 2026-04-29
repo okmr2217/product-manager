@@ -2,10 +2,8 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PRODUCT_CATEGORY_LABELS } from "@/constants";
+import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_VALUES } from "@/constants";
 import type { ProductCategory } from "@prisma/client";
-
-const CATEGORIES: ProductCategory[] = ["APP", "MCP", "SITE"];
 
 export function CategoryFilter() {
   const router = useRouter();
@@ -31,7 +29,7 @@ export function CategoryFilter() {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">すべて</SelectItem>
-        {CATEGORIES.map((c) => (
+        {PRODUCT_CATEGORY_VALUES.map((c) => (
           <SelectItem key={c} value={c}>
             {PRODUCT_CATEGORY_LABELS[c]}
           </SelectItem>

@@ -2,10 +2,8 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PRODUCT_STATUS_LABELS } from "@/constants";
+import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_VALUES } from "@/constants";
 import type { ProductStatus } from "@prisma/client";
-
-const STATUSES: ProductStatus[] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
 
 export function StatusFilter() {
   const router = useRouter();
@@ -31,7 +29,7 @@ export function StatusFilter() {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">すべて</SelectItem>
-        {STATUSES.map((s) => (
+        {PRODUCT_STATUS_VALUES.map((s) => (
           <SelectItem key={s} value={s}>
             {PRODUCT_STATUS_LABELS[s]}
           </SelectItem>

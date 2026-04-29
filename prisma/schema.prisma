@@ -89,6 +89,8 @@ enum ProductCategory {
   APP
   MCP
   SITE
+  EXTENSION
+  LIBRARY
 }
 
 enum ProductStatus {

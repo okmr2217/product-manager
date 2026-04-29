@@ -14,10 +14,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { updateStatusHistory } from "@/actions/status";
-import { PRODUCT_STATUS_LABELS } from "@/constants";
+import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_VALUES } from "@/constants";
 import type { ProductStatus } from "@prisma/client";
-
-const ALL_STATUSES: ProductStatus[] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
 
 interface HistoryEntry {
   id: string;
@@ -94,7 +92,7 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
                   <SelectValue>{PRODUCT_STATUS_LABELS[from]}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {ALL_STATUSES.map((s) => (
+                  {PRODUCT_STATUS_VALUES.map((s) => (
                     <SelectItem key={s} value={s}>
                       {PRODUCT_STATUS_LABELS[s]}
                     </SelectItem>
@@ -109,7 +107,7 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
                   <SelectValue>{PRODUCT_STATUS_LABELS[to]}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {ALL_STATUSES.map((s) => (
+                  {PRODUCT_STATUS_VALUES.map((s) => (
                     <SelectItem key={s} value={s}>
                       {PRODUCT_STATUS_LABELS[s]}
                     </SelectItem>

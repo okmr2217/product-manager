@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { RELEASE_TYPE_VALUES } from "@/constants";
 
 export const releaseSchema = z.object({
   version: z.string().min(1, "バージョンは必須です"),
   title: z.string().min(1, "タイトルは必須です"),
   content: z.string().min(1, "内容は必須です"),
   releaseDate: z.coerce.date({ message: "リリース日は必須です" }),
-  type: z.enum(["MAJOR", "MINOR", "PATCH", "HOTFIX"]),
+  type: z.enum(RELEASE_TYPE_VALUES),
   isDraft: z.boolean().default(true),
 });
 

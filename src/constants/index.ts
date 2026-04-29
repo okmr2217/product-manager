@@ -1,5 +1,27 @@
 import type { ProductStatus, ProductCategory, ReleaseType, DevTaskType, DevTaskStatus, Priority, DeviceType } from "@prisma/client";
 
+export const PRODUCT_STATUS_VALUES: readonly [ProductStatus, ...ProductStatus[]] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
+
+export const PRODUCT_CATEGORY_VALUES: readonly [ProductCategory, ...ProductCategory[]] = ["APP", "MCP", "SITE", "EXTENSION", "LIBRARY"];
+
+export const RELEASE_TYPE_VALUES: readonly [ReleaseType, ...ReleaseType[]] = ["MAJOR", "MINOR", "PATCH", "HOTFIX"];
+
+export const DEV_TASK_TYPE_VALUES: readonly [DevTaskType, ...DevTaskType[]] = ["FEATURE", "BUG", "IMPROVEMENT"];
+
+export const DEV_TASK_STATUS_VALUES: readonly [DevTaskStatus, ...DevTaskStatus[]] = ["TODO", "IN_PROGRESS", "DONE", "ON_HOLD"];
+
+export const PRIORITY_VALUES: readonly [Priority, ...Priority[]] = ["HIGH", "MEDIUM", "LOW"];
+
+export const PRODUCT_SORT_OPTIONS = [
+  { value: "sortOrder", label: "表示順" },
+  { value: "updatedAt", label: "更新日順" },
+  { value: "name", label: "名前順" },
+  { value: "releaseDate", label: "リリース日順" },
+  { value: "latestRelease", label: "最新リリース順" },
+] as const;
+
+export type ProductSortKey = (typeof PRODUCT_SORT_OPTIONS)[number]["value"];
+
 export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
   IDEA: "構想中",
   DEVELOPING: "開発中",
@@ -28,12 +50,16 @@ export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
   APP: "アプリ",
   MCP: "MCP",
   SITE: "サイト",
+  EXTENSION: "拡張機能",
+  LIBRARY: "ライブラリ",
 };
 
 export const PRODUCT_CATEGORY_COLORS: Record<ProductCategory, string> = {
   APP: "bg-purple-100 text-purple-700",
   MCP: "bg-orange-100 text-orange-700",
   SITE: "bg-cyan-100 text-cyan-700",
+  EXTENSION: "bg-green-100 text-green-700",
+  LIBRARY: "bg-indigo-100 text-indigo-700",
 };
 
 export const RELEASE_TYPE_LABELS: Record<ReleaseType, string> = {

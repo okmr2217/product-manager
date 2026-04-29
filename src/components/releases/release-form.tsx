@@ -16,11 +16,10 @@ import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RELEASE_TYPE_LABELS } from "@/constants";
+import { RELEASE_TYPE_LABELS, RELEASE_TYPE_VALUES } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { ActionResult } from "@/types";
 
-const RELEASE_TYPES: ReleaseType[] = ["MAJOR", "MINOR", "PATCH", "HOTFIX"];
 
 interface InitialData {
   version?: string;
@@ -85,7 +84,7 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
               <SelectValue placeholder="タイプを選択">{type ? RELEASE_TYPE_LABELS[type as ReleaseType] : undefined}</SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {RELEASE_TYPES.map((t) => (
+              {RELEASE_TYPE_VALUES.map((t) => (
                 <SelectItem key={t} value={t}>
                   {RELEASE_TYPE_LABELS[t]}
                 </SelectItem>

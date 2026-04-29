@@ -14,10 +14,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { changeStatus } from "@/actions/status";
-import { PRODUCT_STATUS_LABELS } from "@/constants";
+import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_VALUES } from "@/constants";
 import type { ProductStatus } from "@prisma/client";
-
-const ALL_STATUSES: ProductStatus[] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
 
 interface StatusChangeDialogProps {
   productId: string;
@@ -32,7 +30,7 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
   const [time, setTime] = useState(() => format(new Date(), "HH:mm"));
   const [isPending, startTransition] = useTransition();
 
-  const candidateStatuses = ALL_STATUSES.filter((s) => s !== currentStatus);
+  const candidateStatuses = PRODUCT_STATUS_VALUES.filter((s) => s !== currentStatus);
 
   const handleOpenChange = (value: boolean) => {
     setOpen(value);

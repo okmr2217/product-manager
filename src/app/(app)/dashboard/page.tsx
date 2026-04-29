@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import type { Product, ProductImage, ProductStatus, ProductCategory, StatusHistory } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/lib/button-variants";
+import { PRODUCT_STATUS_VALUES, PRODUCT_CATEGORY_VALUES, PRODUCT_SORT_OPTIONS, type ProductSortKey } from "@/constants";
 import { PageHeader } from "@/components/layout/page-header";
 import { DashboardView } from "@/components/products/dashboard-view";
 import { StatusFilter } from "@/components/filters/status-filter";
@@ -24,10 +25,7 @@ export type ProductWithLatestRelease = Product & {
   latestRelease: LatestRelease;
 };
 
-const VALID_SORT = ["sortOrder", "updatedAt", "name", "releaseDate", "latestRelease"] as const;
-type SortKey = (typeof VALID_SORT)[number];
-
-async function getProducts(status: ProductStatus | null, category: ProductCategory | null, sort: SortKey): Promise<ProductWithLatestRelease[]> {
+async function getProducts(status: ProductStatus | null, category: ProductCategory | null, sort: ProductSortKey): Promise<ProductWithLatestRelease[]> {
   const where = {
     ...(status ? { status } : {}),
     ...(category ? { category } : {}),
@@ -90,12 +88,9 @@ type SearchParams = Promise<{ status?: string; category?: string; sort?: string 
 export default async function DashboardPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
 
-  const statusValues = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"] as const;
-  const categoryValues = ["APP", "MCP", "SITE"] as const;
-
-  const status = statusValues.includes(params.status as ProductStatus) ? (params.status as ProductStatus) : null;
-  const category = categoryValues.includes(params.category as ProductCategory) ? (params.category as ProductCategory) : null;
-  const sort: SortKey = VALID_SORT.includes(params.sort as SortKey) ? (params.sort as SortKey) : "latestRelease";
+  const status = PRODUCT_STATUS_VALUES.includes(params.status as ProductStatus) ? (params.status as ProductStatus) : null;
+  const category = PRODUCT_CATEGORY_VALUES.includes(params.category as ProductCategory) ? (params.category as ProductCategory) : null;
+  const sort: ProductSortKey = PRODUCT_SORT_OPTIONS.some((o) => o.value === params.sort) ? (params.sort as ProductSortKey) : "latestRelease";
 
   const products = await getProducts(status, category, sort);
 

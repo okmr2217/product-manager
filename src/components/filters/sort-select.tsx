@@ -2,14 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const SORT_OPTIONS = [
-  { value: "sortOrder", label: "表示順" },
-  { value: "updatedAt", label: "更新日順" },
-  { value: "name", label: "名前順" },
-  { value: "releaseDate", label: "リリース日順" },
-  { value: "latestRelease", label: "最新リリース順" },
-] as const;
+import { PRODUCT_SORT_OPTIONS } from "@/constants";
 
 export function SortSelect() {
   const router = useRouter();
@@ -31,10 +24,10 @@ export function SortSelect() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue>{SORT_OPTIONS.find((o) => o.value === current)?.label}</SelectValue>
+        <SelectValue>{PRODUCT_SORT_OPTIONS.find((o) => o.value === current)?.label}</SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {SORT_OPTIONS.map((o) => (
+        {PRODUCT_SORT_OPTIONS.map((o) => (
           <SelectItem key={o.value} value={o.value}>
             {o.label}
           </SelectItem>

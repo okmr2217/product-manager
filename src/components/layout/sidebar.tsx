@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Plus, Rocket } from "lucide-react";
+import { LayoutDashboard, Plus, Rocket, Settings } from "lucide-react";
 import type { ProductStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { PRODUCT_STATUS_DOT_COLORS } from "@/constants";
@@ -119,6 +119,17 @@ export function Sidebar({ products }: SidebarProps) {
         >
           <Plus className="size-4" />
           新規作成
+        </Link>
+
+        <Link
+          href="/settings"
+          className={cn(
+            "flex w-full items-center justify-start gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
+            pathname === "/settings" ? "bg-slate-800 text-white" : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+          )}
+        >
+          <Settings className="size-4" />
+          設定
         </Link>
 
         <Separator className="my-2 bg-slate-700/50" />
