@@ -72,6 +72,8 @@ model Product {
   repositoryUrl   String?
   productUrl      String?
   note            String?
+  iconUrl         String?
+  themeColor      String?
   sortOrder       Int             @default(0)
   isPublic        Boolean         @default(false)
   createdAt       DateTime        @default(now())

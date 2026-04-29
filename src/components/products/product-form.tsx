@@ -14,9 +14,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { PRODUCT_CATEGORY_LABELS, STACK_SUGGESTIONS } from "@/constants";
 import { cn } from "@/lib/utils";
+import { useUpload } from "@/hooks/use-upload";
 import type { ActionResult } from "@/types";
 
 interface InitialData {
+  id?: string;
   name?: string;
   slug?: string;
   description?: string;
@@ -26,6 +28,8 @@ interface InitialData {
   repositoryUrl?: string | null;
   productUrl?: string | null;
   note?: string | null;
+  iconUrl?: string | null;
+  themeColor?: string | null;
   sortOrder?: number;
   isPublic?: boolean;
 }
@@ -56,12 +60,25 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
   const [stackInput, setStackInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isPublic, setIsPublic] = useState(initialData?.isPublic ?? false);
+  const [iconUrl, setIconUrl] = useState<string>(initialData?.iconUrl ?? "");
+  const [themeColor, setThemeColor] = useState<string>(initialData?.themeColor ?? "#6366F1");
+  const [iconUploading, setIconUploading] = useState(false);
+  const { upload } = useUpload();
 
   useEffect(() => {
     if (state?.success === false && state.error) {
       toast.error(state.error);
     }
   }, [state]);
+
+  const handleIconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !initialData?.id) return;
+    setIconUploading(true);
+    const result = await upload(file, initialData.id, "icon");
+    if (result) setIconUrl(result.url);
+    setIconUploading(false);
+  };
 
   const addStack = (value: string) => {
     const trimmed = value.trim();
@@ -194,6 +211,66 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
         <FieldLabel>備考</FieldLabel>
         <Textarea id="note" name="note" rows={4} defaultValue={initialData?.note ?? ""} placeholder="例: Vercel（個人アカウント）、Supabase（Free プラン）、ドメイン: example.com" />
         <p className="text-xs text-muted-foreground mt-1">管理者のみ閲覧。ホスティング・DB・ドメインなどの運用情報を自由に記録。ブログには表示されない。</p>
+      </div>
+
+      {/* Icon */}
+      <div>
+        <FieldLabel>アイコン画像</FieldLabel>
+        <div className="flex items-center gap-3">
+          <div className="size-12 rounded-lg border border-border overflow-hidden bg-muted flex items-center justify-center shrink-0">
+            {iconUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={iconUrl} alt="icon" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-muted-foreground text-xs">なし</span>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label
+              className={cn(
+                "cursor-pointer text-xs px-3 py-1.5 rounded-md border border-border hover:bg-muted transition-colors",
+                (!initialData?.id || iconUploading) && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              {iconUploading ? "アップロード中..." : "画像を選択"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={!initialData?.id || iconUploading}
+                onChange={handleIconUpload}
+              />
+            </label>
+            {!initialData?.id && (
+              <p className="text-xs text-muted-foreground">作成後に設定できます</p>
+            )}
+          </div>
+        </div>
+        <input type="hidden" name="iconUrl" value={iconUrl} />
+        <FieldError message={fieldError("iconUrl")} />
+      </div>
+
+      {/* Theme Color */}
+      <div>
+        <FieldLabel>テーマカラー</FieldLabel>
+        <div className="flex items-center gap-2">
+          <input
+            type="color"
+            value={themeColor}
+            onChange={(e) => setThemeColor(e.target.value)}
+            className="size-8 rounded cursor-pointer border border-border"
+          />
+          <Input
+            value={themeColor}
+            onChange={(e) => setThemeColor(e.target.value)}
+            placeholder="#6366F1"
+            className="w-28 font-mono text-sm"
+            maxLength={7}
+          />
+          <div className="h-8 w-16 rounded-md border border-border" style={{ backgroundColor: themeColor }} />
+        </div>
+        <input type="hidden" name="themeColor" value={themeColor} />
+        <FieldError message={fieldError("themeColor")} />
       </div>
 
       {/* Sort Order + isPublic */}

@@ -11,7 +11,7 @@ export function useUpload() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const upload = useCallback(async (file: File, productId: string): Promise<UploadResult | null> => {
+  const upload = useCallback(async (file: File, productId: string, type?: "icon"): Promise<UploadResult | null> => {
     setUploading(true);
     setError(null);
 
@@ -19,6 +19,7 @@ export function useUpload() {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("productId", productId);
+      if (type) formData.append("type", type);
 
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const json = await res.json();

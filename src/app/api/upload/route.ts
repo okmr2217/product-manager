@@ -12,13 +12,17 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
   const productId = formData.get("productId") as string | null;
+  const type = formData.get("type") as string | null;
 
   if (!file || !productId) {
     return NextResponse.json({ error: "file and productId are required" }, { status: 400 });
   }
 
   const ext = file.name.split(".").pop() ?? "jpg";
-  const path = `${productId}/${crypto.randomUUID()}.${ext}`;
+  const path =
+    type === "icon"
+      ? `${productId}/icons/icon.${ext}`
+      : `${productId}/${crypto.randomUUID()}.${ext}`;
 
   const arrayBuffer = await file.arrayBuffer();
   const { error } = await supabaseAdmin.storage
@@ -26,7 +30,7 @@ export async function POST(request: NextRequest) {
     .upload(path, arrayBuffer, {
       contentType: file.type,
       cacheControl: "3600",
-      upsert: false,
+      upsert: type === "icon",
     });
 
   if (error) {

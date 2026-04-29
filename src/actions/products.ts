@@ -20,6 +20,8 @@ function parseFormData(formData: FormData) {
     repositoryUrl: formData.get("repositoryUrl") || undefined,
     productUrl: formData.get("productUrl") || undefined,
     note: formData.get("note") || undefined,
+    iconUrl: formData.get("iconUrl") || undefined,
+    themeColor: formData.get("themeColor") || undefined,
     sortOrder: formData.get("sortOrder") || 0,
     isPublic: formData.get("isPublic") === "true",
   };
@@ -91,6 +93,11 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     if (files && files.length > 0) {
       const paths = files.map((f) => `${id}/${f.name}`);
       await supabaseAdmin.storage.from("product-images").remove(paths);
+    }
+    const { data: iconFiles } = await supabaseAdmin.storage.from("product-images").list(`${id}/icons`);
+    if (iconFiles && iconFiles.length > 0) {
+      const iconPaths = iconFiles.map((f) => `${id}/icons/${f.name}`);
+      await supabaseAdmin.storage.from("product-images").remove(iconPaths);
     }
     await prisma.product.delete({ where: { id } });
   } catch {

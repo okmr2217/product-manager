@@ -10,6 +10,8 @@ export const productSchema = z.object({
   repositoryUrl: z.string().url("有効なURLを入力してください").optional().or(z.literal("")),
   productUrl: z.string().url("有効なURLを入力してください").optional().or(z.literal("")),
   note: z.string().optional(),
+  iconUrl: z.string().url("有効なURLを入力してください").optional().or(z.literal("")),
+  themeColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "有効なカラーコードを入力してください").optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().default(0),
   isPublic: z.boolean().default(false),
 });

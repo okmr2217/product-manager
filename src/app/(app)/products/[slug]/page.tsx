@@ -38,9 +38,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await prisma.product.findUnique({
     where: { slug },
-    select: { name: true },
+    select: { name: true, description: true, iconUrl: true },
   });
-  return { title: product?.name ?? slug };
+  return {
+    title: product?.name ?? slug,
+    description: product?.description,
+    openGraph: {
+      images: product?.iconUrl ? [{ url: product.iconUrl }] : [],
+    },
+  };
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {

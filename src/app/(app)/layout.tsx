@@ -11,6 +11,8 @@ async function getProducts() {
       name: true,
       slug: true,
       status: true,
+      iconUrl: true,
+      themeColor: true,
       releases: {
         select: { releaseDate: true },
         orderBy: { releaseDate: "desc" },

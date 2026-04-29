@@ -16,6 +16,8 @@ type SidebarProduct = {
   name: string;
   slug: string;
   status: ProductStatus;
+  iconUrl?: string | null;
+  themeColor?: string | null;
 };
 
 type SidebarProps = {
@@ -92,7 +94,12 @@ export function Sidebar({ products }: SidebarProps) {
                       isActive ? "bg-slate-800 text-white font-medium" : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
                     )}
                   >
-                    <span className={cn("size-2 shrink-0 rounded-full", PRODUCT_STATUS_DOT_COLORS[product.status])} />
+                    {product.iconUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={product.iconUrl} alt="" className="size-4 shrink-0 rounded overflow-hidden object-cover" />
+                    ) : (
+                      <span className={cn("size-2 shrink-0 rounded-full", PRODUCT_STATUS_DOT_COLORS[product.status])} />
+                    )}
                     <span className="truncate">{product.name}</span>
                   </Link>
                 </li>
