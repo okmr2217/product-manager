@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
 import { updateProduct } from "@/actions/products";
 import { ProductTabs } from "@/components/products/product-tabs";
-import { ProductForm } from "@/components/products/product-form";
+import { ProductSettingsForm } from "@/components/products/product-settings-form";
 import { StatusBadge } from "@/components/products/status-badge";
 import { StatusChangeDialog } from "@/components/products/status-change-dialog";
 import { HistoryEditDialog } from "@/components/products/history-edit-dialog";
@@ -33,6 +33,15 @@ async function getExistingStacks() {
   return [...new Set(products.flatMap((p) => p.stacks))];
 }
 
+async function getTabCounts(productId: string) {
+  const [taskCount, imageCount, releaseCount] = await Promise.all([
+    prisma.devTask.count({ where: { productId } }),
+    prisma.productImage.count({ where: { productId } }),
+    prisma.release.count({ where: { productId } }),
+  ]);
+  return { taskCount, imageCount, releaseCount };
+}
+
 function SectionHeader({ title, description, danger }: { title: string; description?: string; danger?: boolean }) {
   return (
     <div className={cn("pb-2 border-b", danger ? "border-red-100" : "border-slate-200")}>
@@ -48,6 +57,7 @@ export default async function ProductSettingsPage({ params }: { params: Promise<
 
   if (!product) notFound();
 
+  const { taskCount, imageCount, releaseCount } = await getTabCounts(product.id);
   const boundAction = updateProduct.bind(null, product.id);
 
   return (
@@ -58,11 +68,19 @@ export default async function ProductSettingsPage({ params }: { params: Promise<
 
       <ProductTabs slug={slug} productId={product.id} />
 
-      <div className="mt-6 max-w-3xl space-y-12">
+      <div className="mt-6 max-w-5xl space-y-12">
         {/* Section 1: 基本情報 */}
         <section className="space-y-4">
-          <SectionHeader title="基本情報" />
-          <ProductForm action={boundAction} initialData={product} existingStacks={existingStacks} cancelHref={`/products/${slug}`} />
+          <ProductSettingsForm
+            action={boundAction}
+            initialData={product}
+            existingStacks={existingStacks}
+            cancelHref={`/products/${slug}`}
+            productName={product.name}
+            taskCount={taskCount}
+            imageCount={imageCount}
+            releaseCount={releaseCount}
+          />
         </section>
 
         {/* Section 2: ステータス管理 */}
@@ -109,7 +127,7 @@ export default async function ProductSettingsPage({ params }: { params: Promise<
         </section>
 
         {/* Section 3: 危険な操作 */}
-        <section className="space-y-4 border-t border-red-100 pt-6">
+        <section className="space-y-4">
           <SectionHeader
             title="危険な操作"
             description="プロダクトを削除すると、タスク・リリースノート・画像・ステータス履歴を含むすべてのデータが完全に削除されます。この操作は取り消せません。"

@@ -87,21 +87,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6 max-w-5xl">
-        {/* Thumbnail */}
-        <div className="w-full aspect-video rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center">
-          {thumbnail ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={thumbnail.url} alt={thumbnail.alt ?? product.name} className="w-full h-full object-cover" />
-          ) : (
-            <div className="flex flex-col items-center gap-2 text-slate-300">
-              <ImageIcon className="h-12 w-12" />
-              <span className="text-sm">画像なし</span>
-            </div>
-          )}
-        </div>
-
         {/* 2-column grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left column */}
           <div className="md:col-span-2 space-y-6">
             <p className="text-base text-slate-800 leading-relaxed">{product.description}</p>

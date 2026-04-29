@@ -82,19 +82,19 @@ export default function SettingsPage() {
   return (
     <div className="p-6 max-w-2xl space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-white mb-1">設定</h1>
-        <p className="text-sm text-slate-400">アカウント情報の確認・パスワードの変更ができます。</p>
+        <h1 className="text-xl font-semibold text-slate-900 mb-1">設定</h1>
+        <p className="text-sm text-slate-500">アカウント情報の確認・パスワードの変更ができます。</p>
       </div>
 
       <section>
         <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">アカウント</h2>
-        <div className="bg-slate-800/50 rounded-lg border border-slate-700/50 overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+          <div className="flex items-center justify-between p-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-slate-400" />
               <div>
-                <div className="text-sm font-medium text-white">メールアドレス</div>
-                <div className="text-sm text-slate-400">{session?.user?.email ?? "読み込み中..."}</div>
+                <div className="text-sm font-medium text-slate-800">メールアドレス</div>
+                <div className="text-sm text-slate-500">{session?.user?.email ?? "読み込み中..."}</div>
               </div>
             </div>
           </div>
@@ -103,12 +103,12 @@ export default function SettingsPage() {
             <div className="flex items-center gap-3">
               <Lock className="h-5 w-5 text-slate-400" />
               <div>
-                <div className="text-sm font-medium text-white">パスワード</div>
-                <div className="text-sm text-slate-400">••••••••</div>
+                <div className="text-sm font-medium text-slate-800">パスワード</div>
+                <div className="text-sm text-slate-500">••••••••</div>
               </div>
             </div>
             <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-              <DialogTrigger render={<Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-slate-700" />}>
+              <DialogTrigger render={<Button variant="ghost" size="sm" className="text-slate-400 hover:text-slate-700 hover:bg-slate-100" />}>
                 <Edit className="h-4 w-4" />
               </DialogTrigger>
               <DialogContent>
@@ -179,11 +179,11 @@ export default function SettingsPage() {
 
       <section>
         <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">その他</h2>
-        <div className="bg-slate-800/50 rounded-lg border border-slate-700/50 overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="w-full flex items-center gap-3 p-4 text-left text-slate-300 hover:bg-slate-700/50 transition-colors disabled:opacity-50"
+            className="w-full flex items-center gap-3 p-4 text-left text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             <LogOut className="h-5 w-5 text-slate-400" />
             <span className="text-sm font-medium">{isLoggingOut ? "ログアウト中..." : "ログアウト"}</span>
