@@ -11,7 +11,7 @@ import { ReleaseCard } from "@/components/releases/release-card";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const product = await prisma.product.findUnique({ where: { slug }, select: { name: true } });
-  return { title: product ? `${product.name} — リリースノート` : "リリースノート" };
+  return { title: product ? `${product.name} — リリース` : "リリース" };
 }
 
 async function getProductWithReleases(slug: string) {
@@ -29,6 +29,9 @@ export default async function ProductReleasesPage({ params }: { params: Promise<
 
   if (!product) notFound();
 
+  const drafts = product.releases.filter((r) => r.isDraft);
+  const published = product.releases.filter((r) => !r.isDraft);
+
   return (
     <div>
       <div className="mb-6">
@@ -37,8 +40,7 @@ export default async function ProductReleasesPage({ params }: { params: Promise<
       <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-medium text-slate-500">リリースノート</h2>
+        <div className="flex justify-end mb-6">
           <Link href={`/products/${slug}/releases/new`} className={cn(buttonVariants({ size: "sm" }))}>
             <Plus className="h-4 w-4 mr-1" />
             リリースノートを追加
@@ -48,10 +50,38 @@ export default async function ProductReleasesPage({ params }: { params: Promise<
         {product.releases.length === 0 ? (
           <p className="text-sm text-slate-400">リリースノートはありません</p>
         ) : (
-          <div className="space-y-3">
-            {product.releases.map((release) => (
-              <ReleaseCard key={release.id} release={release} slug={slug} />
-            ))}
+          <div className="space-y-8">
+            {drafts.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 rounded-full bg-amber-400" />
+                  <h3 className="text-sm font-medium text-slate-600">下書き</h3>
+                  <span className="text-xs text-slate-400">({drafts.length})</span>
+                </div>
+                <div className="space-y-3">
+                  {drafts.map((release) => (
+                    <ReleaseCard key={release.id} release={release} slug={slug} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {drafts.length > 0 && published.length > 0 && <hr className="border-slate-100" />}
+
+            {published.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <h3 className="text-sm font-medium text-slate-600">公開済み</h3>
+                  <span className="text-xs text-slate-400">({published.length})</span>
+                </div>
+                <div className="space-y-3">
+                  {published.map((release) => (
+                    <ReleaseCard key={release.id} release={release} slug={slug} />
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </div>

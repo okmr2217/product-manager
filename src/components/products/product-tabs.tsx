@@ -15,10 +15,10 @@ export async function ProductTabs({ slug, productId }: { slug: string; productId
 
   const tabs = [
     { label: "概要", path: "" },
-    { label: "リリースノート", path: "/releases", count: releaseCount },
-    { label: "画像", path: "/images", count: imageCount },
     { label: "タスク", path: "/tasks", count: taskCount },
-    { label: "設定", path: "/info" },
+    { label: "リリース", path: "/releases", count: releaseCount },
+    { label: "画像", path: "/images", count: imageCount },
+    { label: "設定", path: "/settings" },
   ];
 
   const basePath = `/products/${slug}`;

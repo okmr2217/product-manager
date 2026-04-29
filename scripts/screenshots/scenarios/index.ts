@@ -33,13 +33,13 @@ export async function runPcScenarios(page: Page): Promise<void> {
     console.error('❌ product-detail-overview failed:', e);
   }
 
-  // product-detail-info
+  // product-detail-settings
   try {
-    await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/info`);
+    await page.goto(`${BASE_URL}/products/${DEMO_SLUG}/settings`);
     await page.waitForLoadState('networkidle');
-    await capture(page, 'product-detail-info', 'pc');
+    await capture(page, 'product-detail-settings', 'pc');
   } catch (e) {
-    console.error('❌ product-detail-info failed:', e);
+    console.error('❌ product-detail-settings failed:', e);
   }
 
   // product-detail-tasks
