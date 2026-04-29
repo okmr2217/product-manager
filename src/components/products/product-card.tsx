@@ -1,58 +1,72 @@
-import Link from "next/link";
-import Image from "next/image";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import Image from "next/image";
+import type { ProductCategory, ProductStatus } from "@prisma/client";
 import type { ProductWithLatestRelease } from "@/app/(app)/dashboard/page";
-import { Card, CardContent } from "@/components/ui/card";
-import { StatusBadge } from "./status-badge";
-import { CategoryBadge } from "./category-badge";
-import { StackTags } from "./stack-tags";
+import { PRODUCT_STATUS_DOT_COLORS, PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_COLORS } from "@/constants";
+import { cn } from "@/lib/utils";
+
+function StatusDot({ status }: { status: ProductStatus }) {
+  return <span className={cn("size-[7px] rounded-full shrink-0", PRODUCT_STATUS_DOT_COLORS[status])} />;
+}
+
+function ProductIcon({ iconUrl, themeColor, name }: { iconUrl: string | null; themeColor: string | null; name: string }) {
+  if (iconUrl) {
+    return (
+      <div className="size-9 rounded-lg overflow-hidden shrink-0">
+        <Image src={iconUrl} alt="" width={36} height={36} className="w-full h-full object-cover" unoptimized />
+      </div>
+    );
+  }
+  const bg = themeColor ? `${themeColor}26` : "#6366F126";
+  return (
+    <div
+      className="size-9 rounded-lg shrink-0 flex items-center justify-center text-xs font-semibold"
+      style={{ backgroundColor: bg, color: themeColor ?? "#6366F1" }}
+    >
+      {name.charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
+function CategoryBadge({ category }: { category: ProductCategory }) {
+  return (
+    <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded", PRODUCT_CATEGORY_COLORS[category])}>
+      {PRODUCT_CATEGORY_LABELS[category]}
+    </span>
+  );
+}
+
+function VersionInfo({ release }: { release: { version: string; releaseDate: Date } | null }) {
+  if (!release) return <span className="text-xs text-muted-foreground">—</span>;
+  return (
+    <div className="flex flex-col items-end gap-0.5">
+      <span className="text-xs font-medium font-mono">{release.version}</span>
+      <span className="text-[10px] text-muted-foreground">{format(release.releaseDate, "yyyy/MM/dd")}</span>
+    </div>
+  );
+}
 
 export function ProductCard({ product }: { product: ProductWithLatestRelease }) {
-  const thumbnail = product.images[0];
-  const themeColor = product.themeColor ?? "#6366F1";
-  const iconUrl = product.iconUrl;
-
+  const router = useRouter();
   return (
-    <Link href={`/products/${product.slug}`}>
-      <Card className="hover:shadow-md transition-shadow overflow-hidden h-full">
-        <div className="h-1 w-full" style={{ backgroundColor: themeColor }} />
-        <div className="aspect-video bg-slate-100 relative">
-          {thumbnail ? (
-            <Image src={thumbnail.url} alt={thumbnail.alt ?? product.name} fill className="object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">画像なし</div>
-          )}
-          {iconUrl && (
-            <div className="absolute bottom-2 right-2 size-8 rounded-md overflow-hidden border-2 border-white shadow-sm bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={iconUrl} alt={`${product.name} icon`} className="w-full h-full object-cover" />
-            </div>
-          )}
-        </div>
-        <CardContent className="p-4 space-y-2">
-          <div className="flex items-center gap-2">
-            {iconUrl && (
-              <div className="size-5 rounded overflow-hidden shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={iconUrl} alt="" className="w-full h-full object-cover" />
-              </div>
-            )}
-            <h2 className="font-semibold text-base leading-snug">{product.name}</h2>
-          </div>
-          <div className="flex gap-1.5 flex-wrap">
-            <CategoryBadge category={product.category} />
-            <StatusBadge status={product.status} />
-          </div>
-          <StackTags stacks={product.stacks} maxDisplay={2} />
-          {product.latestRelease ? (
-            <p className="text-xs text-muted-foreground">
-              {product.latestRelease.version} · {format(product.latestRelease.releaseDate, "yyyy/MM/dd")}
-            </p>
-          ) : (
-            <p className="text-xs text-muted-foreground">リリースなし</p>
-          )}
-        </CardContent>
-      </Card>
-    </Link>
+    <div
+      className="bg-card border border-border/40 rounded-xl p-4 cursor-pointer hover:border-border/80 transition-colors data-[status=DEVELOPING]:border-blue-400/60"
+      data-status={product.status}
+      onClick={() => router.push(`/products/${product.slug}`)}
+    >
+      <div className="flex items-start justify-between mb-3">
+        <ProductIcon iconUrl={product.iconUrl} themeColor={product.themeColor} name={product.name} />
+        <StatusDot status={product.status} />
+      </div>
+      <p className="text-sm font-medium text-foreground mb-1">{product.name}</p>
+      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{product.description}</p>
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
+        <CategoryBadge category={product.category} />
+        <VersionInfo release={product.latestRelease} />
+      </div>
+    </div>
   );
 }

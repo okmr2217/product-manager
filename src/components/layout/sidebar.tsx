@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Plus, Rocket, Settings } from "lucide-react";
+import { LayoutGrid, Plus, Rocket, Settings } from "lucide-react";
 import type { ProductStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { PRODUCT_STATUS_DOT_COLORS } from "@/constants";
@@ -69,8 +69,8 @@ export function Sidebar({ products }: SidebarProps) {
             isDashboardActive ? "bg-slate-800 text-white" : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
           )}
         >
-          <LayoutDashboard className="size-4 shrink-0" />
-          ダッシュボード
+          <LayoutGrid className="size-4 shrink-0" />
+          プロジェクト
         </Link>
 
         {/* プロダクトセクション */}

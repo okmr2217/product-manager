@@ -31,19 +31,19 @@ export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
 };
 
 export const PRODUCT_STATUS_COLORS: Record<ProductStatus, string> = {
-  IDEA: "bg-slate-100 text-slate-700",
-  DEVELOPING: "bg-blue-100 text-blue-700",
-  RELEASED: "bg-green-100 text-green-700",
-  MAINTENANCE: "bg-yellow-100 text-yellow-700",
-  PAUSED: "bg-red-100 text-red-700",
+  IDEA: "bg-gray-100 text-gray-600",
+  DEVELOPING: "bg-blue-50 text-blue-800",
+  RELEASED: "bg-green-50 text-green-800",
+  MAINTENANCE: "bg-teal-50 text-teal-800",
+  PAUSED: "bg-amber-50 text-amber-800",
 };
 
 export const PRODUCT_STATUS_DOT_COLORS: Record<ProductStatus, string> = {
-  IDEA: "bg-slate-400",
+  IDEA: "bg-gray-400",
   DEVELOPING: "bg-blue-500",
   RELEASED: "bg-green-500",
-  MAINTENANCE: "bg-yellow-500",
-  PAUSED: "bg-red-500",
+  MAINTENANCE: "bg-teal-500",
+  PAUSED: "bg-amber-500",
 };
 
 export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
@@ -55,11 +55,11 @@ export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
 };
 
 export const PRODUCT_CATEGORY_COLORS: Record<ProductCategory, string> = {
-  APP: "bg-purple-100 text-purple-700",
-  MCP: "bg-orange-100 text-orange-700",
-  SITE: "bg-cyan-100 text-cyan-700",
-  EXTENSION: "bg-green-100 text-green-700",
-  LIBRARY: "bg-indigo-100 text-indigo-700",
+  APP: "bg-blue-50 text-blue-800",
+  MCP: "bg-purple-50 text-purple-800",
+  SITE: "bg-green-50 text-green-800",
+  EXTENSION: "bg-orange-50 text-orange-800",
+  LIBRARY: "bg-gray-100 text-gray-700",
 };
 
 export const RELEASE_TYPE_LABELS: Record<ReleaseType, string> = {

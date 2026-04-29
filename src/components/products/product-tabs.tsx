@@ -2,25 +2,23 @@ import { prisma } from "@/lib/prisma";
 import { ProductTabLink } from "./product-tab-link";
 
 async function getTabCounts(productId: string) {
-  const [taskCount, imageCount, releaseCount, historyCount] = await Promise.all([
+  const [taskCount, imageCount, releaseCount] = await Promise.all([
     prisma.devTask.count({ where: { productId } }),
     prisma.productImage.count({ where: { productId } }),
     prisma.release.count({ where: { productId } }),
-    prisma.statusHistory.count({ where: { productId } }),
   ]);
-  return { taskCount, imageCount, releaseCount, historyCount };
+  return { taskCount, imageCount, releaseCount };
 }
 
 export async function ProductTabs({ slug, productId }: { slug: string; productId: string }) {
-  const { taskCount, imageCount, releaseCount, historyCount } = await getTabCounts(productId);
+  const { taskCount, imageCount, releaseCount } = await getTabCounts(productId);
 
   const tabs = [
     { label: "概要", path: "" },
-    { label: "基本情報", path: "/info" },
     { label: "タスク", path: "/tasks", count: taskCount },
+    { label: "リリース", path: "/releases", count: releaseCount },
     { label: "画像", path: "/images", count: imageCount },
-    { label: "リリースノート", path: "/releases", count: releaseCount },
-    { label: "履歴", path: "/history", count: historyCount },
+    { label: "設定", path: "/settings" },
   ];
 
   const basePath = `/products/${slug}`;
