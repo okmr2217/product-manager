@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { LayoutGrid, List } from "lucide-react";
+import { LayoutGrid, List, ArrowUpDown } from "lucide-react";
 import type { ProductCategory } from "@prisma/client";
 import { PRODUCT_CATEGORY_LABELS } from "@/constants";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ const CATEGORIES: { value: ProductCategory | "ALL"; label: string }[] = [
   { value: "LIBRARY", label: PRODUCT_CATEGORY_LABELS.LIBRARY },
 ];
 
-export function ProductToolbar() {
+export function ProductToolbar({ onSort }: { onSort: () => void }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -54,27 +54,36 @@ export function ProductToolbar() {
           </button>
         ))}
       </div>
-      <div className="flex border border-border rounded-md overflow-hidden shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
         <button
-          onClick={() => setView("grid")}
-          className={cn(
-            "p-1.5 transition-colors",
-            currentView === "grid" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"
-          )}
-          aria-label="グリッド表示"
+          onClick={onSort}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
         >
-          <LayoutGrid className="size-4" />
+          <ArrowUpDown className="size-3.5" />
+          並び替え
         </button>
-        <button
-          onClick={() => setView("list")}
-          className={cn(
-            "p-1.5 transition-colors border-l border-border",
-            currentView === "list" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"
-          )}
-          aria-label="リスト表示"
-        >
-          <List className="size-4" />
-        </button>
+        <div className="flex border border-border rounded-md overflow-hidden">
+          <button
+            onClick={() => setView("grid")}
+            className={cn(
+              "p-1.5 transition-colors",
+              currentView === "grid" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"
+            )}
+            aria-label="グリッド表示"
+          >
+            <LayoutGrid className="size-4" />
+          </button>
+          <button
+            onClick={() => setView("list")}
+            className={cn(
+              "p-1.5 transition-colors border-l border-border",
+              currentView === "list" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"
+            )}
+            aria-label="リスト表示"
+          >
+            <List className="size-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

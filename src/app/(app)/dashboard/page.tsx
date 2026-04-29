@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { Suspense } from "react";
 import type { Product } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/lib/button-variants";
 import { PageHeader } from "@/components/layout/page-header";
 import { ProductSummaryBar } from "@/components/products/product-summary-bar";
-import { ProductToolbar } from "@/components/products/product-toolbar";
-import { ProductGrid } from "@/components/products/product-grid";
-import { ProductList } from "@/components/products/product-list";
+import { ProductDashboard } from "@/components/products/product-dashboard";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -76,17 +73,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
       ) : (
-        <>
-          <Suspense>
-            <ProductToolbar />
-          </Suspense>
-          <Suspense>
-            <ProductGrid products={products} />
-          </Suspense>
-          <Suspense>
-            <ProductList products={products} />
-          </Suspense>
-        </>
+        <ProductDashboard products={products} />
       )}
     </div>
   );

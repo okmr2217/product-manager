@@ -85,6 +85,26 @@ export async function updateProduct(id: string, _prev: ActionResult | null, form
   redirect(`/products/${slug}`);
 }
 
+export async function reorderProducts(orderedIds: string[]): Promise<ActionResult> {
+  await requireAuth();
+
+  try {
+    await prisma.$transaction(
+      orderedIds.map((id, index) =>
+        prisma.product.update({
+          where: { id },
+          data: { sortOrder: index },
+        })
+      )
+    );
+    revalidatePath("/dashboard");
+  } catch {
+    return { success: false, error: "並び替えに失敗しました" };
+  }
+
+  return { success: true };
+}
+
 export async function deleteProduct(id: string): Promise<ActionResult> {
   await requireAuth();
 
