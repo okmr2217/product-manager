@@ -1,7 +1,7 @@
 import type { ShotKitProjectConfig } from 'shot-kit';
 
 const config: ShotKitProjectConfig = {
-  projectName: 'yarukoto',
+  projectName: 'launchpad',
   baseUrl: process.env['SHOT_KIT_BASE_URL'] ?? 'http://localhost:3000',
 };
 
