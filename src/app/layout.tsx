@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     template: "%s | Launchpad",
   },
   description: "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
