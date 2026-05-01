@@ -44,7 +44,7 @@ async function getTabCounts(productId: string) {
 
 function SectionHeader({ title, description, danger }: { title: string; description?: string; danger?: boolean }) {
   return (
-    <div className={cn("pb-2 border-b", danger ? "border-red-100" : "border-slate-200")}>
+    <div className={cn("pb-2 border-b border-slate-200")}>
       <h2 className={cn("text-base font-semibold", danger ? "text-red-600" : "text-slate-900")}>{title}</h2>
       {description && <p className="text-sm text-slate-500 mt-0.5">{description}</p>}
     </div>

@@ -90,7 +90,8 @@ export function ProductSettingsForm({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isPublic, setIsPublic] = useState(initialData.isPublic ?? false);
   const [iconUrl, setIconUrl] = useState<string>(initialData.iconUrl ?? "");
-  const [themeColor, setThemeColor] = useState<string>(initialData.themeColor ?? "#6366F1");
+  const [themeColor, setThemeColor] = useState<string>(initialData.themeColor || "#6366F1");
+  const [noThemeColor, setNoThemeColor] = useState(!initialData.themeColor);
   const [iconUploading, setIconUploading] = useState(false);
   const [repoPath, setRepoPath] = useState<string>(extractGithubPath(initialData.repositoryUrl));
   const { upload } = useUpload();
@@ -159,7 +160,7 @@ export function ProductSettingsForm({
         ))}
         <input type="hidden" name="isPublic" value={isPublic ? "true" : "false"} />
         <input type="hidden" name="iconUrl" value={iconUrl} />
-        <input type="hidden" name="themeColor" value={themeColor} />
+        <input type="hidden" name="themeColor" value={noThemeColor ? "" : themeColor} />
         <input type="hidden" name="sortOrder" value={initialData.sortOrder ?? 0} />
         <input type="hidden" name="repositoryUrl" value={repositoryUrl} />
 
@@ -352,35 +353,60 @@ export function ProductSettingsForm({
                       <span className="text-muted-foreground text-xs">なし</span>
                     )}
                   </div>
-                  <label
-                    className={cn(
-                      "cursor-pointer text-xs px-3 py-1.5 rounded-md border border-border hover:bg-muted transition-colors",
-                      iconUploading && "opacity-50 cursor-not-allowed"
+                  <div className="flex flex-col gap-1">
+                    <label
+                      className={cn(
+                        "cursor-pointer text-xs px-3 py-1.5 rounded-md border border-border hover:bg-muted transition-colors",
+                        iconUploading && "opacity-50 cursor-not-allowed"
+                      )}
+                    >
+                      {iconUploading ? "アップロード中..." : "変更"}
+                      <input type="file" accept="image/*" className="hidden" disabled={iconUploading} onChange={handleIconUpload} />
+                    </label>
+                    {iconUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setIconUrl("")}
+                        className="text-xs px-3 py-1.5 rounded-md border border-border hover:bg-muted text-muted-foreground transition-colors text-left"
+                      >
+                        削除
+                      </button>
                     )}
-                  >
-                    {iconUploading ? "アップロード中..." : "変更"}
-                    <input type="file" accept="image/*" className="hidden" disabled={iconUploading} onChange={handleIconUpload} />
-                  </label>
+                  </div>
                 </div>
               </div>
 
               <div>
                 <FieldLabel>テーマカラー</FieldLabel>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={themeColor}
-                    onChange={(e) => setThemeColor(e.target.value)}
-                    className="size-8 rounded cursor-pointer border border-border"
-                  />
-                  <Input
-                    value={themeColor}
-                    onChange={(e) => setThemeColor(e.target.value)}
-                    placeholder="#6366F1"
-                    className="w-28 font-mono text-sm"
-                    maxLength={7}
-                  />
-                  <div className="h-8 w-10 rounded-md border border-border" style={{ backgroundColor: themeColor }} />
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="noThemeColor"
+                      checked={noThemeColor}
+                      onChange={(e) => setNoThemeColor(e.target.checked)}
+                      className="size-4 rounded"
+                    />
+                    <label htmlFor="noThemeColor" className="text-sm cursor-pointer">なし</label>
+                  </div>
+                  {!noThemeColor && (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={themeColor}
+                        onChange={(e) => setThemeColor(e.target.value)}
+                        className="size-8 rounded cursor-pointer border border-border"
+                      />
+                      <Input
+                        value={themeColor}
+                        onChange={(e) => setThemeColor(e.target.value)}
+                        placeholder="#6366F1"
+                        className="w-28 font-mono text-sm"
+                        maxLength={7}
+                      />
+                      <div className="h-8 w-10 rounded-md border border-border" style={{ backgroundColor: themeColor }} />
+                    </div>
+                  )}
                 </div>
                 <FieldError message={fieldError("themeColor")} />
               </div>

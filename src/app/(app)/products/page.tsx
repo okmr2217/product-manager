@@ -10,7 +10,7 @@ import { ProductDashboard } from "@/components/products/product-dashboard";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "プロジェクト",
+  title: "プロダクト",
 };
 
 export type LatestRelease = { version: string; releaseDate: Date } | null;
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <PageHeader
-        title="プロジェクト"
+        title="プロダクト"
         actions={
           <Link href="/products/new" className={cn(buttonVariants({ size: "sm" }))}>
             <Plus className="h-4 w-4 mr-1" />
@@ -67,9 +67,9 @@ export default async function DashboardPage() {
 
       {products.length === 0 ? (
         <div className="text-center py-16 text-slate-500">
-          <p className="mb-4">プロジェクトがまだありません</p>
+          <p className="mb-4">プロダクトがまだありません</p>
           <Link href="/products/new" className={cn(buttonVariants())}>
-            最初のプロジェクトを追加
+            最初のプロダクトを追加
           </Link>
         </div>
       ) : (

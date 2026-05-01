@@ -25,6 +25,7 @@ import {
   Pencil,
   Trash2,
   ImageIcon,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -65,19 +66,10 @@ const MAX_SIZE_BYTES = 5 * 1024 * 1024;
 
 interface SortableItemProps {
   image: ImageData;
-  productId: string;
   onPreviewClick: () => void;
-  onSetThumbnail: () => void;
-  onDeviceTypeChange: (newType: DeviceType) => void;
 }
 
-function SortableItem({
-  image,
-  productId,
-  onPreviewClick,
-  onSetThumbnail,
-  onDeviceTypeChange,
-}: SortableItemProps) {
+function SortableItem({ image, onPreviewClick }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -103,13 +95,7 @@ function SortableItem({
         isDragging && "z-50 opacity-50",
       )}
     >
-      <ImageCard
-        image={image}
-        productId={productId}
-        onPreviewClick={onPreviewClick}
-        onSetThumbnail={onSetThumbnail}
-        onDeviceTypeChange={onDeviceTypeChange}
-      />
+      <ImageCard image={image} onPreviewClick={onPreviewClick} />
     </div>
   );
 }
@@ -269,6 +255,11 @@ function PreviewModal({
                 alt={image.alt ?? ""}
                 className="max-w-full max-h-[75vh] object-contain p-4"
               />
+              {uploading && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                  <Loader2 className="h-8 w-8 text-white animate-spin" />
+                </div>
+              )}
               {images.length > 1 && (
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-xs text-white/60 bg-black/30 rounded-full px-2.5 py-0.5 pointer-events-none">
                   {index + 1} / {images.length}
@@ -334,24 +325,27 @@ function PreviewModal({
                       onChange={handleFileChange}
                       className="hidden"
                     />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={isPending}
-                      onClick={handleSetThumbnail}
-                      className={cn(
-                        "w-full h-8 justify-start",
-                        image.isThumbnail && "text-yellow-600 border-yellow-300 bg-yellow-50",
-                      )}
-                    >
-                      <Star
+                    <div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isPending}
+                        onClick={handleSetThumbnail}
                         className={cn(
-                          "h-3.5 w-3.5 mr-1.5",
-                          image.isThumbnail && "fill-yellow-400 text-yellow-400",
+                          "w-full h-8 justify-start",
+                          image.isThumbnail && "text-yellow-600 border-yellow-300 bg-yellow-50",
                         )}
-                      />
-                      {image.isThumbnail ? "サムネイル設定済み" : "サムネイルに設定"}
-                    </Button>
+                      >
+                        <Star
+                          className={cn(
+                            "h-3.5 w-3.5 mr-1.5",
+                            image.isThumbnail && "fill-yellow-400 text-yellow-400",
+                          )}
+                        />
+                        {image.isThumbnail ? "サムネイル設定済み" : "サムネイルに設定"}
+                      </Button>
+                      <p className="text-[10px] text-muted-foreground mt-1">※ この機能は廃止されました</p>
+                    </div>
                     <Button
                       variant="outline"
                       size="sm"
@@ -415,7 +409,6 @@ interface ImageGridProps {
   onDelete: (id: string) => void;
   onRename: (id: string, newAlt: string | null) => void;
   onSetThumbnail: (id: string) => void;
-  onDeviceTypeChange: (id: string, newType: DeviceType) => void;
   onReplace: (id: string, newUrl: string) => void;
   onReorder: (newImages: ImageData[]) => void;
 }
@@ -426,7 +419,6 @@ export function ImageGrid({
   onDelete,
   onRename,
   onSetThumbnail,
-  onDeviceTypeChange,
   onReplace,
   onReorder,
 }: ImageGridProps) {
@@ -478,17 +470,12 @@ export function ImageGrid({
           items={images.map((img) => img.id)}
           strategy={rectSortingStrategy}
         >
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {images.map((image, i) => (
               <SortableItem
                 key={image.id}
                 image={image}
-                productId={productId}
                 onPreviewClick={() => setPreviewIndex(i)}
-                onSetThumbnail={() => onSetThumbnail(image.id)}
-                onDeviceTypeChange={(newType) =>
-                  onDeviceTypeChange(image.id, newType)
-                }
               />
             ))}
           </div>

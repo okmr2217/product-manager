@@ -5,7 +5,6 @@ import { Monitor, Smartphone } from "lucide-react";
 import { ImageUpload } from "./image-upload";
 import { ImageGrid } from "./image-grid";
 import type { ImageData } from "@/types";
-import type { DeviceType } from "@prisma/client";
 
 interface ImagesPanelProps {
   images: ImageData[];
@@ -32,10 +31,6 @@ export function ImagesPanel({ images: initialImages, productId }: ImagesPanelPro
 
   const handleSetThumbnail = (id: string) => {
     setImages((prev) => prev.map((img) => ({ ...img, isThumbnail: img.id === id })));
-  };
-
-  const handleDeviceTypeChange = (id: string, newType: DeviceType) => {
-    setImages((prev) => prev.map((img) => (img.id === id ? { ...img, deviceType: newType } : img)));
   };
 
   const handleReplace = (id: string, newUrl: string) => {
@@ -77,7 +72,6 @@ export function ImagesPanel({ images: initialImages, productId }: ImagesPanelPro
           onDelete={handleDelete}
           onRename={handleRename}
           onSetThumbnail={handleSetThumbnail}
-          onDeviceTypeChange={handleDeviceTypeChange}
           onReplace={handleReplace}
           onReorder={handlePCReorder}
         />
@@ -102,7 +96,6 @@ export function ImagesPanel({ images: initialImages, productId }: ImagesPanelPro
           onDelete={handleDelete}
           onRename={handleRename}
           onSetThumbnail={handleSetThumbnail}
-          onDeviceTypeChange={handleDeviceTypeChange}
           onReplace={handleReplace}
           onReorder={handleMobileReorder}
         />

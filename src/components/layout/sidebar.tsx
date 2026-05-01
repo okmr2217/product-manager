@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, Plus, Rocket, Settings } from "lucide-react";
+import { LayoutGrid, Settings } from "lucide-react";
 import type { ProductStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { PRODUCT_STATUS_DOT_COLORS } from "@/constants";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -70,7 +69,19 @@ export function Sidebar({ products }: SidebarProps) {
           )}
         >
           <LayoutGrid className="size-4 shrink-0" />
-          プロジェクト
+          プロダクト
+        </Link>
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+            pathname === "/settings"
+              ? "bg-[oklch(0.91_0.04_277)] text-[oklch(0.28_0.14_277)] font-medium"
+              : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]"
+          )}
+        >
+          <Settings className="size-4 shrink-0" />
+          設定
         </Link>
 
         {/* プロダクトセクション */}
@@ -116,27 +127,6 @@ export function Sidebar({ products }: SidebarProps) {
       {/* 下部 */}
       <div className="p-2 space-y-1">
         <Separator className="mb-2 bg-[oklch(0.9_0.025_276)]" />
-
-        <Link
-          href="/products/new"
-          className="flex w-full items-center justify-start gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-[oklch(0.48_0.04_277)] transition-colors hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]"
-        >
-          <Plus className="size-4" />
-          新規作成
-        </Link>
-
-        <Link
-          href="/settings"
-          className={cn(
-            "flex w-full items-center justify-start gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
-            pathname === "/settings"
-              ? "bg-[oklch(0.91_0.04_277)] text-[oklch(0.28_0.14_277)]"
-              : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]"
-          )}
-        >
-          <Settings className="size-4" />
-          設定
-        </Link>
 
         <Separator className="my-2 bg-[oklch(0.9_0.025_276)]" />
 

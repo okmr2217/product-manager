@@ -21,11 +21,11 @@ export function ProductGrid({ products }: { products: ProductWithLatestRelease[]
   if (view !== "grid") return null;
 
   if (filtered.length === 0) {
-    return <p className="py-12 text-center text-sm text-muted-foreground">該当するプロジェクトがありません</p>;
+    return <p className="py-12 text-center text-sm text-muted-foreground">該当するプロダクトがありません</p>;
   }
 
   return (
-    <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {filtered.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
