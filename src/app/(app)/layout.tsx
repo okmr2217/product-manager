@@ -35,7 +35,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <Header products={products} />
 
         <main className="flex-1 overflow-y-auto bg-white">
-          <div className="p-4 sm:p-6">{children}</div>
+          <div className="p-4 sm:px-6">{children}</div>
         </main>
       </div>
 
