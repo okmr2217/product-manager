@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { ImagesPanel } from "@/components/images/images-panel";
+import { ProductHeader } from "@/components/products/product-header";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -27,9 +28,7 @@ export default async function ProductImagesPage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
-      </div>
+      <ProductHeader name={product.name} iconUrl={product.iconUrl} status={product.status} />
       <ProductTabs slug={slug} productId={product.id} />
       <div className="mt-6">
         <ImagesPanel images={product.images} productId={product.id} />

@@ -13,6 +13,7 @@ import { ProductTabs } from "@/components/products/product-tabs";
 import { ReleaseTypeBadge } from "@/components/releases/release-type-badge";
 import { TaskPriorityBadge } from "@/components/tasks/task-priority-badge";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_DOT_COLORS } from "@/constants";
+import { ProductHeader } from "@/components/products/product-header";
 
 async function getProduct(slug: string) {
   return prisma.product.findUnique({
@@ -80,9 +81,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
-      </div>
+      <ProductHeader name={product.name} iconUrl={product.iconUrl} status={product.status} />
 
       <ProductTabs slug={slug} productId={product.id} />
 

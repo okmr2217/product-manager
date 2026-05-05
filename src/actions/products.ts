@@ -21,7 +21,7 @@ function parseFormData(formData: FormData) {
     productUrl: formData.get("productUrl") || undefined,
     note: formData.get("note") || undefined,
     iconUrl: formData.get("iconUrl") || undefined,
-    themeColor: formData.get("themeColor") || undefined,
+    themeColor: (formData.get("themeColor") as string) || null,
     sortOrder: formData.get("sortOrder") || 0,
     isPublic: formData.get("isPublic") === "true",
   };

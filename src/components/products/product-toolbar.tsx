@@ -37,8 +37,8 @@ export function ProductToolbar({ onSort }: { onSort: () => void }) {
   }
 
   return (
-    <div className="flex items-center gap-2 mb-5 flex-wrap">
-      <div className="flex items-center gap-1 flex-1 flex-wrap">
+    <div className="flex flex-col gap-2.5 mb-5 sm:flex-row sm:items-center">
+      <div className="flex items-center gap-1 flex-wrap">
         {CATEGORIES.map(({ value, label }) => (
           <button
             key={value}
@@ -54,7 +54,7 @@ export function ProductToolbar({ onSort }: { onSort: () => void }) {
           </button>
         ))}
       </div>
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-2 sm:ml-auto shrink-0">
         <button
           onClick={onSort}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"

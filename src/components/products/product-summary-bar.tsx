@@ -14,7 +14,7 @@ type Props = { total: number; released: number; developing: number; idea: number
 
 export function ProductSummaryBar({ total, released, developing, idea }: Props) {
   return (
-    <div className="grid grid-cols-4 gap-3 mb-5">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
       <SummaryCard label="全プロジェクト" value={total} />
       <SummaryCard label="リリース済み" value={released} color="success" />
       <SummaryCard label="開発中" value={developing} color="info" />

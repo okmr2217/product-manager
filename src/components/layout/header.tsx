@@ -21,9 +21,9 @@ export function Header({ products }: HeaderProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="flex h-14 items-center border-b border-slate-200 bg-white px-4 md:hidden">
+    <header className="flex h-14 items-center border-b border-[oklch(0.9_0.025_276)] bg-[oklch(0.975_0.008_276)] px-4 md:hidden">
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger className="inline-flex size-8 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition-colors">
+        <SheetTrigger className="inline-flex size-8 items-center justify-center rounded-lg text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] transition-colors">
           <Menu className="size-5" />
           <span className="sr-only">メニューを開く</span>
         </SheetTrigger>
@@ -31,11 +31,9 @@ export function Header({ products }: HeaderProps) {
           <Sidebar products={products} />
         </SheetContent>
       </Sheet>
-      <div className="ml-3 flex items-center gap-2">
-        <span className="flex size-6 items-center justify-center rounded-md bg-indigo-600">
-          <img src="/icon-192.png" alt="Launchpad" className="size-3.5" />
-        </span>
-        <span className="text-sm font-semibold text-slate-900">Launchpad</span>
+      <div className="ml-3 flex items-center gap-2.5">
+        <img src="/icon-192.png" alt="Launchpad" className="size-7" />
+        <span className="text-base font-bold text-[oklch(0.22_0.12_277)]">Launchpad</span>
       </div>
     </header>
   );

@@ -7,6 +7,7 @@ import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
 import { ProductTabs } from "@/components/products/product-tabs";
 import { ReleaseCard } from "@/components/releases/release-card";
+import { ProductHeader } from "@/components/products/product-header";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -34,9 +35,7 @@ export default async function ProductReleasesPage({ params }: { params: Promise<
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
-      </div>
+      <ProductHeader name={product.name} iconUrl={product.iconUrl} status={product.status} />
       <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6">

@@ -470,7 +470,7 @@ export function ImageGrid({
           items={images.map((img) => img.id)}
           strategy={rectSortingStrategy}
         >
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
             {images.map((image, i) => (
               <SortableItem
                 key={image.id}

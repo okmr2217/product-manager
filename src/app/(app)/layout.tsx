@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Toaster } from "@/components/ui/sonner";
 
 async function getProducts() {
-  const products = await prisma.product.findMany({
+  return prisma.product.findMany({
     select: {
       id: true,
       name: true,
@@ -13,18 +13,8 @@ async function getProducts() {
       status: true,
       iconUrl: true,
       themeColor: true,
-      releases: {
-        select: { releaseDate: true },
-        orderBy: { releaseDate: "desc" },
-        take: 1,
-      },
     },
-  });
-
-  return products.sort((a, b) => {
-    const aDate = a.releases[0]?.releaseDate ?? new Date(0);
-    const bDate = b.releases[0]?.releaseDate ?? new Date(0);
-    return bDate.getTime() - aDate.getTime();
+    orderBy: { sortOrder: "asc" },
   });
 }
 
@@ -45,7 +35,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <Header products={products} />
 
         <main className="flex-1 overflow-y-auto bg-white">
-          <div className="p-6">{children}</div>
+          <div className="p-4 sm:p-6">{children}</div>
         </main>
       </div>
 
