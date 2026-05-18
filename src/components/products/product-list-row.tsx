@@ -4,18 +4,42 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
 import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
-import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_COLORS, PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_COLORS } from "@/constants";
+import {
+  PRODUCT_STATUS_LABELS,
+  PRODUCT_STATUS_COLORS,
+  PRODUCT_CATEGORY_LABELS,
+  PRODUCT_CATEGORY_COLORS,
+} from "@/constants";
 import { cn } from "@/lib/utils";
 
-export function ProductListRow({ product }: { product: ProductWithLatestRelease }) {
+export function ProductListRow({
+  product,
+}: {
+  product: ProductWithLatestRelease;
+}) {
   const router = useRouter();
-  const { iconUrl, themeColor, name, description, category, status, latestRelease } = product;
+  const {
+    iconUrl,
+    themeColor,
+    name,
+    description,
+    category,
+    status,
+    latestRelease,
+  } = product;
 
   function renderIcon() {
     if (iconUrl) {
       return (
         <div className="size-7 rounded-lg overflow-hidden shrink-0">
-          <Image src={iconUrl} alt="" width={28} height={28} className="w-full h-full object-cover" unoptimized />
+          <Image
+            src={iconUrl}
+            alt=""
+            width={28}
+            height={28}
+            className="w-full h-full object-cover"
+            unoptimized
+          />
         </div>
       );
     }
@@ -40,18 +64,34 @@ export function ProductListRow({ product }: { product: ProductWithLatestRelease 
       {renderIcon()}
       <div className="min-w-0">
         <p className="text-sm font-medium truncate">{name}</p>
-        <p className="text-xs text-muted-foreground truncate mt-0.5">{description}</p>
+        <p className="text-xs text-muted-foreground truncate mt-0.5">
+          {description}
+        </p>
       </div>
-      <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded w-fit", PRODUCT_CATEGORY_COLORS[category])}>
+      <span
+        className={cn(
+          "text-[10px] font-medium px-1.5 py-0.5 rounded w-fit",
+          PRODUCT_CATEGORY_COLORS[category],
+        )}
+      >
         {PRODUCT_CATEGORY_LABELS[category]}
       </span>
-      <span className={cn("text-[10px] px-2 py-0.5 rounded-full inline-flex items-center w-fit", PRODUCT_STATUS_COLORS[status])}>
+      <span
+        className={cn(
+          "text-[10px] px-2 py-0.5 rounded-full inline-flex items-center w-fit",
+          PRODUCT_STATUS_COLORS[status],
+        )}
+      >
         {PRODUCT_STATUS_LABELS[status]}
       </span>
       {latestRelease ? (
         <div className="flex flex-col items-end gap-0.5">
-          <span className="text-xs font-medium font-mono">{latestRelease.version}</span>
-          <span className="text-[10px] text-muted-foreground">{format(latestRelease.releaseDate, "yyyy/MM/dd")}</span>
+          <span className="text-xs font-medium font-mono">
+            {latestRelease.version}
+          </span>
+          <span className="text-[10px] text-muted-foreground">
+            {format(latestRelease.releaseDate, "yyyy/MM/dd")}
+          </span>
         </div>
       ) : (
         <span className="text-xs text-muted-foreground">—</span>

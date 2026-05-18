@@ -4,13 +4,30 @@ import { useState, useTransition } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { CalendarIcon, Pencil } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { updateStatusHistory } from "@/actions/status";
@@ -87,7 +104,10 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>変更前</Label>
-              <Select value={from} onValueChange={(v) => setFrom(v as ProductStatus)}>
+              <Select
+                value={from}
+                onValueChange={(v) => setFrom(v as ProductStatus)}
+              >
                 <SelectTrigger>
                   <SelectValue>{PRODUCT_STATUS_LABELS[from]}</SelectValue>
                 </SelectTrigger>
@@ -102,7 +122,10 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
             </div>
             <div className="space-y-1.5">
               <Label>変更後</Label>
-              <Select value={to} onValueChange={(v) => setTo(v as ProductStatus)}>
+              <Select
+                value={to}
+                onValueChange={(v) => setTo(v as ProductStatus)}
+              >
                 <SelectTrigger>
                   <SelectValue>{PRODUCT_STATUS_LABELS[to]}</SelectValue>
                 </SelectTrigger>
@@ -127,7 +150,7 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
                       type="button"
                       className={cn(
                         "flex h-9 flex-1 items-center gap-2 rounded-md border border-input bg-background px-3 text-sm",
-                        !date && "text-muted-foreground"
+                        !date && "text-muted-foreground",
                       )}
                     />
                   }
@@ -159,7 +182,11 @@ export function HistoryEditDialog({ entry }: HistoryEditDialogProps) {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isPending}>
+          <Button
+            variant="outline"
+            onClick={() => handleOpenChange(false)}
+            disabled={isPending}
+          >
             キャンセル
           </Button>
           <Button onClick={handleSubmit} disabled={isPending}>

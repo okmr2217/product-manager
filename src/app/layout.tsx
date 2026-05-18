@@ -20,7 +20,8 @@ export const metadata: Metadata = {
     default: "Launchpad",
     template: "%s | Launchpad",
   },
-  description: "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
+  description:
+    "個人開発プロダクトの進捗・ステータス・リリース履歴を横断的に管理するアプリ",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -49,7 +50,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={`${notoSansJP.variable} ${roboto.variable} h-full antialiased`}>
+    <html
+      lang="ja"
+      className={`${notoSansJP.variable} ${roboto.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

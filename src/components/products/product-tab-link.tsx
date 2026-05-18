@@ -12,7 +12,13 @@ type Props = {
   count?: number;
 };
 
-export function ProductTabLink({ label, href, basePath, isExact, count }: Props) {
+export function ProductTabLink({
+  label,
+  href,
+  basePath,
+  isExact,
+  count,
+}: Props) {
   const pathname = usePathname();
   const isActive = isExact ? pathname === basePath : pathname.startsWith(href);
 
@@ -23,7 +29,7 @@ export function ProductTabLink({ label, href, basePath, isExact, count }: Props)
         "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap transition-all",
         isActive
           ? "bg-background text-foreground shadow-sm border border-border"
-          : "text-muted-foreground hover:text-foreground hover:bg-background/60"
+          : "text-muted-foreground hover:text-foreground hover:bg-background/60",
       )}
     >
       {label}
@@ -31,7 +37,9 @@ export function ProductTabLink({ label, href, basePath, isExact, count }: Props)
         <span
           className={cn(
             "text-xs font-medium px-1.5 py-0.5 rounded-full tabular-nums",
-            isActive ? "bg-primary/10 text-primary" : "bg-muted-foreground/15 text-muted-foreground"
+            isActive
+              ? "bg-primary/10 text-primary"
+              : "bg-muted-foreground/15 text-muted-foreground",
           )}
         >
           {count}

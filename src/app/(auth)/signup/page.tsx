@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -99,7 +105,10 @@ export default function SignupPage() {
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           すでにアカウントをお持ちの方は{" "}
-          <Link href="/login" className="underline underline-offset-4 hover:text-primary">
+          <Link
+            href="/login"
+            className="underline underline-offset-4 hover:text-primary"
+          >
             ログイン
           </Link>
         </p>

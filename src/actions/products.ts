@@ -27,14 +27,20 @@ function parseFormData(formData: FormData) {
   };
 }
 
-export async function createProduct(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+export async function createProduct(
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = productSchema.safeParse(parseFormData(formData));
   if (!result.success) {
     return {
       success: false,
-      fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]>,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
     };
   }
 
@@ -45,8 +51,14 @@ export async function createProduct(_prev: ActionResult | null, formData: FormDa
     });
     slug = product.slug;
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      return { success: false, fieldErrors: { slug: ["このスラッグはすでに使用されています"] } };
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return {
+        success: false,
+        fieldErrors: { slug: ["このスラッグはすでに使用されています"] },
+      };
     }
     return { success: false, error: "プロダクトの作成に失敗しました" };
   }
@@ -55,14 +67,21 @@ export async function createProduct(_prev: ActionResult | null, formData: FormDa
   redirect(`/products/${slug}`);
 }
 
-export async function updateProduct(id: string, _prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+export async function updateProduct(
+  id: string,
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = productSchema.safeParse(parseFormData(formData));
   if (!result.success) {
     return {
       success: false,
-      fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]>,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
     };
   }
 
@@ -74,8 +93,14 @@ export async function updateProduct(id: string, _prev: ActionResult | null, form
     });
     slug = product.slug;
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      return { success: false, fieldErrors: { slug: ["このスラッグはすでに使用されています"] } };
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return {
+        success: false,
+        fieldErrors: { slug: ["このスラッグはすでに使用されています"] },
+      };
     }
     return { success: false, error: "プロダクトの更新に失敗しました" };
   }
@@ -85,7 +110,9 @@ export async function updateProduct(id: string, _prev: ActionResult | null, form
   redirect(`/products/${slug}`);
 }
 
-export async function reorderProducts(orderedIds: string[]): Promise<ActionResult> {
+export async function reorderProducts(
+  orderedIds: string[],
+): Promise<ActionResult> {
   await requireAuth();
 
   try {
@@ -94,8 +121,8 @@ export async function reorderProducts(orderedIds: string[]): Promise<ActionResul
         prisma.product.update({
           where: { id },
           data: { sortOrder: index },
-        })
-      )
+        }),
+      ),
     );
     revalidatePath("/products");
   } catch {
@@ -109,12 +136,16 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
   await requireAuth();
 
   try {
-    const { data: files } = await supabaseAdmin.storage.from("product-images").list(id);
+    const { data: files } = await supabaseAdmin.storage
+      .from("product-images")
+      .list(id);
     if (files && files.length > 0) {
       const paths = files.map((f) => `${id}/${f.name}`);
       await supabaseAdmin.storage.from("product-images").remove(paths);
     }
-    const { data: iconFiles } = await supabaseAdmin.storage.from("product-images").list(`${id}/icons`);
+    const { data: iconFiles } = await supabaseAdmin.storage
+      .from("product-images")
+      .list(`${id}/icons`);
     if (iconFiles && iconFiles.length > 0) {
       const iconPaths = iconFiles.map((f) => `${id}/icons/${f.name}`);
       await supabaseAdmin.storage.from("product-images").remove(iconPaths);

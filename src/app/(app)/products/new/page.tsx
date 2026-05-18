@@ -19,7 +19,11 @@ export default async function NewProductPage() {
   return (
     <div>
       <PageHeader title="プロダクトを追加" />
-      <ProductForm action={createProduct} existingStacks={existingStacks} cancelHref="/products" />
+      <ProductForm
+        action={createProduct}
+        existingStacks={existingStacks}
+        cancelHref="/products"
+      />
     </div>
   );
 }

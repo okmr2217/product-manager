@@ -3,20 +3,37 @@
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { statusChangeSchema, statusHistoryUpdateSchema } from "@/schemas/status";
+import {
+  statusChangeSchema,
+  statusHistoryUpdateSchema,
+} from "@/schemas/status";
 import type { ActionResult } from "@/types";
-import type { StatusChangeInput, StatusHistoryUpdateInput } from "@/schemas/status";
+import type {
+  StatusChangeInput,
+  StatusHistoryUpdateInput,
+} from "@/schemas/status";
 
-export async function changeStatus(productId: string, data: StatusChangeInput): Promise<ActionResult> {
+export async function changeStatus(
+  productId: string,
+  data: StatusChangeInput,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = statusChangeSchema.safeParse(data);
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   try {
-    const product = await prisma.product.findUniqueOrThrow({ where: { id: productId } });
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+    });
 
     await prisma.$transaction([
       prisma.product.update({
@@ -43,12 +60,21 @@ export async function changeStatus(productId: string, data: StatusChangeInput): 
   return { success: true };
 }
 
-export async function updateStatusHistory(id: string, data: StatusHistoryUpdateInput): Promise<ActionResult> {
+export async function updateStatusHistory(
+  id: string,
+  data: StatusHistoryUpdateInput,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = statusHistoryUpdateSchema.safeParse(data);
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   try {

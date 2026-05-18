@@ -47,7 +47,7 @@ export function ProductToolbar({ onSort }: { onSort: () => void }) {
               "px-3 py-1.5 rounded-full text-xs font-medium transition-colors",
               currentCategory === value
                 ? "bg-foreground text-background"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                : "bg-muted text-muted-foreground hover:bg-muted/80",
             )}
           >
             {label}
@@ -67,7 +67,9 @@ export function ProductToolbar({ onSort }: { onSort: () => void }) {
             onClick={() => setView("grid")}
             className={cn(
               "p-1.5 transition-colors",
-              currentView === "grid" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"
+              currentView === "grid"
+                ? "bg-foreground text-background"
+                : "bg-card text-muted-foreground hover:bg-muted",
             )}
             aria-label="グリッド表示"
           >
@@ -77,7 +79,9 @@ export function ProductToolbar({ onSort }: { onSort: () => void }) {
             onClick={() => setView("list")}
             className={cn(
               "p-1.5 transition-colors border-l border-border",
-              currentView === "list" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"
+              currentView === "list"
+                ? "bg-foreground text-background"
+                : "bg-card text-muted-foreground hover:bg-muted",
             )}
             aria-label="リスト表示"
           >

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, Rocket } from "lucide-react";
+import Image from "next/image";
+import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "./sidebar";
 import type { ProductStatus } from "@prisma/client";
@@ -27,13 +28,19 @@ export function Header({ products }: HeaderProps) {
           <Menu className="size-5" />
           <span className="sr-only">メニューを開く</span>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 max-w-64" showCloseButton={false}>
+        <SheetContent
+          side="left"
+          className="p-0 max-w-64"
+          showCloseButton={false}
+        >
           <Sidebar products={products} />
         </SheetContent>
       </Sheet>
       <div className="ml-3 flex items-center gap-2.5">
-        <img src="/icon-192.png" alt="Launchpad" className="size-7" />
-        <span className="text-base font-bold text-[oklch(0.22_0.12_277)]">Launchpad</span>
+        <Image src="/icon-192.png" alt="Launchpad" width={28} height={28} />
+        <span className="text-base font-bold text-[oklch(0.22_0.12_277)]">
+          Launchpad
+        </span>
       </div>
     </header>
   );

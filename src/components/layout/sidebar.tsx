@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LayoutGrid, Settings } from "lucide-react";
 import type { ProductStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { PRODUCT_STATUS_DOT_COLORS } from "@/constants";
 import { Separator } from "@/components/ui/separator";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
 
 type SidebarProduct = {
@@ -47,7 +53,7 @@ export function Sidebar({ products }: SidebarProps) {
       {/* アプリ名 */}
       <div className="p-4">
         <Link href="/products" className="flex items-center gap-2.5">
-          <img src="/icon-192.png" alt="Launchpad" className="size-7" />
+          <Image src="/icon-192.png" alt="Launchpad" width={28} height={28} />
           <span className="text-lg font-semibold text-[oklch(0.22_0.12_277)] hover:text-[oklch(0.35_0.15_277)] transition-colors">
             Launchpad
           </span>
@@ -65,7 +71,7 @@ export function Sidebar({ products }: SidebarProps) {
             "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
             isDashboardActive
               ? "bg-[oklch(0.91_0.04_277)] text-[oklch(0.28_0.14_277)] font-medium"
-              : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]"
+              : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]",
           )}
         >
           <LayoutGrid className="size-4 shrink-0" />
@@ -77,7 +83,7 @@ export function Sidebar({ products }: SidebarProps) {
             "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
             pathname === "/settings"
               ? "bg-[oklch(0.91_0.04_277)] text-[oklch(0.28_0.14_277)] font-medium"
-              : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]"
+              : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]",
           )}
         >
           <Settings className="size-4 shrink-0" />
@@ -86,16 +92,22 @@ export function Sidebar({ products }: SidebarProps) {
 
         {/* プロダクトセクション */}
         <div className="mt-4 mb-1 px-3">
-          <span className="text-xs font-semibold text-[oklch(0.65_0.04_277)] uppercase tracking-wider">プロダクト</span>
+          <span className="text-xs font-semibold text-[oklch(0.65_0.04_277)] uppercase tracking-wider">
+            プロダクト
+          </span>
         </div>
         <Separator className="mb-1 bg-[oklch(0.9_0.025_276)]" />
 
         {products.length === 0 ? (
-          <p className="px-3 py-2 text-xs text-[oklch(0.65_0.04_277)]">プロダクトがありません</p>
+          <p className="px-3 py-2 text-xs text-[oklch(0.65_0.04_277)]">
+            プロダクトがありません
+          </p>
         ) : (
           <ul className="space-y-0.5">
             {products.map((product) => {
-              const isActive = pathname === `/products/${product.slug}` || pathname.startsWith(`/products/${product.slug}/`);
+              const isActive =
+                pathname === `/products/${product.slug}` ||
+                pathname.startsWith(`/products/${product.slug}/`);
               return (
                 <li key={product.id}>
                   <Link
@@ -104,15 +116,24 @@ export function Sidebar({ products }: SidebarProps) {
                       "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
                       isActive
                         ? "bg-[oklch(0.91_0.04_277)] text-[oklch(0.28_0.14_277)] font-medium"
-                        : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]"
+                        : "text-[oklch(0.48_0.04_277)] hover:bg-[oklch(0.955_0.018_277)] hover:text-[oklch(0.28_0.14_277)]",
                     )}
                   >
                     {product.iconUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={product.iconUrl} alt="" className="size-4.5 shrink-0 rounded overflow-hidden object-cover" />
+                      <img
+                        src={product.iconUrl}
+                        alt=""
+                        className="size-4.5 shrink-0 rounded overflow-hidden object-cover"
+                      />
                     ) : (
                       <span className="size-4.5 shrink-0 flex items-center justify-center">
-                        <span className={cn("size-2 rounded-full", PRODUCT_STATUS_DOT_COLORS[product.status])} />
+                        <span
+                          className={cn(
+                            "size-2 rounded-full",
+                            PRODUCT_STATUS_DOT_COLORS[product.status],
+                          )}
+                        />
                       </span>
                     )}
                     <span className="truncate">{product.name}</span>
@@ -135,10 +156,15 @@ export function Sidebar({ products }: SidebarProps) {
             <span className="size-6 rounded-full bg-[oklch(0.91_0.04_277)] flex items-center justify-center text-xs font-medium text-[oklch(0.28_0.14_277)] shrink-0">
               {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
             </span>
-            <span className="truncate">{session?.user?.name ?? session?.user?.email ?? "ユーザー"}</span>
+            <span className="truncate">
+              {session?.user?.name ?? session?.user?.email ?? "ユーザー"}
+            </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="start" className="w-48">
-            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+            <DropdownMenuItem
+              onClick={handleSignOut}
+              className="cursor-pointer"
+            >
               ログアウト
             </DropdownMenuItem>
           </DropdownMenuContent>

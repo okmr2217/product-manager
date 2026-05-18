@@ -33,7 +33,12 @@ export function TaskCard({ task, slug }: TaskCardProps) {
   };
 
   return (
-    <div className={cn("flex items-start gap-3 p-4 border rounded-lg bg-white", isDone && "opacity-50")}>
+    <div
+      className={cn(
+        "flex items-start gap-3 p-4 border rounded-lg bg-white",
+        isDone && "opacity-50",
+      )}
+    >
       <Checkbox
         checked={isDone}
         onCheckedChange={(checked) => handleToggle(checked === true)}
@@ -41,9 +46,15 @@ export function TaskCard({ task, slug }: TaskCardProps) {
         className="mt-0.5 shrink-0"
       />
       <div className="flex-1 min-w-0">
-        <p className={cn("font-medium text-slate-900", isDone && "line-through")}>{task.title}</p>
+        <p
+          className={cn("font-medium text-slate-900", isDone && "line-through")}
+        >
+          {task.title}
+        </p>
         {descriptionFirstLine && (
-          <p className="text-sm text-slate-500 mt-0.5 truncate">{descriptionFirstLine}</p>
+          <p className="text-sm text-slate-500 mt-0.5 truncate">
+            {descriptionFirstLine}
+          </p>
         )}
         <div className="flex flex-wrap gap-1.5 mt-2">
           <TaskTypeBadge type={task.type} />
@@ -52,7 +63,10 @@ export function TaskCard({ task, slug }: TaskCardProps) {
         </div>
       </div>
       <div className="flex items-center gap-1 shrink-0">
-        <Link href={`/products/${slug}/tasks/${task.id}/edit`} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded hover:bg-muted">
+        <Link
+          href={`/products/${slug}/tasks/${task.id}/edit`}
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded hover:bg-muted"
+        >
           <Pencil className="h-3 w-3" />
           編集
         </Link>

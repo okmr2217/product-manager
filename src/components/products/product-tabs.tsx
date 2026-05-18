@@ -10,7 +10,13 @@ async function getTabCounts(productId: string) {
   return { taskCount, imageCount, releaseCount };
 }
 
-export async function ProductTabs({ slug, productId }: { slug: string; productId: string }) {
+export async function ProductTabs({
+  slug,
+  productId,
+}: {
+  slug: string;
+  productId: string;
+}) {
   const { taskCount, imageCount, releaseCount } = await getTabCounts(productId);
 
   const tabs = [

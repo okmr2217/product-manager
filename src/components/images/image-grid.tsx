@@ -59,7 +59,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DEVICE_TYPE_LABELS, DEVICE_TYPE_COLORS } from "@/constants";
 import { useUpload } from "@/hooks/use-upload";
-import type { DeviceType } from "@prisma/client";
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 const MAX_SIZE_BYTES = 5 * 1024 * 1024;
@@ -142,10 +141,6 @@ function PreviewModal({
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   });
-
-  useEffect(() => {
-    setAltValue(image.alt ?? "");
-  }, [image.id, image.alt]);
 
   const handleSetThumbnail = () => {
     if (image.isThumbnail) return;
@@ -279,20 +274,26 @@ function PreviewModal({
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
                 {/* Meta */}
                 <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">情報</p>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    情報
+                  </p>
                   <div className="flex flex-col gap-1.5">
                     <span
                       className={`self-start inline-flex items-center text-xs font-medium rounded px-1.5 py-0.5 border ${DEVICE_TYPE_COLORS[image.deviceType]}`}
                     >
                       {DEVICE_TYPE_LABELS[image.deviceType]}
                     </span>
-                    <span className="text-xs text-slate-400">{formatDate(image.createdAt)}</span>
+                    <span className="text-xs text-slate-400">
+                      {formatDate(image.createdAt)}
+                    </span>
                   </div>
                 </div>
 
                 {/* Alt text */}
                 <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">名前（alt）</p>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    名前（alt）
+                  </p>
                   <Input
                     id="preview-alt-input"
                     value={altValue}
@@ -316,7 +317,9 @@ function PreviewModal({
 
                 {/* Actions */}
                 <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">操作</p>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    操作
+                  </p>
                   <div className="flex flex-col gap-2">
                     <input
                       ref={fileInputRef}
@@ -333,18 +336,24 @@ function PreviewModal({
                         onClick={handleSetThumbnail}
                         className={cn(
                           "w-full h-8 justify-start",
-                          image.isThumbnail && "text-yellow-600 border-yellow-300 bg-yellow-50",
+                          image.isThumbnail &&
+                            "text-yellow-600 border-yellow-300 bg-yellow-50",
                         )}
                       >
                         <Star
                           className={cn(
                             "h-3.5 w-3.5 mr-1.5",
-                            image.isThumbnail && "fill-yellow-400 text-yellow-400",
+                            image.isThumbnail &&
+                              "fill-yellow-400 text-yellow-400",
                           )}
                         />
-                        {image.isThumbnail ? "サムネイル設定済み" : "サムネイルに設定"}
+                        {image.isThumbnail
+                          ? "サムネイル設定済み"
+                          : "サムネイルに設定"}
                       </Button>
-                      <p className="text-[10px] text-muted-foreground mt-1">※ この機能は廃止されました</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        ※ この機能は廃止されました
+                      </p>
                     </div>
                     <Button
                       variant="outline"
@@ -484,6 +493,7 @@ export function ImageGrid({
 
       {previewIndex !== null && (
         <PreviewModal
+          key={images[previewIndex]?.id}
           images={images}
           index={previewIndex}
           productId={productId}

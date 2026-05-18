@@ -12,7 +12,11 @@ async function getTask(id: string) {
   return prisma.devTask.findUnique({ where: { id } });
 }
 
-export default async function EditTaskPage({ params }: { params: Promise<{ slug: string; id: string }> }) {
+export default async function EditTaskPage({
+  params,
+}: {
+  params: Promise<{ slug: string; id: string }>;
+}) {
   const { slug, id } = await params;
   const task = await getTask(id);
 

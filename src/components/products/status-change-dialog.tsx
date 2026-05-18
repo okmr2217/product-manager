@@ -4,13 +4,30 @@ import { useState, useTransition } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { CalendarIcon } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { changeStatus } from "@/actions/status";
@@ -22,7 +39,10 @@ interface StatusChangeDialogProps {
   currentStatus: ProductStatus;
 }
 
-export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDialogProps) {
+export function StatusChangeDialog({
+  productId,
+  currentStatus,
+}: StatusChangeDialogProps) {
   const [open, setOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<ProductStatus | "">("");
   const [note, setNote] = useState("");
@@ -30,7 +50,9 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
   const [time, setTime] = useState(() => format(new Date(), "HH:mm"));
   const [isPending, startTransition] = useTransition();
 
-  const candidateStatuses = PRODUCT_STATUS_VALUES.filter((s) => s !== currentStatus);
+  const candidateStatuses = PRODUCT_STATUS_VALUES.filter(
+    (s) => s !== currentStatus,
+  );
 
   const handleOpenChange = (value: boolean) => {
     setOpen(value);
@@ -70,7 +92,9 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger render={<Button variant="outline" size="sm" />}>ステータスを変更</DialogTrigger>
+      <DialogTrigger render={<Button variant="outline" size="sm" />}>
+        ステータスを変更
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>ステータスを変更</DialogTitle>
@@ -78,9 +102,16 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
         <div className="space-y-4 py-2">
           <div className="space-y-1.5">
             <Label htmlFor="status-select">変更先ステータス</Label>
-            <Select value={selectedStatus} onValueChange={(v) => setSelectedStatus(v as ProductStatus)}>
+            <Select
+              value={selectedStatus}
+              onValueChange={(v) => setSelectedStatus(v as ProductStatus)}
+            >
               <SelectTrigger id="status-select">
-                <SelectValue placeholder="ステータスを選択">{selectedStatus ? PRODUCT_STATUS_LABELS[selectedStatus] : undefined}</SelectValue>
+                <SelectValue placeholder="ステータスを選択">
+                  {selectedStatus
+                    ? PRODUCT_STATUS_LABELS[selectedStatus]
+                    : undefined}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {candidateStatuses.map((s) => (
@@ -102,7 +133,7 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
                       type="button"
                       className={cn(
                         "flex h-9 flex-1 items-center gap-2 rounded-md border border-input bg-background px-3 text-sm",
-                        !date && "text-muted-foreground"
+                        !date && "text-muted-foreground",
                       )}
                     />
                   }
@@ -135,10 +166,17 @@ export function StatusChangeDialog({ productId, currentStatus }: StatusChangeDia
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isPending}>
+          <Button
+            variant="outline"
+            onClick={() => handleOpenChange(false)}
+            disabled={isPending}
+          >
             キャンセル
           </Button>
-          <Button onClick={handleSubmit} disabled={!selectedStatus || isPending}>
+          <Button
+            onClick={handleSubmit}
+            disabled={!selectedStatus || isPending}
+          >
             {isPending ? "変更中..." : "変更する"}
           </Button>
         </DialogFooter>

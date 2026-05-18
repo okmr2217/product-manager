@@ -10,7 +10,13 @@ import { buttonVariants } from "@/lib/button-variants";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCT_CATEGORY_LABELS, STACK_SUGGESTIONS } from "@/constants";
 import { cn } from "@/lib/utils";
@@ -34,15 +40,29 @@ interface InitialData {
 }
 
 interface ProductFormProps {
-  action: (prev: ActionResult | null, formData: FormData) => Promise<ActionResult>;
+  action: (
+    prev: ActionResult | null,
+    formData: FormData,
+  ) => Promise<ActionResult>;
   initialData?: InitialData;
   existingStacks?: string[];
   cancelHref: string;
 }
 
-function SectionLabel({ children, className }: { children: React.ReactNode; className?: string }) {
+function SectionLabel({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <p className={cn("text-[11px] font-medium text-muted-foreground uppercase tracking-wide", className)}>
+    <p
+      className={cn(
+        "text-[11px] font-medium text-muted-foreground uppercase tracking-wide",
+        className,
+      )}
+    >
       {children}
     </p>
   );
@@ -50,7 +70,9 @@ function SectionLabel({ children, className }: { children: React.ReactNode; clas
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">{children}</p>
+    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">
+      {children}
+    </p>
   );
 }
 
@@ -65,7 +87,12 @@ function extractGithubPath(url: string | null | undefined): string {
   return match ? match[1] : url;
 }
 
-export function ProductForm({ action, initialData, existingStacks = [], cancelHref }: ProductFormProps) {
+export function ProductForm({
+  action,
+  initialData,
+  existingStacks = [],
+  cancelHref,
+}: ProductFormProps) {
   const [state, formAction, isPending] = useActionState(action, null);
 
   const [category, setCategory] = useState<string>(initialData?.category ?? "");
@@ -73,9 +100,13 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
   const [stackInput, setStackInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isPublic, setIsPublic] = useState(initialData?.isPublic ?? false);
-  const [themeColor, setThemeColor] = useState<string>(initialData?.themeColor || "#6366F1");
+  const [themeColor, setThemeColor] = useState<string>(
+    initialData?.themeColor || "#6366F1",
+  );
   const [noThemeColor, setNoThemeColor] = useState(!initialData?.themeColor);
-  const [repoPath, setRepoPath] = useState<string>(extractGithubPath(initialData?.repositoryUrl));
+  const [repoPath, setRepoPath] = useState<string>(
+    extractGithubPath(initialData?.repositoryUrl),
+  );
 
   useEffect(() => {
     if (state?.success === false && state.error) {
@@ -96,9 +127,12 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
     setStacks((prev) => prev.filter((s) => s !== stack));
   };
 
-  const allSuggestions = [...new Set([...STACK_SUGGESTIONS, ...existingStacks])];
+  const allSuggestions = [
+    ...new Set([...STACK_SUGGESTIONS, ...existingStacks]),
+  ];
   const filteredSuggestions = allSuggestions.filter(
-    (s) => s.toLowerCase().includes(stackInput.toLowerCase()) && !stacks.includes(s)
+    (s) =>
+      s.toLowerCase().includes(stackInput.toLowerCase()) && !stacks.includes(s),
   );
 
   const fieldError = (field: string) => state?.fieldErrors?.[field]?.[0];
@@ -111,15 +145,26 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
       {stacks.map((stack) => (
         <input key={stack} type="hidden" name="stacks" value={stack} />
       ))}
-      <input type="hidden" name="isPublic" value={isPublic ? "true" : "false"} />
-      <input type="hidden" name="themeColor" value={noThemeColor ? "" : themeColor} />
+      <input
+        type="hidden"
+        name="isPublic"
+        value={isPublic ? "true" : "false"}
+      />
+      <input
+        type="hidden"
+        name="themeColor"
+        value={noThemeColor ? "" : themeColor}
+      />
       <input type="hidden" name="repositoryUrl" value={repositoryUrl} />
 
       {/* Action bar */}
       <div className="flex items-center justify-between mb-5 pb-4 border-b">
         <h2 className="text-base font-semibold">プロダクトを追加</h2>
         <div className="flex gap-2">
-          <Link href={cancelHref} className={cn(buttonVariants({ variant: "outline" }))}>
+          <Link
+            href={cancelHref}
+            className={cn(buttonVariants({ variant: "outline" }))}
+          >
             キャンセル
           </Link>
           <Button type="submit" disabled={isPending}>
@@ -138,35 +183,66 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
 
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-2">
-                <FieldLabel>プロダクト名 <span className="text-red-400 normal-case">*</span></FieldLabel>
+                <FieldLabel>
+                  プロダクト名{" "}
+                  <span className="text-red-400 normal-case">*</span>
+                </FieldLabel>
                 <Input name="name" defaultValue={initialData?.name} />
                 <FieldError message={fieldError("name")} />
               </div>
               <div>
-                <FieldLabel>スラッグ <span className="text-red-400 normal-case">*</span></FieldLabel>
-                <Input name="slug" defaultValue={initialData?.slug} placeholder="my-product" />
+                <FieldLabel>
+                  スラッグ <span className="text-red-400 normal-case">*</span>
+                </FieldLabel>
+                <Input
+                  name="slug"
+                  defaultValue={initialData?.slug}
+                  placeholder="my-product"
+                />
                 <FieldError message={fieldError("slug")} />
               </div>
             </div>
 
             <div className="flex gap-4 items-start">
               <div className="flex-1">
-                <FieldLabel>概要説明 <span className="text-red-400 normal-case">*</span></FieldLabel>
-                <Input name="description" defaultValue={initialData?.description} placeholder="例: 日々のタスク管理に特化したWebアプリ" />
-                <p className="text-xs text-muted-foreground mt-1">1〜2文・40〜80字目安。カード一覧やブログの説明文に使用。</p>
+                <FieldLabel>
+                  概要説明 <span className="text-red-400 normal-case">*</span>
+                </FieldLabel>
+                <Input
+                  name="description"
+                  defaultValue={initialData?.description}
+                  placeholder="例: 日々のタスク管理に特化したWebアプリ"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  1〜2文・40〜80字目安。カード一覧やブログの説明文に使用。
+                </p>
                 <FieldError message={fieldError("description")} />
               </div>
               <div className="w-[150px]">
-                <FieldLabel>カテゴリ <span className="text-red-400 normal-case">*</span></FieldLabel>
-                <Select value={category} onValueChange={(value) => setCategory(value ?? "")}>
+                <FieldLabel>
+                  カテゴリ <span className="text-red-400 normal-case">*</span>
+                </FieldLabel>
+                <Select
+                  value={category}
+                  onValueChange={(value) => setCategory(value ?? "")}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="選択">
-                      {category ? PRODUCT_CATEGORY_LABELS[category as ProductCategory] : undefined}
+                      {category
+                        ? PRODUCT_CATEGORY_LABELS[category as ProductCategory]
+                        : undefined}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {(Object.entries(PRODUCT_CATEGORY_LABELS) as [ProductCategory, string][]).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    {(
+                      Object.entries(PRODUCT_CATEGORY_LABELS) as [
+                        ProductCategory,
+                        string,
+                      ][]
+                    ).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -176,8 +252,15 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
 
             <div>
               <FieldLabel>詳細説明</FieldLabel>
-              <Textarea name="longDescription" rows={6} defaultValue={initialData?.longDescription ?? ""} placeholder="プロダクトの背景・コンセプト・主な機能などを自由に記述" />
-              <p className="text-xs text-muted-foreground mt-1">200〜600字目安。ブログのプロダクト詳細ページに掲載する紹介文。</p>
+              <Textarea
+                name="longDescription"
+                rows={6}
+                defaultValue={initialData?.longDescription ?? ""}
+                placeholder="プロダクトの背景・コンセプト・主な機能などを自由に記述"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                200〜600字目安。ブログのプロダクト詳細ページに掲載する紹介文。
+              </p>
             </div>
           </div>
 
@@ -189,7 +272,11 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
                 {stacks.map((stack) => (
                   <Badge key={stack} variant="secondary" className="gap-1 pr-1">
                     {stack}
-                    <button type="button" onClick={() => removeStack(stack)} className="hover:text-destructive ml-0.5">
+                    <button
+                      type="button"
+                      onClick={() => removeStack(stack)}
+                      className="hover:text-destructive ml-0.5"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -199,21 +286,36 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
             <div className="relative">
               <Input
                 value={stackInput}
-                onChange={(e) => { setStackInput(e.target.value); setShowSuggestions(true); }}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addStack(stackInput); } }}
+                onChange={(e) => {
+                  setStackInput(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addStack(stackInput);
+                  }
+                }}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                 onFocus={() => setShowSuggestions(true)}
                 placeholder="技術名を入力してEnterで追加"
               />
-              {showSuggestions && stackInput && filteredSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-md max-h-40 overflow-y-auto">
-                  {filteredSuggestions.slice(0, 8).map((s) => (
-                    <button key={s} type="button" className="w-full text-left px-3 py-1.5 hover:bg-muted text-sm" onMouseDown={() => addStack(s)}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {showSuggestions &&
+                stackInput &&
+                filteredSuggestions.length > 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-md max-h-40 overflow-y-auto">
+                    {filteredSuggestions.slice(0, 8).map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        className="w-full text-left px-3 py-1.5 hover:bg-muted text-sm"
+                        onMouseDown={() => addStack(s)}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
 
@@ -238,7 +340,12 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
               </div>
               <div>
                 <FieldLabel>プロダクトURL</FieldLabel>
-                <Input name="productUrl" type="url" defaultValue={initialData?.productUrl ?? ""} placeholder="https://..." />
+                <Input
+                  name="productUrl"
+                  type="url"
+                  defaultValue={initialData?.productUrl ?? ""}
+                  placeholder="https://..."
+                />
                 <FieldError message={fieldError("productUrl")} />
               </div>
             </div>
@@ -248,9 +355,16 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
           <div className="bg-background border rounded-lg p-5 space-y-3">
             <div className="flex items-center gap-2">
               <SectionLabel>備考</SectionLabel>
-              <Badge variant="outline" className="text-[10px] py-0 h-4">管理者のみ・ブログ非表示</Badge>
+              <Badge variant="outline" className="text-[10px] py-0 h-4">
+                管理者のみ・ブログ非表示
+              </Badge>
             </div>
-            <Textarea name="note" rows={4} defaultValue={initialData?.note ?? ""} placeholder="例: Vercel（個人アカウント）、Supabase（Free プラン）、ドメイン: example.com" />
+            <Textarea
+              name="note"
+              rows={4}
+              defaultValue={initialData?.note ?? ""}
+              placeholder="例: Vercel（個人アカウント）、Supabase（Free プラン）、ドメイン: example.com"
+            />
           </div>
         </div>
 
@@ -266,7 +380,9 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
                 <div className="size-10 rounded-lg border border-border overflow-hidden bg-muted flex items-center justify-center shrink-0">
                   <span className="text-muted-foreground text-xs">なし</span>
                 </div>
-                <p className="text-xs text-muted-foreground">作成後に設定できます</p>
+                <p className="text-xs text-muted-foreground">
+                  作成後に設定できます
+                </p>
               </div>
             </div>
 
@@ -281,7 +397,12 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
                     onChange={(e) => setNoThemeColor(e.target.checked)}
                     className="size-4 rounded"
                   />
-                  <label htmlFor="noThemeColor" className="text-sm cursor-pointer">なし</label>
+                  <label
+                    htmlFor="noThemeColor"
+                    className="text-sm cursor-pointer"
+                  >
+                    なし
+                  </label>
                 </div>
                 {!noThemeColor && (
                   <div className="flex items-center gap-2">
@@ -298,7 +419,10 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
                       className="w-28 font-mono text-sm"
                       maxLength={7}
                     />
-                    <div className="h-8 w-10 rounded-md border border-border" style={{ backgroundColor: themeColor }} />
+                    <div
+                      className="h-8 w-10 rounded-md border border-border"
+                      style={{ backgroundColor: themeColor }}
+                    />
                   </div>
                 )}
               </div>
@@ -310,15 +434,26 @@ export function ProductForm({ action, initialData, existingStacks = [], cancelHr
           <div className="bg-background border rounded-lg p-5 space-y-3">
             <SectionLabel>公開設定</SectionLabel>
             <div className="flex items-center gap-2.5">
-              <Switch id="isPublic" checked={isPublic} onCheckedChange={setIsPublic} />
-              <label htmlFor="isPublic" className="text-sm cursor-pointer">ブログで公開する</label>
+              <Switch
+                id="isPublic"
+                checked={isPublic}
+                onCheckedChange={setIsPublic}
+              />
+              <label htmlFor="isPublic" className="text-sm cursor-pointer">
+                ブログで公開する
+              </label>
             </div>
           </div>
 
           {/* 表示順 card */}
           <div className="bg-background border rounded-lg p-5 space-y-3">
             <SectionLabel>表示順</SectionLabel>
-            <Input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} className="w-20" />
+            <Input
+              name="sortOrder"
+              type="number"
+              defaultValue={initialData?.sortOrder ?? 0}
+              className="w-20"
+            />
           </div>
         </div>
       </div>

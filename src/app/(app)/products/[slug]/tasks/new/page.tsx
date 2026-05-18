@@ -12,7 +12,11 @@ async function getProduct(slug: string) {
   return prisma.product.findUnique({ where: { slug } });
 }
 
-export default async function NewTaskPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function NewTaskPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProduct(slug);
 

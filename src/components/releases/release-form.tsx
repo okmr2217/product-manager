@@ -14,12 +14,21 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RELEASE_TYPE_LABELS, RELEASE_TYPE_VALUES } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { ActionResult } from "@/types";
-
 
 interface InitialData {
   version?: string;
@@ -31,18 +40,26 @@ interface InitialData {
 }
 
 interface ReleaseFormProps {
-  action: (prev: ActionResult | null, formData: FormData) => Promise<ActionResult>;
+  action: (
+    prev: ActionResult | null,
+    formData: FormData,
+  ) => Promise<ActionResult>;
   initialData?: InitialData;
   cancelHref: string;
   successHref: string;
 }
 
-export function ReleaseForm({ action, initialData, cancelHref, successHref }: ReleaseFormProps) {
+export function ReleaseForm({
+  action,
+  initialData,
+  cancelHref,
+  successHref,
+}: ReleaseFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(action, null);
 
   const [releaseDate, setReleaseDate] = useState<Date | undefined>(
-    initialData?.releaseDate ? new Date(initialData.releaseDate) : new Date()
+    initialData?.releaseDate ? new Date(initialData.releaseDate) : new Date(),
   );
   const [type, setType] = useState<string>(initialData?.type ?? "");
   const [isDraft, setIsDraft] = useState(initialData?.isDraft ?? false);
@@ -52,7 +69,11 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
       toast.error(state.error);
     }
     if (state?.success === true) {
-      toast.success(initialData?.version ? "リリースノートを更新しました" : "リリースノートを作成しました");
+      toast.success(
+        initialData?.version
+          ? "リリースノートを更新しました"
+          : "リリースノートを作成しました",
+      );
       router.push(successHref);
     }
   }, [state, router, successHref, initialData?.version]);
@@ -72,7 +93,9 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
             placeholder="v1.0.0"
             aria-invalid={!!fieldError("version")}
           />
-          {fieldError("version") && <p className="text-xs text-destructive">{fieldError("version")}</p>}
+          {fieldError("version") && (
+            <p className="text-xs text-destructive">{fieldError("version")}</p>
+          )}
         </div>
 
         {/* Type */}
@@ -81,7 +104,9 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
           <input type="hidden" name="type" value={type} />
           <Select value={type} onValueChange={(v) => setType(v ?? "")}>
             <SelectTrigger aria-invalid={!!fieldError("type")}>
-              <SelectValue placeholder="タイプを選択">{type ? RELEASE_TYPE_LABELS[type as ReleaseType] : undefined}</SelectValue>
+              <SelectValue placeholder="タイプを選択">
+                {type ? RELEASE_TYPE_LABELS[type as ReleaseType] : undefined}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {RELEASE_TYPE_VALUES.map((t) => (
@@ -91,7 +116,9 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
               ))}
             </SelectContent>
           </Select>
-          {fieldError("type") && <p className="text-xs text-destructive">{fieldError("type")}</p>}
+          {fieldError("type") && (
+            <p className="text-xs text-destructive">{fieldError("type")}</p>
+          )}
         </div>
       </div>
 
@@ -105,13 +132,19 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
           placeholder="例: タスクカテゴリ機能追加"
           aria-invalid={!!fieldError("title")}
         />
-        {fieldError("title") && <p className="text-xs text-destructive">{fieldError("title")}</p>}
+        {fieldError("title") && (
+          <p className="text-xs text-destructive">{fieldError("title")}</p>
+        )}
       </div>
 
       {/* Release Date */}
       <div className="space-y-1.5">
         <Label>リリース日 *</Label>
-        <input type="hidden" name="releaseDate" value={releaseDate ? format(releaseDate, "yyyy-MM-dd") : ""} />
+        <input
+          type="hidden"
+          name="releaseDate"
+          value={releaseDate ? format(releaseDate, "yyyy-MM-dd") : ""}
+        />
         <Popover>
           <PopoverTrigger
             render={
@@ -119,7 +152,7 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
                 type="button"
                 className={cn(
                   "flex h-9 w-full items-center gap-2 rounded-md border border-input bg-background px-3 text-sm",
-                  !releaseDate && "text-muted-foreground"
+                  !releaseDate && "text-muted-foreground",
                 )}
               />
             }
@@ -128,10 +161,18 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
             {releaseDate ? format(releaseDate, "yyyy/MM/dd") : "日付を選択"}
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
-            <Calendar mode="single" selected={releaseDate} onSelect={setReleaseDate} />
+            <Calendar
+              mode="single"
+              selected={releaseDate}
+              onSelect={setReleaseDate}
+            />
           </PopoverContent>
         </Popover>
-        {fieldError("releaseDate") && <p className="text-xs text-destructive">{fieldError("releaseDate")}</p>}
+        {fieldError("releaseDate") && (
+          <p className="text-xs text-destructive">
+            {fieldError("releaseDate")}
+          </p>
+        )}
       </div>
 
       {/* Content */}
@@ -145,19 +186,28 @@ export function ReleaseForm({ action, initialData, cancelHref, successHref }: Re
           rows={8}
           aria-invalid={!!fieldError("content")}
         />
-        {fieldError("content") && <p className="text-xs text-destructive">{fieldError("content")}</p>}
+        {fieldError("content") && (
+          <p className="text-xs text-destructive">{fieldError("content")}</p>
+        )}
       </div>
 
       {/* isDraft */}
       <div className="flex items-center gap-3">
-        <input type="hidden" name="isDraft" value={isDraft ? "true" : "false"} />
+        <input
+          type="hidden"
+          name="isDraft"
+          value={isDraft ? "true" : "false"}
+        />
         <Switch id="isDraft" checked={isDraft} onCheckedChange={setIsDraft} />
         <Label htmlFor="isDraft">下書き（公開しない）</Label>
       </div>
 
       {/* Actions */}
       <div className="flex gap-2 pt-2">
-        <Link href={cancelHref} className={cn(buttonVariants({ variant: "outline" }))}>
+        <Link
+          href={cancelHref}
+          className={cn(buttonVariants({ variant: "outline" }))}
+        >
           キャンセル
         </Link>
         <Button type="submit" disabled={isPending}>

@@ -12,12 +12,17 @@ export function StackTags({ stacks, maxDisplay }: StackTagsProps) {
   return (
     <div className="flex flex-wrap gap-1">
       {displayed.map((stack) => (
-        <span key={stack} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+        <span
+          key={stack}
+          className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded"
+        >
           {stack}
         </span>
       ))}
       {remaining > 0 && (
-        <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded">+{remaining}</span>
+        <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded">
+          +{remaining}
+        </span>
       )}
     </div>
   );

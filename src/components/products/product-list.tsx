@@ -7,11 +7,19 @@ import { PRODUCT_CATEGORY_VALUES } from "@/constants";
 import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { ProductListRow } from "./product-list-row";
 
-export function ProductList({ products }: { products: ProductWithLatestRelease[] }) {
+export function ProductList({
+  products,
+}: {
+  products: ProductWithLatestRelease[];
+}) {
   const searchParams = useSearchParams();
   const view = searchParams.get("view") ?? "grid";
   const categoryParam = searchParams.get("category");
-  const category = PRODUCT_CATEGORY_VALUES.includes(categoryParam as ProductCategory) ? (categoryParam as ProductCategory) : null;
+  const category = PRODUCT_CATEGORY_VALUES.includes(
+    categoryParam as ProductCategory,
+  )
+    ? (categoryParam as ProductCategory)
+    : null;
 
   const filtered = useMemo(() => {
     if (!category) return products;
@@ -21,7 +29,11 @@ export function ProductList({ products }: { products: ProductWithLatestRelease[]
   if (view !== "list") return null;
 
   if (filtered.length === 0) {
-    return <p className="py-12 text-center text-sm text-muted-foreground">該当するプロジェクトがありません</p>;
+    return (
+      <p className="py-12 text-center text-sm text-muted-foreground">
+        該当するプロジェクトがありません
+      </p>
+    );
   }
 
   return (
@@ -31,10 +43,18 @@ export function ProductList({ products }: { products: ProductWithLatestRelease[]
         style={{ gridTemplateColumns: "36px 1fr 90px 100px 130px" }}
       >
         <div />
-        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">プロジェクト</span>
-        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">カテゴリ</span>
-        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">ステータス</span>
-        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">最新バージョン</span>
+        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">
+          プロジェクト
+        </span>
+        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">
+          カテゴリ
+        </span>
+        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">
+          ステータス
+        </span>
+        <span className="text-[11px] text-muted-foreground font-medium tracking-wide">
+          最新バージョン
+        </span>
       </div>
       {filtered.map((product) => (
         <ProductListRow key={product.id} product={product} />

@@ -7,11 +7,19 @@ import { PRODUCT_CATEGORY_VALUES } from "@/constants";
 import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { ProductCard } from "./product-card";
 
-export function ProductGrid({ products }: { products: ProductWithLatestRelease[] }) {
+export function ProductGrid({
+  products,
+}: {
+  products: ProductWithLatestRelease[];
+}) {
   const searchParams = useSearchParams();
   const view = searchParams.get("view") ?? "grid";
   const categoryParam = searchParams.get("category");
-  const category = PRODUCT_CATEGORY_VALUES.includes(categoryParam as ProductCategory) ? (categoryParam as ProductCategory) : null;
+  const category = PRODUCT_CATEGORY_VALUES.includes(
+    categoryParam as ProductCategory,
+  )
+    ? (categoryParam as ProductCategory)
+    : null;
 
   const filtered = useMemo(() => {
     if (!category) return products;
@@ -21,7 +29,11 @@ export function ProductGrid({ products }: { products: ProductWithLatestRelease[]
   if (view !== "grid") return null;
 
   if (filtered.length === 0) {
-    return <p className="py-12 text-center text-sm text-muted-foreground">該当するプロダクトがありません</p>;
+    return (
+      <p className="py-12 text-center text-sm text-muted-foreground">
+        該当するプロダクトがありません
+      </p>
+    );
   }
 
   return (

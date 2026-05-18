@@ -41,7 +41,9 @@ export function HistoryDeleteButton({ id }: HistoryDeleteButtonProps) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>この履歴を削除しますか？</AlertDialogTitle>
-          <AlertDialogDescription>この操作は取り消せません。</AlertDialogDescription>
+          <AlertDialogDescription>
+            この操作は取り消せません。
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>キャンセル</AlertDialogCancel>

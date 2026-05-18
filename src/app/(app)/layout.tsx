@@ -18,7 +18,11 @@ async function getProducts() {
   });
 }
 
-export default async function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   await requireAuth();
   const products = await getProducts();
 

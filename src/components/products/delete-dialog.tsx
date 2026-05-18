@@ -58,7 +58,11 @@ export function DeleteDialog({ product }: DeleteDialogProps) {
             確認のため「<strong>{product.name}</strong>」と入力してください。
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder={product.name} />
+        <Input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder={product.name}
+        />
         <AlertDialogFooter>
           <AlertDialogCancel>キャンセル</AlertDialogCancel>
           <AlertDialogAction

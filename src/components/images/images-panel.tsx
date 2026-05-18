@@ -11,7 +11,10 @@ interface ImagesPanelProps {
   productId: string;
 }
 
-export function ImagesPanel({ images: initialImages, productId }: ImagesPanelProps) {
+export function ImagesPanel({
+  images: initialImages,
+  productId,
+}: ImagesPanelProps) {
   const [images, setImages] = useState<ImageData[]>(initialImages);
 
   const pcImages = images.filter((img) => img.deviceType !== "MOBILE");
@@ -26,15 +29,21 @@ export function ImagesPanel({ images: initialImages, productId }: ImagesPanelPro
   };
 
   const handleRename = (id: string, newAlt: string | null) => {
-    setImages((prev) => prev.map((img) => (img.id === id ? { ...img, alt: newAlt } : img)));
+    setImages((prev) =>
+      prev.map((img) => (img.id === id ? { ...img, alt: newAlt } : img)),
+    );
   };
 
   const handleSetThumbnail = (id: string) => {
-    setImages((prev) => prev.map((img) => ({ ...img, isThumbnail: img.id === id })));
+    setImages((prev) =>
+      prev.map((img) => ({ ...img, isThumbnail: img.id === id })),
+    );
   };
 
   const handleReplace = (id: string, newUrl: string) => {
-    setImages((prev) => prev.map((img) => (img.id === id ? { ...img, url: newUrl } : img)));
+    setImages((prev) =>
+      prev.map((img) => (img.id === id ? { ...img, url: newUrl } : img)),
+    );
   };
 
   const handlePCReorder = (reordered: ImageData[]) => {
@@ -82,7 +91,9 @@ export function ImagesPanel({ images: initialImages, productId }: ImagesPanelPro
         <div className="flex items-center gap-2">
           <Smartphone className="h-4 w-4 text-slate-500" />
           <h3 className="text-sm font-medium text-slate-700">モバイル</h3>
-          <span className="text-xs text-slate-400">({mobileImages.length})</span>
+          <span className="text-xs text-slate-400">
+            ({mobileImages.length})
+          </span>
         </div>
         <ImageUpload
           productId={productId}

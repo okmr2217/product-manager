@@ -10,8 +10,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PRODUCT_CATEGORY_LABELS, STACK_SUGGESTIONS } from "@/constants";
 import { cn } from "@/lib/utils";
 import { useUpload } from "@/hooks/use-upload";
@@ -35,7 +50,10 @@ interface InitialData {
 }
 
 interface ProductSettingsFormProps {
-  action: (prev: ActionResult | null, formData: FormData) => Promise<ActionResult>;
+  action: (
+    prev: ActionResult | null,
+    formData: FormData,
+  ) => Promise<ActionResult>;
   initialData: InitialData;
   existingStacks: string[];
   cancelHref: string;
@@ -45,9 +63,20 @@ interface ProductSettingsFormProps {
   releaseCount: number;
 }
 
-function SectionLabel({ children, className }: { children: React.ReactNode; className?: string }) {
+function SectionLabel({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <p className={cn("text-[11px] font-medium text-muted-foreground uppercase tracking-wide", className)}>
+    <p
+      className={cn(
+        "text-[11px] font-medium text-muted-foreground uppercase tracking-wide",
+        className,
+      )}
+    >
       {children}
     </p>
   );
@@ -55,7 +84,9 @@ function SectionLabel({ children, className }: { children: React.ReactNode; clas
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">{children}</p>
+    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">
+      {children}
+    </p>
   );
 }
 
@@ -90,10 +121,14 @@ export function ProductSettingsForm({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isPublic, setIsPublic] = useState(initialData.isPublic ?? false);
   const [iconUrl, setIconUrl] = useState<string>(initialData.iconUrl ?? "");
-  const [themeColor, setThemeColor] = useState<string>(initialData.themeColor || "#6366F1");
+  const [themeColor, setThemeColor] = useState<string>(
+    initialData.themeColor || "#6366F1",
+  );
   const [noThemeColor, setNoThemeColor] = useState(!initialData.themeColor);
   const [iconUploading, setIconUploading] = useState(false);
-  const [repoPath, setRepoPath] = useState<string>(extractGithubPath(initialData.repositoryUrl));
+  const [repoPath, setRepoPath] = useState<string>(
+    extractGithubPath(initialData.repositoryUrl),
+  );
   const { upload } = useUpload();
 
   useEffect(() => {
@@ -124,9 +159,12 @@ export function ProductSettingsForm({
     setStacks((prev) => prev.filter((s) => s !== stack));
   };
 
-  const allSuggestions = [...new Set([...STACK_SUGGESTIONS, ...existingStacks])];
+  const allSuggestions = [
+    ...new Set([...STACK_SUGGESTIONS, ...existingStacks]),
+  ];
   const filteredSuggestions = allSuggestions.filter(
-    (s) => s.toLowerCase().includes(stackInput.toLowerCase()) && !stacks.includes(s)
+    (s) =>
+      s.toLowerCase().includes(stackInput.toLowerCase()) && !stacks.includes(s),
   );
 
   const fieldError = (field: string) => state?.fieldErrors?.[field]?.[0];
@@ -138,7 +176,9 @@ export function ProductSettingsForm({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>編集を破棄しますか？</AlertDialogTitle>
-            <AlertDialogDescription>保存していない変更はすべて失われます。本当にキャンセルしますか？</AlertDialogDescription>
+            <AlertDialogDescription>
+              保存していない変更はすべて失われます。本当にキャンセルしますか？
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>戻る</AlertDialogCancel>
@@ -158,17 +198,33 @@ export function ProductSettingsForm({
         {stacks.map((stack) => (
           <input key={stack} type="hidden" name="stacks" value={stack} />
         ))}
-        <input type="hidden" name="isPublic" value={isPublic ? "true" : "false"} />
+        <input
+          type="hidden"
+          name="isPublic"
+          value={isPublic ? "true" : "false"}
+        />
         <input type="hidden" name="iconUrl" value={iconUrl} />
-        <input type="hidden" name="themeColor" value={noThemeColor ? "" : themeColor} />
-        <input type="hidden" name="sortOrder" value={initialData.sortOrder ?? 0} />
+        <input
+          type="hidden"
+          name="themeColor"
+          value={noThemeColor ? "" : themeColor}
+        />
+        <input
+          type="hidden"
+          name="sortOrder"
+          value={initialData.sortOrder ?? 0}
+        />
         <input type="hidden" name="repositoryUrl" value={repositoryUrl} />
 
         {/* Action bar */}
         <div className="flex items-center justify-between mb-5 pb-4 border-b">
           <h2 className="text-base font-semibold">{productName} — 設定</h2>
           <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={() => setShowCancelConfirm(true)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowCancelConfirm(true)}
+            >
               キャンセル
             </Button>
             <Button type="submit" disabled={isPending}>
@@ -189,7 +245,8 @@ export function ProductSettingsForm({
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
                   <FieldLabel>
-                    プロダクト名 <span className="text-red-400 normal-case">*</span>
+                    プロダクト名{" "}
+                    <span className="text-red-400 normal-case">*</span>
                   </FieldLabel>
                   <Input name="name" defaultValue={initialData.name} />
                   <FieldError message={fieldError("name")} />
@@ -198,7 +255,11 @@ export function ProductSettingsForm({
                   <FieldLabel>
                     スラッグ <span className="text-red-400 normal-case">*</span>
                   </FieldLabel>
-                  <Input name="slug" defaultValue={initialData.slug} placeholder="my-product" />
+                  <Input
+                    name="slug"
+                    defaultValue={initialData.slug}
+                    placeholder="my-product"
+                  />
                   <FieldError message={fieldError("slug")} />
                 </div>
               </div>
@@ -209,22 +270,38 @@ export function ProductSettingsForm({
                   <FieldLabel>
                     概要説明 <span className="text-red-400 normal-case">*</span>
                   </FieldLabel>
-                  <Input name="description" defaultValue={initialData.description} placeholder="例: 日々のタスク管理に特化したWebアプリ" />
-                  <p className="text-xs text-muted-foreground mt-1">1〜2文・40〜80字目安。カード一覧やブログの説明文に使用。</p>
+                  <Input
+                    name="description"
+                    defaultValue={initialData.description}
+                    placeholder="例: 日々のタスク管理に特化したWebアプリ"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    1〜2文・40〜80字目安。カード一覧やブログの説明文に使用。
+                  </p>
                   <FieldError message={fieldError("description")} />
                 </div>
                 <div className="w-[150px]">
                   <FieldLabel>
                     カテゴリ <span className="text-red-400 normal-case">*</span>
                   </FieldLabel>
-                  <Select value={category} onValueChange={(value) => setCategory(value ?? "")}>
+                  <Select
+                    value={category}
+                    onValueChange={(value) => setCategory(value ?? "")}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="選択">
-                        {category ? PRODUCT_CATEGORY_LABELS[category as ProductCategory] : undefined}
+                        {category
+                          ? PRODUCT_CATEGORY_LABELS[category as ProductCategory]
+                          : undefined}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      {(Object.entries(PRODUCT_CATEGORY_LABELS) as [ProductCategory, string][]).map(([value, label]) => (
+                      {(
+                        Object.entries(PRODUCT_CATEGORY_LABELS) as [
+                          ProductCategory,
+                          string,
+                        ][]
+                      ).map(([value, label]) => (
                         <SelectItem key={value} value={value}>
                           {label}
                         </SelectItem>
@@ -244,7 +321,9 @@ export function ProductSettingsForm({
                   defaultValue={initialData.longDescription ?? ""}
                   placeholder="プロダクトの背景・コンセプト・主な機能などを自由に記述"
                 />
-                <p className="text-xs text-muted-foreground mt-1">200〜600字目安。ブログのプロダクト詳細ページに掲載する紹介文。</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  200〜600字目安。ブログのプロダクト詳細ページに掲載する紹介文。
+                </p>
               </div>
             </div>
 
@@ -254,9 +333,17 @@ export function ProductSettingsForm({
               {stacks.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {stacks.map((stack) => (
-                    <Badge key={stack} variant="secondary" className="gap-1 pr-1">
+                    <Badge
+                      key={stack}
+                      variant="secondary"
+                      className="gap-1 pr-1"
+                    >
                       {stack}
-                      <button type="button" onClick={() => removeStack(stack)} className="hover:text-destructive ml-0.5">
+                      <button
+                        type="button"
+                        onClick={() => removeStack(stack)}
+                        className="hover:text-destructive ml-0.5"
+                      >
                         <X className="h-3 w-3" />
                       </button>
                     </Badge>
@@ -276,19 +363,28 @@ export function ProductSettingsForm({
                       addStack(stackInput);
                     }
                   }}
-                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 150)
+                  }
                   onFocus={() => setShowSuggestions(true)}
                   placeholder="技術名を入力してEnterで追加"
                 />
-                {showSuggestions && stackInput && filteredSuggestions.length > 0 && (
-                  <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-md max-h-40 overflow-y-auto">
-                    {filteredSuggestions.slice(0, 8).map((s) => (
-                      <button key={s} type="button" className="w-full text-left px-3 py-1.5 hover:bg-muted text-sm" onMouseDown={() => addStack(s)}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {showSuggestions &&
+                  stackInput &&
+                  filteredSuggestions.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-md max-h-40 overflow-y-auto">
+                      {filteredSuggestions.slice(0, 8).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          className="w-full text-left px-3 py-1.5 hover:bg-muted text-sm"
+                          onMouseDown={() => addStack(s)}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
               </div>
             </div>
 
@@ -313,7 +409,12 @@ export function ProductSettingsForm({
                 </div>
                 <div>
                   <FieldLabel>プロダクトURL</FieldLabel>
-                  <Input name="productUrl" type="url" defaultValue={initialData.productUrl ?? ""} placeholder="https://..." />
+                  <Input
+                    name="productUrl"
+                    type="url"
+                    defaultValue={initialData.productUrl ?? ""}
+                    placeholder="https://..."
+                  />
                   <FieldError message={fieldError("productUrl")} />
                 </div>
               </div>
@@ -348,20 +449,32 @@ export function ProductSettingsForm({
                   <div className="size-10 rounded-lg border border-border overflow-hidden bg-muted flex items-center justify-center shrink-0">
                     {iconUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={iconUrl} alt="icon" className="w-full h-full object-cover" />
+                      <img
+                        src={iconUrl}
+                        alt="icon"
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
-                      <span className="text-muted-foreground text-xs">なし</span>
+                      <span className="text-muted-foreground text-xs">
+                        なし
+                      </span>
                     )}
                   </div>
                   <div className="flex flex-col gap-1">
                     <label
                       className={cn(
                         "cursor-pointer text-xs px-3 py-1.5 rounded-md border border-border hover:bg-muted transition-colors",
-                        iconUploading && "opacity-50 cursor-not-allowed"
+                        iconUploading && "opacity-50 cursor-not-allowed",
                       )}
                     >
                       {iconUploading ? "アップロード中..." : "変更"}
-                      <input type="file" accept="image/*" className="hidden" disabled={iconUploading} onChange={handleIconUpload} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={iconUploading}
+                        onChange={handleIconUpload}
+                      />
                     </label>
                     {iconUrl && (
                       <button
@@ -387,7 +500,12 @@ export function ProductSettingsForm({
                       onChange={(e) => setNoThemeColor(e.target.checked)}
                       className="size-4 rounded"
                     />
-                    <label htmlFor="noThemeColor" className="text-sm cursor-pointer">なし</label>
+                    <label
+                      htmlFor="noThemeColor"
+                      className="text-sm cursor-pointer"
+                    >
+                      なし
+                    </label>
                   </div>
                   {!noThemeColor && (
                     <div className="flex items-center gap-2">
@@ -404,7 +522,10 @@ export function ProductSettingsForm({
                         className="w-28 font-mono text-sm"
                         maxLength={7}
                       />
-                      <div className="h-8 w-10 rounded-md border border-border" style={{ backgroundColor: themeColor }} />
+                      <div
+                        className="h-8 w-10 rounded-md border border-border"
+                        style={{ backgroundColor: themeColor }}
+                      />
                     </div>
                   )}
                 </div>
@@ -416,7 +537,11 @@ export function ProductSettingsForm({
             <div className="bg-background border rounded-lg p-5 space-y-3">
               <SectionLabel>公開設定</SectionLabel>
               <div className="flex items-center gap-2.5">
-                <Switch id="isPublic" checked={isPublic} onCheckedChange={setIsPublic} />
+                <Switch
+                  id="isPublic"
+                  checked={isPublic}
+                  onCheckedChange={setIsPublic}
+                />
                 <label htmlFor="isPublic" className="text-sm cursor-pointer">
                   ブログで公開する
                 </label>

@@ -15,7 +15,11 @@ async function getRelease(id: string, slug: string) {
   });
 }
 
-export default async function EditReleasePage({ params }: { params: Promise<{ slug: string; id: string }> }) {
+export default async function EditReleasePage({
+  params,
+}: {
+  params: Promise<{ slug: string; id: string }>;
+}) {
   const { slug, id } = await params;
   const release = await getRelease(id, slug);
 
@@ -27,7 +31,9 @@ export default async function EditReleasePage({ params }: { params: Promise<{ sl
     <div>
       <ProductTabs slug={slug} productId={release.productId} />
       <div className="mt-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">リリースノートを編集</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+          リリースノートを編集
+        </h2>
         <ReleaseForm
           action={action}
           initialData={release}

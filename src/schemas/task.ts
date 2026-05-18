@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { DEV_TASK_TYPE_VALUES, DEV_TASK_STATUS_VALUES, PRIORITY_VALUES } from "@/constants";
+import {
+  DEV_TASK_TYPE_VALUES,
+  DEV_TASK_STATUS_VALUES,
+  PRIORITY_VALUES,
+} from "@/constants";
 
 export const taskSchema = z.object({
   title: z.string().min(1, "タスク名は必須です"),

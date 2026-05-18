@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
-import { ExternalLink, GitFork, ImageIcon, Circle, Clock, CheckCircle2 } from "lucide-react";
+import {
+  ExternalLink,
+  GitFork,
+  Circle,
+  Clock,
+  CheckCircle2,
+} from "lucide-react";
 import type { DevTaskStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
@@ -37,7 +43,11 @@ async function getProduct(slug: string) {
   });
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const product = await prisma.product.findUnique({
     where: { slug },
@@ -52,10 +62,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-function MetaItem({ label, children }: { label: string; children: React.ReactNode }) {
+function MetaItem({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1.5">{label}</p>
+      <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1.5">
+        {label}
+      </p>
       {children}
     </div>
   );
@@ -68,20 +86,29 @@ const TASK_STATUS_ICONS: Record<DevTaskStatus, React.ElementType> = {
   ON_HOLD: Circle,
 };
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProduct(slug);
 
   if (!product) notFound();
 
-  const thumbnail = product.images.find((img) => img.isThumbnail) ?? product.images[0] ?? null;
   const latestRelease = product.releases[0] ?? null;
-  const releaseDate = product.statusHistory.filter((h) => h.to === "RELEASED").at(-1)?.changedAt ?? null;
+  const releaseDate =
+    product.statusHistory.filter((h) => h.to === "RELEASED").at(-1)
+      ?.changedAt ?? null;
   const historyTimeline = product.statusHistory.slice(0, 6);
 
   return (
     <div>
-      <ProductHeader name={product.name} iconUrl={product.iconUrl} status={product.status} />
+      <ProductHeader
+        name={product.name}
+        iconUrl={product.iconUrl}
+        status={product.status}
+      />
 
       <ProductTabs slug={slug} productId={product.id} />
 
@@ -90,7 +117,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left column */}
           <div className="md:col-span-2 space-y-6">
-            <p className="text-base text-slate-800 leading-relaxed">{product.description}</p>
+            <p className="text-base text-slate-800 leading-relaxed">
+              {product.description}
+            </p>
 
             {product.longDescription && (
               <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
@@ -128,15 +157,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {latestRelease && (
               <div className="rounded-lg border border-slate-200 p-4 space-y-1.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-mono text-sm font-semibold">{latestRelease.version}</span>
+                  <span className="font-mono text-sm font-semibold">
+                    {latestRelease.version}
+                  </span>
                   <ReleaseTypeBadge type={latestRelease.type} />
-                  <span className="text-sm text-slate-700">{latestRelease.title}</span>
+                  <span className="text-sm text-slate-700">
+                    {latestRelease.title}
+                  </span>
                 </div>
-                <p className="text-xs text-slate-400">{format(latestRelease.releaseDate, "yyyy/MM/dd")}</p>
+                <p className="text-xs text-slate-400">
+                  {format(latestRelease.releaseDate, "yyyy/MM/dd")}
+                </p>
                 {latestRelease.content && (
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{latestRelease.content}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                    {latestRelease.content}
+                  </p>
                 )}
-                <Link href={`/products/${slug}/releases`} className="text-xs text-blue-600 hover:underline block">
+                <Link
+                  href={`/products/${slug}/releases`}
+                  className="text-xs text-blue-600 hover:underline block"
+                >
                   すべてのリリースを見る →
                 </Link>
               </div>
@@ -144,18 +184,30 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             {product.tasks.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2">オープンタスク</p>
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2">
+                  オープンタスク
+                </p>
                 {product.tasks.map((task) => {
                   const Icon = TASK_STATUS_ICONS[task.status];
                   return (
-                    <div key={task.id} className="flex items-center gap-2.5 text-sm py-1.5 border-b border-slate-100 last:border-0">
+                    <div
+                      key={task.id}
+                      className="flex items-center gap-2.5 text-sm py-1.5 border-b border-slate-100 last:border-0"
+                    >
                       <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-                      <span className="text-slate-700 line-clamp-1 flex-1">{task.title}</span>
-                      {task.priority && <TaskPriorityBadge priority={task.priority} />}
+                      <span className="text-slate-700 line-clamp-1 flex-1">
+                        {task.title}
+                      </span>
+                      {task.priority && (
+                        <TaskPriorityBadge priority={task.priority} />
+                      )}
                     </div>
                   );
                 })}
-                <Link href={`/products/${slug}/tasks`} className="text-xs text-blue-600 hover:underline block pt-1">
+                <Link
+                  href={`/products/${slug}/tasks`}
+                  className="text-xs text-blue-600 hover:underline block pt-1"
+                >
                   すべてのタスクを見る →
                 </Link>
               </div>
@@ -172,7 +224,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </MetaItem>
             {releaseDate && (
               <MetaItem label="初回リリース日">
-                <p className="text-sm text-slate-800">{format(releaseDate, "yyyy/MM/dd")}</p>
+                <p className="text-sm text-slate-800">
+                  {format(releaseDate, "yyyy/MM/dd")}
+                </p>
               </MetaItem>
             )}
             <MetaItem label="スラッグ">
@@ -188,7 +242,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         {/* Status history timeline (read-only) */}
         <section className="mt-10 pt-8 border-t border-slate-100">
-          <h2 className="text-sm font-medium text-slate-500 mb-4">ステータス履歴</h2>
+          <h2 className="text-sm font-medium text-slate-500 mb-4">
+            ステータス履歴
+          </h2>
           {historyTimeline.length === 0 ? (
             <p className="text-sm text-slate-400">変更履歴はありません</p>
           ) : (
@@ -197,14 +253,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <ul className="space-y-5">
                 {historyTimeline.map((entry) => (
                   <li key={entry.id} className="flex gap-4 relative">
-                    <div className={cn("w-5 h-5 rounded-full shrink-0 mt-0.5 z-10", PRODUCT_STATUS_DOT_COLORS[entry.to])} />
+                    <div
+                      className={cn(
+                        "w-5 h-5 rounded-full shrink-0 mt-0.5 z-10",
+                        PRODUCT_STATUS_DOT_COLORS[entry.to],
+                      )}
+                    />
                     <div>
                       <p className="text-sm font-medium text-slate-900">
                         {PRODUCT_STATUS_LABELS[entry.to]}
-                        <span className="font-normal text-slate-500 ml-1">← {PRODUCT_STATUS_LABELS[entry.from]}</span>
+                        <span className="font-normal text-slate-500 ml-1">
+                          ← {PRODUCT_STATUS_LABELS[entry.from]}
+                        </span>
                       </p>
-                      <p className="text-xs text-slate-400 mt-0.5">{format(entry.changedAt, "yyyy/MM/dd HH:mm")}</p>
-                      {entry.note && <p className="text-xs text-slate-600 mt-1 whitespace-pre-wrap">{entry.note}</p>}
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {format(entry.changedAt, "yyyy/MM/dd HH:mm")}
+                      </p>
+                      {entry.note && (
+                        <p className="text-xs text-slate-600 mt-1 whitespace-pre-wrap">
+                          {entry.note}
+                        </p>
+                      )}
                     </div>
                   </li>
                 ))}

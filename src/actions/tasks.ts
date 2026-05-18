@@ -17,17 +17,29 @@ function parseFormData(formData: FormData) {
   };
 }
 
-export async function createTask(productId: string, _prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+export async function createTask(
+  productId: string,
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = taskSchema.safeParse(parseFormData(formData));
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   let slug: string;
   try {
-    const product = await prisma.product.findUniqueOrThrow({ where: { id: productId } });
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+    });
     await prisma.devTask.create({ data: { ...result.data, productId } });
     slug = product.slug;
   } catch {
@@ -38,12 +50,22 @@ export async function createTask(productId: string, _prev: ActionResult | null, 
   redirect(`/products/${slug}/tasks`);
 }
 
-export async function updateTask(id: string, _prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+export async function updateTask(
+  id: string,
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = taskSchema.safeParse(parseFormData(formData));
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   let slug: string;
@@ -62,7 +84,10 @@ export async function updateTask(id: string, _prev: ActionResult | null, formDat
   redirect(`/products/${slug}/tasks`);
 }
 
-export async function toggleTaskDone(id: string, done: boolean): Promise<ActionResult> {
+export async function toggleTaskDone(
+  id: string,
+  done: boolean,
+): Promise<ActionResult> {
   await requireAuth();
 
   try {
@@ -83,7 +108,10 @@ export async function deleteTask(id: string): Promise<ActionResult> {
   await requireAuth();
 
   try {
-    const task = await prisma.devTask.findUniqueOrThrow({ where: { id }, include: { product: true } });
+    const task = await prisma.devTask.findUniqueOrThrow({
+      where: { id },
+      include: { product: true },
+    });
     await prisma.devTask.delete({ where: { id } });
     revalidatePath(`/products/${task.product.slug}/tasks`);
   } catch {

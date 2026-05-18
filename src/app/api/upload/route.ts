@@ -15,7 +15,10 @@ export async function POST(request: NextRequest) {
   const type = formData.get("type") as string | null;
 
   if (!file || !productId) {
-    return NextResponse.json({ error: "file and productId are required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "file and productId are required" },
+      { status: 400 },
+    );
   }
 
   const ext = file.name.split(".").pop() ?? "jpg";

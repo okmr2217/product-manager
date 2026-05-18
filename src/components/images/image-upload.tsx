@@ -19,7 +19,12 @@ interface ImageUploadProps {
   onImageAdded: (image: ImageData) => void;
 }
 
-export function ImageUpload({ productId, nextSortOrder, deviceType, onImageAdded }: ImageUploadProps) {
+export function ImageUpload({
+  productId,
+  nextSortOrder,
+  deviceType,
+  onImageAdded,
+}: ImageUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -100,8 +105,12 @@ export function ImageUpload({ productId, nextSortOrder, deviceType, onImageAdded
       onClick={() => !isUploading && fileInputRef.current?.click()}
       className={cn(
         "border-2 border-dashed rounded-lg p-4 text-center transition-colors",
-        isDragOver ? "border-primary bg-primary/5" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
-        isUploading ? "pointer-events-none opacity-60 cursor-default" : "cursor-pointer"
+        isDragOver
+          ? "border-primary bg-primary/5"
+          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+        isUploading
+          ? "pointer-events-none opacity-60 cursor-default"
+          : "cursor-pointer",
       )}
     >
       <input
@@ -126,8 +135,12 @@ export function ImageUpload({ productId, nextSortOrder, deviceType, onImageAdded
         </div>
       ) : (
         <>
-          <p className="text-sm text-slate-600">ドロップまたはクリックして追加</p>
-          <p className="text-xs text-slate-400 mt-0.5">PNG, JPEG, WebP, GIF（最大5MB）・複数可</p>
+          <p className="text-sm text-slate-600">
+            ドロップまたはクリックして追加
+          </p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            PNG, JPEG, WebP, GIF（最大5MB）・複数可
+          </p>
         </>
       )}
     </div>

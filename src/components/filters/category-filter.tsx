@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_VALUES } from "@/constants";
 import type { ProductCategory } from "@prisma/client";
 
@@ -25,7 +31,11 @@ export function CategoryFilter() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue>{current === "all" ? "すべて" : PRODUCT_CATEGORY_LABELS[current as ProductCategory]}</SelectValue>
+        <SelectValue>
+          {current === "all"
+            ? "すべて"
+            : PRODUCT_CATEGORY_LABELS[current as ProductCategory]}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">すべて</SelectItem>

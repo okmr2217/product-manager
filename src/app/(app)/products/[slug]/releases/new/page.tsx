@@ -10,10 +10,17 @@ export const metadata: Metadata = {
 };
 
 async function getProduct(slug: string) {
-  return prisma.product.findUnique({ where: { slug }, select: { id: true, slug: true } });
+  return prisma.product.findUnique({
+    where: { slug },
+    select: { id: true, slug: true },
+  });
 }
 
-export default async function NewReleasePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function NewReleasePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProduct(slug);
 
@@ -25,7 +32,9 @@ export default async function NewReleasePage({ params }: { params: Promise<{ slu
     <div>
       <ProductTabs slug={slug} productId={product.id} />
       <div className="mt-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">リリースノートを追加</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+          リリースノートを追加
+        </h2>
         <ReleaseForm
           action={action}
           cancelHref={`/products/${slug}/releases`}

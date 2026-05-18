@@ -1,16 +1,46 @@
-import type { ProductStatus, ProductCategory, ReleaseType, DevTaskType, DevTaskStatus, Priority, DeviceType } from "@prisma/client";
+import type {
+  ProductStatus,
+  ProductCategory,
+  ReleaseType,
+  DevTaskType,
+  DevTaskStatus,
+  Priority,
+  DeviceType,
+} from "@prisma/client";
 
-export const PRODUCT_STATUS_VALUES: readonly [ProductStatus, ...ProductStatus[]] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
+export const PRODUCT_STATUS_VALUES: readonly [
+  ProductStatus,
+  ...ProductStatus[],
+] = ["IDEA", "DEVELOPING", "RELEASED", "MAINTENANCE", "PAUSED"];
 
-export const PRODUCT_CATEGORY_VALUES: readonly [ProductCategory, ...ProductCategory[]] = ["APP", "MCP", "SITE", "EXTENSION", "LIBRARY"];
+export const PRODUCT_CATEGORY_VALUES: readonly [
+  ProductCategory,
+  ...ProductCategory[],
+] = ["APP", "MCP", "SITE", "EXTENSION", "LIBRARY"];
 
-export const RELEASE_TYPE_VALUES: readonly [ReleaseType, ...ReleaseType[]] = ["MAJOR", "MINOR", "PATCH", "HOTFIX"];
+export const RELEASE_TYPE_VALUES: readonly [ReleaseType, ...ReleaseType[]] = [
+  "MAJOR",
+  "MINOR",
+  "PATCH",
+  "HOTFIX",
+];
 
-export const DEV_TASK_TYPE_VALUES: readonly [DevTaskType, ...DevTaskType[]] = ["FEATURE", "BUG", "IMPROVEMENT"];
+export const DEV_TASK_TYPE_VALUES: readonly [DevTaskType, ...DevTaskType[]] = [
+  "FEATURE",
+  "BUG",
+  "IMPROVEMENT",
+];
 
-export const DEV_TASK_STATUS_VALUES: readonly [DevTaskStatus, ...DevTaskStatus[]] = ["TODO", "IN_PROGRESS", "DONE", "ON_HOLD"];
+export const DEV_TASK_STATUS_VALUES: readonly [
+  DevTaskStatus,
+  ...DevTaskStatus[],
+] = ["TODO", "IN_PROGRESS", "DONE", "ON_HOLD"];
 
-export const PRIORITY_VALUES: readonly [Priority, ...Priority[]] = ["HIGH", "MEDIUM", "LOW"];
+export const PRIORITY_VALUES: readonly [Priority, ...Priority[]] = [
+  "HIGH",
+  "MEDIUM",
+  "LOW",
+];
 
 export const PRODUCT_SORT_OPTIONS = [
   { value: "sortOrder", label: "表示順" },

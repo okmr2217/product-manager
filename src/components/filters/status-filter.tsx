@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_VALUES } from "@/constants";
 import type { ProductStatus } from "@prisma/client";
 
@@ -25,7 +31,11 @@ export function StatusFilter() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue>{current === "all" ? "すべて" : PRODUCT_STATUS_LABELS[current as ProductStatus]}</SelectValue>
+        <SelectValue>
+          {current === "all"
+            ? "すべて"
+            : PRODUCT_STATUS_LABELS[current as ProductStatus]}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">すべて</SelectItem>

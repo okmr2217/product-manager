@@ -62,7 +62,9 @@ export default function SettingsPage() {
           revokeOtherSessions: false,
         });
         if (result.error) {
-          setPasswordError(result.error.message || "パスワードの変更に失敗しました");
+          setPasswordError(
+            result.error.message || "パスワードの変更に失敗しました",
+          );
         } else {
           setPasswordSuccess(true);
           setCurrentPassword("");
@@ -74,7 +76,11 @@ export default function SettingsPage() {
           }, 1500);
         }
       } catch (error) {
-        setPasswordError(error instanceof Error ? error.message : "パスワードの変更に失敗しました");
+        setPasswordError(
+          error instanceof Error
+            ? error.message
+            : "パスワードの変更に失敗しました",
+        );
       }
     });
   };
@@ -83,18 +89,26 @@ export default function SettingsPage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-xl font-semibold text-slate-900 mb-1">設定</h1>
-        <p className="text-sm text-slate-500">アカウント情報の確認・パスワードの変更ができます。</p>
+        <p className="text-sm text-slate-500">
+          アカウント情報の確認・パスワードの変更ができます。
+        </p>
       </div>
 
       <section>
-        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">アカウント</h2>
+        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+          アカウント
+        </h2>
         <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
           <div className="flex items-center justify-between p-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-slate-400" />
               <div>
-                <div className="text-sm font-medium text-slate-800">メールアドレス</div>
-                <div className="text-sm text-slate-500">{session?.user?.email ?? "読み込み中..."}</div>
+                <div className="text-sm font-medium text-slate-800">
+                  メールアドレス
+                </div>
+                <div className="text-sm text-slate-500">
+                  {session?.user?.email ?? "読み込み中..."}
+                </div>
               </div>
             </div>
           </div>
@@ -103,18 +117,33 @@ export default function SettingsPage() {
             <div className="flex items-center gap-3">
               <Lock className="h-5 w-5 text-slate-400" />
               <div>
-                <div className="text-sm font-medium text-slate-800">パスワード</div>
+                <div className="text-sm font-medium text-slate-800">
+                  パスワード
+                </div>
                 <div className="text-sm text-slate-500">••••••••</div>
               </div>
             </div>
-            <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-              <DialogTrigger render={<Button variant="ghost" size="sm" className="text-slate-400 hover:text-slate-700 hover:bg-slate-100" />}>
+            <Dialog
+              open={isPasswordDialogOpen}
+              onOpenChange={setIsPasswordDialogOpen}
+            >
+              <DialogTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                  />
+                }
+              >
                 <Edit className="h-4 w-4" />
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>パスワードの変更</DialogTitle>
-                  <DialogDescription>現在のパスワードと新しいパスワードを入力してください</DialogDescription>
+                  <DialogDescription>
+                    現在のパスワードと新しいパスワードを入力してください
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
@@ -138,7 +167,9 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">新しいパスワード（確認）</Label>
+                    <Label htmlFor="confirm-password">
+                      新しいパスワード（確認）
+                    </Label>
                     <Input
                       id="confirm-password"
                       type="password"
@@ -147,8 +178,14 @@ export default function SettingsPage() {
                       disabled={isChangingPassword}
                     />
                   </div>
-                  {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
-                  {passwordSuccess && <p className="text-sm text-green-500">パスワードを変更しました</p>}
+                  {passwordError && (
+                    <p className="text-sm text-destructive">{passwordError}</p>
+                  )}
+                  {passwordSuccess && (
+                    <p className="text-sm text-green-500">
+                      パスワードを変更しました
+                    </p>
+                  )}
                 </div>
                 <DialogFooter>
                   <Button
@@ -166,7 +203,12 @@ export default function SettingsPage() {
                   </Button>
                   <Button
                     onClick={handlePasswordChange}
-                    disabled={isChangingPassword || !currentPassword || !newPassword || !confirmPassword}
+                    disabled={
+                      isChangingPassword ||
+                      !currentPassword ||
+                      !newPassword ||
+                      !confirmPassword
+                    }
                   >
                     {isChangingPassword ? "変更中..." : "変更する"}
                   </Button>
@@ -178,7 +220,9 @@ export default function SettingsPage() {
       </section>
 
       <section>
-        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">その他</h2>
+        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+          その他
+        </h2>
         <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
           <button
             onClick={handleLogout}
@@ -186,7 +230,9 @@ export default function SettingsPage() {
             className="w-full flex items-center gap-3 p-4 text-left text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             <LogOut className="h-5 w-5 text-slate-400" />
-            <span className="text-sm font-medium">{isLoggingOut ? "ログアウト中..." : "ログアウト"}</span>
+            <span className="text-sm font-medium">
+              {isLoggingOut ? "ログアウト中..." : "ログアウト"}
+            </span>
           </button>
         </div>
       </section>

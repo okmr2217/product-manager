@@ -38,12 +38,16 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  const products: ProductWithLatestRelease[] = rows.map(({ releases, ...product }) => ({
-    ...product,
-    latestRelease: releases[0] ?? null,
-  }));
+  const products: ProductWithLatestRelease[] = rows.map(
+    ({ releases, ...product }) => ({
+      ...product,
+      latestRelease: releases[0] ?? null,
+    }),
+  );
 
-  const countMap = Object.fromEntries(statusCounts.map(({ status, _count }) => [status, _count._all]));
+  const countMap = Object.fromEntries(
+    statusCounts.map(({ status, _count }) => [status, _count._all]),
+  );
   const summaryProps = {
     total: products.length,
     released: countMap.RELEASED ?? 0,
@@ -56,7 +60,10 @@ export default async function DashboardPage() {
       <PageHeader
         title="プロダクト"
         actions={
-          <Link href="/products/new" className={cn(buttonVariants({ size: "sm" }))}>
+          <Link
+            href="/products/new"
+            className={cn(buttonVariants({ size: "sm" }))}
+          >
             <Plus className="h-4 w-4 mr-1" />
             新規作成
           </Link>

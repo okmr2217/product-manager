@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PRODUCT_SORT_OPTIONS } from "@/constants";
 
 export function SortSelect() {
@@ -24,7 +30,9 @@ export function SortSelect() {
   return (
     <Select value={current} onValueChange={handleChange}>
       <SelectTrigger className="w-[140px]">
-        <SelectValue>{PRODUCT_SORT_OPTIONS.find((o) => o.value === current)?.label}</SelectValue>
+        <SelectValue>
+          {PRODUCT_SORT_OPTIONS.find((o) => o.value === current)?.label}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {PRODUCT_SORT_OPTIONS.map((o) => (

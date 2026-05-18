@@ -18,21 +18,37 @@ function parseFormData(formData: FormData) {
 }
 
 async function getProductSlug(productId: string): Promise<string> {
-  const product = await prisma.product.findUniqueOrThrow({ where: { id: productId }, select: { slug: true } });
+  const product = await prisma.product.findUniqueOrThrow({
+    where: { id: productId },
+    select: { slug: true },
+  });
   return product.slug;
 }
 
 async function getReleaseProductSlug(id: string): Promise<string> {
-  const release = await prisma.release.findUniqueOrThrow({ where: { id }, select: { product: { select: { slug: true } } } });
+  const release = await prisma.release.findUniqueOrThrow({
+    where: { id },
+    select: { product: { select: { slug: true } } },
+  });
   return release.product.slug;
 }
 
-export async function createRelease(productId: string, _prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+export async function createRelease(
+  productId: string,
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = releaseSchema.safeParse(parseFormData(formData));
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   try {
@@ -46,12 +62,22 @@ export async function createRelease(productId: string, _prev: ActionResult | nul
   return { success: true };
 }
 
-export async function updateRelease(id: string, _prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+export async function updateRelease(
+  id: string,
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = releaseSchema.safeParse(parseFormData(formData));
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   try {

@@ -3,9 +3,20 @@
 import { useState, useCallback } from "react";
 import Image from "next/image";
 import { GripVertical } from "lucide-react";
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { ProductWithLatestRelease } from "@/app/(app)/products/page";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_COLORS } from "@/constants";
@@ -14,7 +25,14 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 function SortableRow({ product }: { product: ProductWithLatestRelease }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: product.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: product.id });
   const { iconUrl, themeColor, name, status } = product;
 
   const style = {
@@ -27,7 +45,14 @@ function SortableRow({ product }: { product: ProductWithLatestRelease }) {
     if (iconUrl) {
       return (
         <div className="size-7 rounded-lg overflow-hidden shrink-0">
-          <Image src={iconUrl} alt="" width={28} height={28} className="w-full h-full object-cover" unoptimized />
+          <Image
+            src={iconUrl}
+            alt=""
+            width={28}
+            height={28}
+            className="w-full h-full object-cover"
+            unoptimized
+          />
         </div>
       );
     }
@@ -58,7 +83,12 @@ function SortableRow({ product }: { product: ProductWithLatestRelease }) {
       </button>
       {renderIcon()}
       <span className="flex-1 text-sm font-medium">{name}</span>
-      <span className={cn("text-[10px] px-2 py-0.5 rounded-full", PRODUCT_STATUS_COLORS[status])}>
+      <span
+        className={cn(
+          "text-[10px] px-2 py-0.5 rounded-full",
+          PRODUCT_STATUS_COLORS[status],
+        )}
+      >
         {PRODUCT_STATUS_LABELS[status]}
       </span>
     </div>
@@ -75,20 +105,19 @@ export function ProductSortable({
   const [items, setItems] = useState(products);
   const [saving, setSaving] = useState(false);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
-
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
-      setItems((prev) => {
-        const oldIndex = prev.findIndex((p) => p.id === active.id);
-        const newIndex = prev.findIndex((p) => p.id === over.id);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-    },
-    []
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setItems((prev) => {
+      const oldIndex = prev.findIndex((p) => p.id === active.id);
+      const newIndex = prev.findIndex((p) => p.id === over.id);
+      return arrayMove(prev, oldIndex, newIndex);
+    });
+  }, []);
 
   async function handleSave() {
     setSaving(true);
@@ -105,8 +134,15 @@ export function ProductSortable({
   return (
     <div>
       <div className="border border-border/40 rounded-xl overflow-hidden mb-4">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={items.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={items.map((p) => p.id)}
+            strategy={verticalListSortingStrategy}
+          >
             {items.map((product) => (
               <SortableRow key={product.id} product={product} />
             ))}

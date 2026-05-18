@@ -9,7 +9,11 @@ async function getProduct(slug: string) {
   return prisma.product.findUnique({ where: { slug } });
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
   return { title: product ? `${product.name} を編集` : "編集" };
@@ -20,9 +24,16 @@ async function getExistingStacks() {
   return [...new Set(products.flatMap((p) => p.stacks))];
 }
 
-export default async function EditProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EditProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
-  const [product, existingStacks] = await Promise.all([getProduct(slug), getExistingStacks()]);
+  const [product, existingStacks] = await Promise.all([
+    getProduct(slug),
+    getExistingStacks(),
+  ]);
 
   if (!product) notFound();
 

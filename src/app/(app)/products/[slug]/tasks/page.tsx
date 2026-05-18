@@ -9,9 +9,16 @@ import { ProductTabs } from "@/components/products/product-tabs";
 import { TaskCard } from "@/components/tasks/task-card";
 import { ProductHeader } from "@/components/products/product-header";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug }, select: { name: true } });
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    select: { name: true },
+  });
   return { title: product ? `${product.name} — タスク` : "タスク" };
 }
 
@@ -24,14 +31,27 @@ async function getProductWithTasks(slug: string) {
   });
 }
 
-const STATUS_GROUPS: { key: DevTaskStatus; label: string; icon: React.ElementType; collapsible?: boolean }[] = [
+const STATUS_GROUPS: {
+  key: DevTaskStatus;
+  label: string;
+  icon: React.ElementType;
+  collapsible?: boolean;
+}[] = [
   { key: "TODO", label: "未着手", icon: Circle },
   { key: "IN_PROGRESS", label: "進行中", icon: Clock },
   { key: "ON_HOLD", label: "保留", icon: PauseCircle },
   { key: "DONE", label: "完了", icon: CheckCircle2, collapsible: true },
 ];
 
-function TaskGroup({ group, tasks, slug }: { group: (typeof STATUS_GROUPS)[number]; tasks: DevTask[]; slug: string }) {
+function TaskGroup({
+  group,
+  tasks,
+  slug,
+}: {
+  group: (typeof STATUS_GROUPS)[number];
+  tasks: DevTask[];
+  slug: string;
+}) {
   const Icon = group.icon;
   const header = (
     <div className="flex items-center gap-2 mb-2">
@@ -56,7 +76,9 @@ function TaskGroup({ group, tasks, slug }: { group: (typeof STATUS_GROUPS)[numbe
       <details>
         <summary className="flex items-center gap-2 cursor-pointer list-none mb-2">
           <Icon className="h-4 w-4 text-slate-400" />
-          <span className="text-sm font-medium text-slate-600">{group.label}</span>
+          <span className="text-sm font-medium text-slate-600">
+            {group.label}
+          </span>
           <span className="text-xs text-slate-400">({tasks.length})</span>
         </summary>
         {body}
@@ -72,7 +94,11 @@ function TaskGroup({ group, tasks, slug }: { group: (typeof STATUS_GROUPS)[numbe
   );
 }
 
-export default async function TasksPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function TasksPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProductWithTasks(slug);
 
@@ -80,13 +106,20 @@ export default async function TasksPage({ params }: { params: Promise<{ slug: st
 
   return (
     <div>
-      <ProductHeader name={product.name} iconUrl={product.iconUrl} status={product.status} />
+      <ProductHeader
+        name={product.name}
+        iconUrl={product.iconUrl}
+        status={product.status}
+      />
 
       <ProductTabs slug={slug} productId={product.id} />
 
       <div className="mt-6">
         <div className="flex justify-end mb-6">
-          <Link href={`/products/${slug}/tasks/new`} className={buttonVariants({ size: "sm" })}>
+          <Link
+            href={`/products/${slug}/tasks/new`}
+            className={buttonVariants({ size: "sm" })}
+          >
             <Plus className="h-4 w-4 mr-1" />
             タスクを追加
           </Link>

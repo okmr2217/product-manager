@@ -14,9 +14,16 @@ import { DeleteDialog } from "@/components/products/delete-dialog";
 import { PRODUCT_STATUS_LABELS, PRODUCT_STATUS_DOT_COLORS } from "@/constants";
 import { ProductHeader } from "@/components/products/product-header";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug }, select: { name: true } });
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    select: { name: true },
+  });
   return { title: product ? `${product.name} — 設定` : "設定" };
 }
 
@@ -43,27 +50,57 @@ async function getTabCounts(productId: string) {
   return { taskCount, imageCount, releaseCount };
 }
 
-function SectionHeader({ title, description, danger }: { title: string; description?: string; danger?: boolean }) {
+function SectionHeader({
+  title,
+  description,
+  danger,
+}: {
+  title: string;
+  description?: string;
+  danger?: boolean;
+}) {
   return (
     <div className={cn("pb-2 border-b border-slate-200")}>
-      <h2 className={cn("text-base font-semibold", danger ? "text-red-600" : "text-slate-900")}>{title}</h2>
-      {description && <p className="text-sm text-slate-500 mt-0.5">{description}</p>}
+      <h2
+        className={cn(
+          "text-base font-semibold",
+          danger ? "text-red-600" : "text-slate-900",
+        )}
+      >
+        {title}
+      </h2>
+      {description && (
+        <p className="text-sm text-slate-500 mt-0.5">{description}</p>
+      )}
     </div>
   );
 }
 
-export default async function ProductSettingsPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductSettingsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
-  const [product, existingStacks] = await Promise.all([getProduct(slug), getExistingStacks()]);
+  const [product, existingStacks] = await Promise.all([
+    getProduct(slug),
+    getExistingStacks(),
+  ]);
 
   if (!product) notFound();
 
-  const { taskCount, imageCount, releaseCount } = await getTabCounts(product.id);
+  const { taskCount, imageCount, releaseCount } = await getTabCounts(
+    product.id,
+  );
   const boundAction = updateProduct.bind(null, product.id);
 
   return (
     <div>
-      <ProductHeader name={product.name} iconUrl={product.iconUrl} status={product.status} />
+      <ProductHeader
+        name={product.name}
+        iconUrl={product.iconUrl}
+        status={product.status}
+      />
 
       <ProductTabs slug={slug} productId={product.id} />
 
@@ -90,7 +127,10 @@ export default async function ProductSettingsPage({ params }: { params: Promise<
               <span className="text-sm text-slate-500">現在のステータス:</span>
               <StatusBadge status={product.status} />
             </div>
-            <StatusChangeDialog productId={product.id} currentStatus={product.status} />
+            <StatusChangeDialog
+              productId={product.id}
+              currentStatus={product.status}
+            />
           </div>
 
           {product.statusHistory.length === 0 ? (
@@ -101,16 +141,29 @@ export default async function ProductSettingsPage({ params }: { params: Promise<
               <ul className="space-y-6">
                 {product.statusHistory.map((entry) => (
                   <li key={entry.id} className="flex gap-4 relative">
-                    <div className={cn("w-5 h-5 rounded-full shrink-0 mt-0.5 z-10", PRODUCT_STATUS_DOT_COLORS[entry.to])} />
+                    <div
+                      className={cn(
+                        "w-5 h-5 rounded-full shrink-0 mt-0.5 z-10",
+                        PRODUCT_STATUS_DOT_COLORS[entry.to],
+                      )}
+                    />
                     <div className="flex-1">
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <p className="text-sm font-medium text-slate-900">
                             {PRODUCT_STATUS_LABELS[entry.to]}{" "}
-                            <span className="font-normal text-slate-500">← {PRODUCT_STATUS_LABELS[entry.from]}</span>
+                            <span className="font-normal text-slate-500">
+                              ← {PRODUCT_STATUS_LABELS[entry.from]}
+                            </span>
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">{format(entry.changedAt, "yyyy/MM/dd HH:mm")}</p>
-                          {entry.note && <p className="text-sm text-slate-600 mt-1 whitespace-pre-wrap">{entry.note}</p>}
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            {format(entry.changedAt, "yyyy/MM/dd HH:mm")}
+                          </p>
+                          {entry.note && (
+                            <p className="text-sm text-slate-600 mt-1 whitespace-pre-wrap">
+                              {entry.note}
+                            </p>
+                          )}
                         </div>
                         <div className="flex gap-1 shrink-0">
                           <HistoryEditDialog entry={entry} />

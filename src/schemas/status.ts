@@ -15,4 +15,6 @@ export const statusHistoryUpdateSchema = z.object({
 });
 
 export type StatusChangeInput = z.infer<typeof statusChangeSchema>;
-export type StatusHistoryUpdateInput = z.infer<typeof statusHistoryUpdateSchema>;
+export type StatusHistoryUpdateInput = z.infer<
+  typeof statusHistoryUpdateSchema
+>;

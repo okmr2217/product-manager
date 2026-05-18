@@ -10,16 +10,27 @@ import type { ImageRecordInput, DeviceTypeInput } from "@/schemas/image";
 
 type ImageCreateResult = ActionResult & { image?: ImageData };
 
-export async function createImageRecord(productId: string, data: ImageRecordInput): Promise<ImageCreateResult> {
+export async function createImageRecord(
+  productId: string,
+  data: ImageRecordInput,
+): Promise<ImageCreateResult> {
   await requireAuth();
 
   const result = imageRecordSchema.safeParse(data);
   if (!result.success) {
-    return { success: false, fieldErrors: result.error.flatten().fieldErrors as Record<string, string[]> };
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
   }
 
   try {
-    const product = await prisma.product.findUniqueOrThrow({ where: { id: productId } });
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+    });
 
     const created = await prisma.productImage.create({
       data: {
@@ -75,11 +86,16 @@ export async function deleteImage(imageId: string): Promise<ActionResult> {
   return { success: true };
 }
 
-export async function setThumbnail(imageId: string, productId: string): Promise<ActionResult> {
+export async function setThumbnail(
+  imageId: string,
+  productId: string,
+): Promise<ActionResult> {
   await requireAuth();
 
   try {
-    const product = await prisma.product.findUniqueOrThrow({ where: { id: productId } });
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+    });
 
     await prisma.$transaction([
       prisma.productImage.updateMany({
@@ -100,7 +116,10 @@ export async function setThumbnail(imageId: string, productId: string): Promise<
   return { success: true };
 }
 
-export async function updateImageAlt(imageId: string, alt: string): Promise<ActionResult> {
+export async function updateImageAlt(
+  imageId: string,
+  alt: string,
+): Promise<ActionResult> {
   await requireAuth();
 
   try {
@@ -122,7 +141,10 @@ export async function updateImageAlt(imageId: string, alt: string): Promise<Acti
   return { success: true };
 }
 
-export async function replaceImage(imageId: string, newUrl: string): Promise<ActionResult> {
+export async function replaceImage(
+  imageId: string,
+  newUrl: string,
+): Promise<ActionResult> {
   await requireAuth();
 
   try {
@@ -150,7 +172,10 @@ export async function replaceImage(imageId: string, newUrl: string): Promise<Act
   return { success: true };
 }
 
-export async function updateImageDeviceType(imageId: string, deviceType: DeviceTypeInput): Promise<ActionResult> {
+export async function updateImageDeviceType(
+  imageId: string,
+  deviceType: DeviceTypeInput,
+): Promise<ActionResult> {
   await requireAuth();
 
   const result = deviceTypeSchema.safeParse(deviceType);
@@ -177,19 +202,24 @@ export async function updateImageDeviceType(imageId: string, deviceType: DeviceT
   return { success: true };
 }
 
-export async function reorderImages(productId: string, orderedIds: string[]): Promise<ActionResult> {
+export async function reorderImages(
+  productId: string,
+  orderedIds: string[],
+): Promise<ActionResult> {
   await requireAuth();
 
   try {
-    const product = await prisma.product.findUniqueOrThrow({ where: { id: productId } });
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+    });
 
     await prisma.$transaction(
       orderedIds.map((id, index) =>
         prisma.productImage.update({
           where: { id },
           data: { sortOrder: index },
-        })
-      )
+        }),
+      ),
     );
 
     revalidatePath(`/products/${product.slug}/images`);

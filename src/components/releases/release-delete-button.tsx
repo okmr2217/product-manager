@@ -38,8 +38,12 @@ export function ReleaseDeleteButton({ id }: { id: string }) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>このリリースノートを削除しますか？</AlertDialogTitle>
-          <AlertDialogDescription>この操作は取り消せません。</AlertDialogDescription>
+          <AlertDialogTitle>
+            このリリースノートを削除しますか？
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            この操作は取り消せません。
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>キャンセル</AlertDialogCancel>
